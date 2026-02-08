@@ -1,0 +1,161 @@
+@import "tailwindcss";
+
+@layer theme {
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+
+    /* --- THEME ENGINE: CORE TOKENS --- */
+
+    /* 1. Layout & Spacing */
+    --gap-main: 1rem;
+    /* Gap between floating islands */
+    --radius-panel: 1.5rem;
+    /* Rounded corners (24px) */
+    --radius-button: 9999px;
+    /* Pills */
+
+    /* 2. Glass Base Properties */
+    --glass-border-color: rgba(255, 255, 255, 0.2);
+    --glass-border-width: 1px;
+    --glass-blur: 20px;
+    /* Frosted effect intensity */
+    --glass-saturate: 180%;
+    /* Vibrancy */
+
+    /* 3. Panel Colors (Aurora Theme) */
+    --glass-panel-bg: rgba(255, 255, 255, 0.4);
+    /* Rail/Sidebar */
+    --glass-content-bg: rgba(255, 255, 255, 0.6);
+    /* Main Content */
+    --glass-interactive-bg: rgba(255, 255, 255, 0.3);
+    /* Buttons */
+
+    /* 4. Liquid Shine Effect (Toggleable) */
+    /* Set to 0 to disable liquid effect globally */
+    --shine-opacity: 0.4;
+    --shine-angle: 125deg;
+  }
+
+  /* Dark Mode Overrides (Future Proofing) */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background: #0a0a0a;
+      --foreground: #ededed;
+      --glass-border-color: rgba(255, 255, 255, 0.1);
+      --glass-panel-bg: rgba(0, 0, 0, 0.3);
+      --glass-content-bg: rgba(0, 0, 0, 0.4);
+      --glass-interactive-bg: rgba(255, 255, 255, 0.05);
+    }
+  }
+}
+
+/* Aurora Mesh Background */
+body {
+  color: var(--foreground);
+  background:
+    radial-gradient(at 0% 0%, rgba(200, 210, 255, 0.7) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(220, 200, 255, 0.6) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(200, 240, 255, 0.6) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(220, 255, 220, 0.5) 0px, transparent 50%),
+    #f3f4f6;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: var(--font-sans), system-ui, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  /* App-like feel */
+}
+
+/* --- THEME ENGINE: COMPONENT CLASSES --- */
+
+@layer components {
+
+  /* 1. The Universal Glass Class */
+  .glass {
+    position: relative;
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    border: var(--glass-border-width) solid var(--glass-border-color);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  /* 2. Variants via Data Modifier */
+
+  /* Panel: Used for Rail, Sidebar, Content Areas */
+  .glass[data-variant="panel"] {
+    background: var(--glass-panel-bg);
+    border-radius: var(--radius-panel);
+    /* Inner light for depth */
+    box-shadow:
+      0 4px 24px -1px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  /* Content: Used for the main workspace */
+  .glass[data-variant="content"] {
+    background: var(--glass-content-bg);
+    border-radius: var(--radius-panel);
+    box-shadow:
+      0 4px 24px -1px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  /* Interactive: Buttons, Pills, Cards */
+  .glass[data-variant="interactive"] {
+    background: var(--glass-interactive-bg);
+    border-radius: var(--radius-button);
+    cursor: pointer;
+  }
+
+  .glass[data-variant="interactive"]:hover {
+    background: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 3. The Liquid Shine (Pseudo-element) */
+  /* Applied to any .glass element that doesn't explicitly opt-out */
+  .glass:not([data-no-shine="true"])::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+
+    /* The Liquid Gradient */
+    background: linear-gradient(var(--shine-angle),
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0.1) 40%,
+        transparent 60%);
+
+    /* Internal Shadows for Gel/Liquid look */
+    box-shadow:
+      inset -10px -8px 0px -11px rgba(255, 255, 255, 0.5),
+      inset 0px -9px 0px -8px rgba(255, 255, 255, 0.6);
+
+    opacity: var(--shine-opacity);
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: overlay;
+  }
+
+  /* Scrollbar Styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
