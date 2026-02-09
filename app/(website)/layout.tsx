@@ -1,29 +1,46 @@
-export default function MarketingLayout({
+import Link from "next/link";
+
+export default function WebsiteLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
     return (
-        <div className="flex flex-col min-h-screen">
-            <header className="fixed w-full z-50 top-0 start-0 border-b border-gray-200 bg-white/80 backdrop-blur-md">
-                <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                    <a href="#" className="flex items-center space-x-3 rtl:space-x-reverse">
-                        <span className="self-center text-2xl font-semibold whitespace-nowrap text-gray-900">Deluno</span>
-                    </a>
-                    <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                        <a href="/dashboard" type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center">Get started</a>
-                    </div>
+        <div className="min-h-screen flex flex-col">
+            {/* Header */}
+            <header className="fixed top-0 left-0 right-0 z-50 p-4">
+                <div className="max-w-6xl mx-auto glass px-6 py-4 flex items-center justify-between" data-variant="panel">
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold text-xs shadow-lg">
+                            DO
+                        </div>
+                        <span className="font-bold text-lg tracking-tight text-zinc-900">Deluno</span>
+                    </Link>
+
+                    {/* CTA */}
+                    <Link
+                        href="/dashboard"
+                        className="glass h-10 px-6 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none flex items-center justify-center rounded-full transition-colors"
+                        data-variant="interactive"
+                        data-no-shine="true"
+                    >
+                        Rozpocznij
+                    </Link>
                 </div>
             </header>
 
-            <main className="flex-grow pt-20">
+            {/* Main Content */}
+            <main className="flex-1 pt-24">
                 {children}
             </main>
 
-            <footer className="bg-white rounded-lg shadow m-4">
-                <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-                    <span className="text-sm text-gray-500 sm:text-center">© 2026 <a href="#" className="hover:underline">Deluno™</a>. All Rights Reserved.
-                    </span>
+            {/* Footer */}
+            <footer className="p-4">
+                <div className="max-w-6xl mx-auto glass px-6 py-6 text-center" data-variant="panel">
+                    <p className="text-sm text-zinc-500">
+                        © 2026 Deluno. Wszystkie prawa zastrzeżone.
+                    </p>
                 </div>
             </footer>
         </div>
