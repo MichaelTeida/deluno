@@ -31,17 +31,28 @@ export default function DashboardView() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                     <button
                         onClick={handleCreateNote}
-                        className="bg-indigo-600 hover:bg-indigo-500 text-white p-4 rounded-xl flex items-center gap-3 transition-colors shadow-lg shadow-indigo-500/20"
+                        className="btn-glass p-0 h-auto w-full justify-start gap-4 transition-all hover:scale-[1.02] active:scale-[0.98] group relative overflow-hidden"
+                        style={{
+                            background: `linear-gradient(135deg, rgba(99, 102, 241, 0.6) 0%, rgba(79, 70, 229, 0.6) 100%)`,
+                            minHeight: '80px',
+                            padding: '1rem',
+                            borderRadius: 'var(--radius-panel)', // Standardized radius
+                            backdropFilter: 'blur(10px) saturate(1.5) url(#glass-clean-v5)',
+                            boxShadow: 'var(--effect-glass-shadow)'
+                        }}
                     >
-                        <div className="bg-white/20 p-2 rounded-lg">
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                        <div className="glass w-12 h-12 flex items-center justify-center rounded-full shadow-lg group-hover:bg-white/40 transition-colors" data-variant="interactive">
+                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
                         </div>
-                        <div className="text-left">
-                            <div className="font-semibold">New Note</div>
-                            <div className="text-xs text-indigo-100">Create a new page in Noter</div>
+                        <div className="text-left flex flex-col items-start gap-0.5">
+                            <div className="font-bold text-lg text-white group-hover:text-indigo-50 transition-colors">New Note</div>
+                            <div className="text-xs text-indigo-100/90 font-medium group-hover:text-white/90 transition-colors">Create a new page in Noter</div>
                         </div>
+
+                        {/* Shimmer effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] pointer-events-none" />
                     </button>
                 </div>
 

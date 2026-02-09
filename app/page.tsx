@@ -14,11 +14,11 @@ export default function HomePage() {
           </Link>
           <Link
             href="/sign-in"
-            className="glass h-10 px-6 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none flex items-center justify-center rounded-full transition-colors"
-            data-variant="interactive"
+            className="btn-glass px-6 text-sm"
+            data-variant="cta"
             data-no-shine="true"
           >
-            Rozpocznij
+            Start
           </Link>
         </div>
       </header>
@@ -35,11 +35,11 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/sign-in"
-              className="glass h-12 px-8 text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none flex items-center justify-center rounded-full transition-colors"
-              data-variant="interactive"
+              className="btn-glass px-8 text-base h-12"
+              data-variant="cta"
               data-no-shine="true"
             >
-              Wypróbuj za darmo
+              Try for free
             </Link>
             <Link
               href="#features"
@@ -89,11 +89,11 @@ export default function HomePage() {
           </p>
           <Link
             href="/dashboard"
-            className="glass h-12 px-8 text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none inline-flex items-center justify-center rounded-full transition-colors"
-            data-variant="interactive"
+            className="btn-glass px-8 text-base h-12"
+            data-variant="cta"
             data-no-shine="true"
           >
-            Rozpocznij teraz
+            Start now
           </Link>
         </div>
       </section>
