@@ -39,12 +39,13 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     {showIconPicker && (
                         <>
                             <div className="fixed inset-0 z-40" onClick={() => setShowIconPicker(false)} />
-                            <div className="absolute top-full left-0 mt-2 glass p-3 grid grid-cols-5 gap-2 z-50" data-variant="panel">
+                            <div className="absolute top-full left-0 mt-3 glass p-4 grid grid-cols-5 gap-3 z-50 min-w-[240px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200" data-variant="panel">
+                                <div className="col-span-5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 px-1">Choose Icon</div>
                                 {ICONS.map(icon => (
                                     <button
                                         key={icon}
                                         onClick={() => { onUpdate({ icon }); setShowIconPicker(false); }}
-                                        className="text-xl hover:bg-white/40 dark:hover:bg-white/20 rounded p-1 transition-colors"
+                                        className="w-10 h-10 text-2xl flex items-center justify-center hover:bg-white/40 dark:hover:bg-white/20 rounded-xl transition-all hover:scale-110 active:scale-95"
                                     >
                                         {icon}
                                     </button>

@@ -18,20 +18,28 @@ export default function NoterSidebarContent() {
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
-
         if (!over) return;
 
         if (active.id !== over.id) {
+            const activeNote = notes.find(n => n.id === active.id);
+            const overNote = notes.find(n => n.id === over.id);
+
+            if (!activeNote || !overNote) return;
+
+            // Find indices in the flat array
             const oldIndex = notes.findIndex(n => n.id === active.id);
             const newIndex = notes.findIndex(n => n.id === over.id);
 
-            // Only reorder if they are siblings (same parent)
-            // Or just allow global reorder which affects effective order
-            // But we should check if valid reorder? 
-            // For now, simple arrayMove on global list handles sibling reordering correctly 
-            // because filter preserves relative order.
+            let newNotes = [...notes];
 
-            reorderNotes(arrayMove(notes, oldIndex, newIndex));
+            // If parenting is different, update the active note's parent to match the target
+            if (activeNote.parentId !== overNote.parentId) {
+                const updatedActiveNote = { ...activeNote, parentId: overNote.parentId, updatedAt: new Date() };
+                newNotes[oldIndex] = updatedActiveNote;
+            }
+
+            // Move the note in the array to the new position
+            reorderNotes(arrayMove(newNotes, oldIndex, newIndex));
         }
     };
 
