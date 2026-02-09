@@ -19,10 +19,10 @@ export default function DashboardLayout({
         <div className="flex flex-col h-screen w-full text-zinc-800 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden">
 
             {/* 1. TOP HEADER */}
-            <header className="h-14 md:h-16 shrink-0 glass flex items-center justify-between px-3 md:px-6 z-50" data-variant="panel">
+            <header className="h-14 md:h-16 shrink-0 glass flex items-center justify-between px-3 md:px-6 z-40" data-variant="panel">
 
                 {/* Left: Mobile Menu + Logo & Breadcrumbs */}
-                <div className="flex items-center gap-3 md:gap-6 overflow-hidden">
+                <div className="flex items-center gap-2 md:gap-4 lg:gap-6 overflow-hidden min-w-0">
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsNavOpen(!isNavOpen)}
@@ -39,7 +39,7 @@ export default function DashboardLayout({
                         <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold text-[10px] md:text-xs shadow-lg">
                             DO
                         </div>
-                        <span className="font-bold text-base md:text-lg tracking-tight text-zinc-900 hidden sm:block">Deluno</span>
+                        <span className="font-bold text-base md:text-lg tracking-tight text-zinc-900 hidden sm:block shrink-0">Deluno</span>
                     </div>
 
                     {/* Separator - Hidden on mobile */}
@@ -154,7 +154,7 @@ export default function DashboardLayout({
                 {/* B. NAVIGATION SIDEBAR */}
                 <nav className={`
                     ${isSidebarVisible ? 'w-64 md:w-56' : 'w-0 overflow-hidden opacity-0'} 
-                    glass flex flex-col z-40 md:z-30 shrink-0
+                    glass flex flex-col z-50 md:z-30 shrink-0
                     fixed md:relative left-0 top-0 h-full md:h-auto
                     transition-all duration-300 ease-out
                     ${isNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
