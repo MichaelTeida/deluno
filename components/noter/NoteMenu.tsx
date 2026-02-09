@@ -62,7 +62,8 @@ export default function NoteMenu() {
         <div className="relative" ref={menuRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg transition-colors backdrop-blur-md border border-white/20 shadow-sm bg-white/50 dark:bg-white/10 text-zinc-400 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-white/80 dark:hover:bg-white/20 outline-none"
+                className="glass w-8 h-8 md:w-9 md:h-9 flex items-center justify-center text-zinc-400 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+                data-variant="interactive"
                 title="Options"
             >
                 <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>

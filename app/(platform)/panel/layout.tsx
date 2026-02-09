@@ -381,7 +381,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             </h1>
                             <button
                                 onClick={() => document.dispatchEvent(new CustomEvent('create-new-note'))}
-                                className="ml-4 h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium text-indigo-600 dark:text-indigo-400 bg-white/50 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 border border-white/20 shadow-sm flex items-center justify-center rounded-lg backdrop-blur-md transition-all active:scale-95"
+                                className="ml-4 glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium text-indigo-600 dark:text-indigo-400 flex items-center justify-center"
+                                data-variant="interactive"
                             >
                                 + New
                             </button>

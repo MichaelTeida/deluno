@@ -116,7 +116,8 @@ function HeaderActionsPortal({ note, onUpdate }: { note: Note, onUpdate: (update
             {/* Favorite Toggle */}
             <button
                 onClick={() => onUpdate({ isFavorite: !note.isFavorite })}
-                className={`w-8 h-8 md:w-9 md:h-9 flex items-center justify-center rounded-lg transition-colors backdrop-blur-md border border-white/20 shadow-sm ${note.isFavorite ? "bg-amber-100/50 dark:bg-amber-900/30 text-amber-500 border-amber-200/50" : "bg-white/50 dark:bg-white/10 text-zinc-400 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400 hover:bg-white/80 dark:hover:bg-white/20"}`}
+                className={`glass w-8 h-8 md:w-9 md:h-9 flex items-center justify-center ${note.isFavorite ? "text-amber-500" : "text-zinc-400 dark:text-zinc-400 hover:text-amber-500 dark:hover:text-amber-400"}`}
+                data-variant="interactive"
                 title={note.isFavorite ? "Remove from favorites" : "Add to favorites"}
             >
                 <svg className="w-4 h-4 md:w-5 md:h-5" fill={note.isFavorite ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
