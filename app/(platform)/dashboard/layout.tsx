@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { UserButton } from "@clerk/nextjs";
+import { usePathname } from "next/navigation";
 
 export default function DashboardLayout({
     children,
@@ -10,6 +12,8 @@ export default function DashboardLayout({
 }) {
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isRailExpanded, setIsRailExpanded] = useState(false);
+    const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+    const pathname = usePathname();
 
     return (
         <div className="flex flex-col h-screen w-full text-zinc-800 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden">
@@ -48,25 +52,26 @@ export default function DashboardLayout({
                         </div>
                         <span className="text-zinc-400">/</span>
                         <div className="glass px-3 py-1.5 text-zinc-600 hover:text-indigo-600 transition-colors truncate" data-variant="interactive">
-                            Narzędzie
+                            {pathname?.startsWith('/dashboard/noter') ? 'Narzędzia' : 'Główna'}
                         </div>
                         <span className="text-zinc-400">/</span>
                         <div className="glass px-3 py-1.5 bg-white/20 text-indigo-700 pointer-events-none truncate" data-variant="interactive">
-                            <span className="opacity-60 mr-1">📄</span> Element
+                            <span className="opacity-60 mr-1">{pathname?.startsWith('/dashboard/noter') ? '📝' : '📊'}</span>
+                            {pathname?.startsWith('/dashboard/noter') ? 'Notatki' : 'Dashboard'}
                         </div>
                     </nav>
 
                     {/* Compact breadcrumb on tablet */}
                     <div className="hidden md:flex lg:hidden items-center">
                         <div className="glass px-3 py-1.5 bg-white/20 text-indigo-700 text-sm" data-variant="interactive">
-                            📄 Element
+                            {pathname?.startsWith('/dashboard/noter') ? '📝 Notatki' : '📊 Dashboard'}
                         </div>
                     </div>
                 </div>
 
-                {/* Right: 3 Dots Menu */}
+                {/* Right: User & Theme Menu */}
                 <div className="flex items-center gap-2 md:gap-3 shrink-0">
-                    <span className="text-xs md:text-sm text-zinc-500 hidden sm:block">Opcje</span>
+                    <UserButton afterSignOutUrl="/" />
                     <button className="glass w-8 h-8 md:w-9 md:h-9 flex items-center justify-center text-zinc-500 hover:text-zinc-900" data-variant="interactive">
                         <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20">
                             <circle cx="4" cy="10" r="2" />
@@ -97,16 +102,25 @@ export default function DashboardLayout({
                 `} data-variant="panel">
                     {/* App Icons */}
                     <div className="flex flex-col gap-2 w-full items-center flex-1">
-                        {[1, 2, 3, 4, 5].map((i) => (
-                            <div key={i} className="group relative w-10 h-10 flex items-center justify-center">
-                                <div className="absolute left-[-16px] md:left-[-20px] w-1 h-6 bg-indigo-500 rounded-r-full opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-                                <div className="w-9 h-9 md:w-10 md:h-10 glass flex items-center justify-center text-zinc-500 hover:text-indigo-600 transition-all" data-variant="interactive">
-                                    <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-                                    </svg>
-                                </div>
+                        <Link href="/dashboard" className="group relative w-10 h-10 flex items-center justify-center">
+                            <div className={`absolute left-[-16px] md:left-[-20px] w-1 h-6 bg-indigo-500 rounded-r-full transition-all duration-300 ${pathname === '/dashboard' ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}></div>
+                            <div className={`w-9 h-9 md:w-10 md:h-10 glass flex items-center justify-center transition-all ${pathname === '/dashboard' ? 'text-indigo-600 bg-white/40' : 'text-zinc-500 hover:text-indigo-600'}`} data-variant="interactive">
+                                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                </svg>
                             </div>
-                        ))}
+                            {isRailExpanded && <span className="absolute left-14 text-sm font-medium whitespace-nowrap text-zinc-600">Dashboard</span>}
+                        </Link>
+
+                        <Link href="/dashboard/noter" className="group relative w-10 h-10 flex items-center justify-center">
+                            <div className={`absolute left-[-16px] md:left-[-20px] w-1 h-6 bg-indigo-500 rounded-r-full transition-all duration-300 ${pathname?.startsWith('/dashboard/noter') ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}></div>
+                            <div className={`w-9 h-9 md:w-10 md:h-10 glass flex items-center justify-center transition-all ${pathname?.startsWith('/dashboard/noter') ? 'text-indigo-600 bg-white/40' : 'text-zinc-500 hover:text-indigo-600'}`} data-variant="interactive">
+                                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                </svg>
+                            </div>
+                            {isRailExpanded && <span className="absolute left-14 text-sm font-medium whitespace-nowrap text-zinc-600">Notatki</span>}
+                        </Link>
                     </div>
 
                     {/* Bottom Icons */}
@@ -139,9 +153,10 @@ export default function DashboardLayout({
 
                 {/* B. NAVIGATION SIDEBAR */}
                 <nav className={`
-                    w-64 md:w-56 glass flex flex-col z-40 md:z-30 shrink-0
+                    ${isSidebarVisible ? 'w-64 md:w-56' : 'w-0 overflow-hidden opacity-0'} 
+                    glass flex flex-col z-40 md:z-30 shrink-0
                     fixed md:relative left-0 top-0 h-full md:h-auto
-                    transition-transform duration-300 ease-out
+                    transition-all duration-300 ease-out
                     ${isNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
                 `} data-variant="panel">
                     {/* Mobile Header */}
@@ -168,7 +183,12 @@ export default function DashboardLayout({
                                 <span>Search</span>
                                 <span className="ml-auto text-xs opacity-50 hidden sm:block">⌘K</span>
                             </div>
-                            <button className="glass w-8 h-8 items-center justify-center text-zinc-400 hover:text-zinc-700 shrink-0 hidden md:flex" data-variant="interactive" title="Zwiń panel">
+                            <button
+                                onClick={() => setIsSidebarVisible(false)}
+                                className="glass w-8 h-8 items-center justify-center text-zinc-400 hover:text-zinc-700 shrink-0 hidden md:flex"
+                                data-variant="interactive"
+                                title="Zwiń panel"
+                            >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
                                 </svg>
@@ -258,7 +278,23 @@ export default function DashboardLayout({
                 <main className="flex-1 glass relative z-20 flex flex-col overflow-hidden min-w-0" data-variant="content">
                     {/* Content Header */}
                     <div className="h-12 md:h-14 shrink-0 border-b border-white/20 flex items-center justify-between px-4 md:px-6">
-                        <h1 className="text-base md:text-xl font-semibold text-zinc-800 tracking-tight truncate">Dashboard</h1>
+                        <div className="flex items-center gap-3">
+                            {!isSidebarVisible && (
+                                <button
+                                    onClick={() => setIsSidebarVisible(true)}
+                                    className="glass w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-zinc-700 hidden md:flex"
+                                    data-variant="interactive"
+                                    title="Pokaż panel"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 4.5l7.5 7.5-7.5 7.5m6-15l7.5 7.5-7.5 7.5" />
+                                    </svg>
+                                </button>
+                            )}
+                            <h1 className="text-base md:text-xl font-semibold text-zinc-800 tracking-tight truncate">
+                                {pathname?.startsWith('/dashboard/noter') ? 'Notatki' : 'Dashboard'}
+                            </h1>
+                        </div>
                         <div className="flex items-center gap-2 shrink-0">
                             <button className="glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium text-zinc-600 flex items-center justify-center" data-variant="interactive">
                                 Export
