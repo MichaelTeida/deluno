@@ -40,10 +40,22 @@ export default function NoterSidebarContent() {
 
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pb-3">
+            {/* Noter Header with + New */}
+            <div className="flex items-center justify-between py-3 border-b border-white/10">
+                <h2 className="text-sm font-bold text-zinc-700 dark:text-zinc-200 uppercase tracking-wider">Noter</h2>
+                <button
+                    onClick={() => { addNote(null); setViewMode('notes'); }}
+                    className="glass px-2 py-1 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors flex items-center gap-1"
+                    data-variant="interactive"
+                    title="New note"
+                >
+                    <span>+</span>
+                    <span>New</span>
+                </button>
+            </div>
+
             {/* Dashboard Link */}
-            {/* Dashboard Link */}
-            {/* Dashboard Link */}
-            <div className="py-2">
+            <div>
                 <div
                     onClick={() => window.location.href = '/dashboard'}
                     className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 font-medium transition-colors"
@@ -59,7 +71,7 @@ export default function NoterSidebarContent() {
             <div className="space-y-1">
                 <h3 className="px-3 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2">Favorites</h3>
                 {favoriteNotes.length === 0 ? (
-                    <div className="px-3 py-1.5 text-xs text-zinc-400 dark:text-zinc-500 italic">Brak ulubionych</div>
+                    <div className="px-3 py-1.5 text-xs text-zinc-400 dark:text-zinc-500 italic">No favorites</div>
                 ) : (
                     <div className="space-y-0.5">
                         {favoriteNotes.map(note => (
@@ -80,13 +92,6 @@ export default function NoterSidebarContent() {
             <div className="space-y-1">
                 <div className="flex items-center justify-between px-3 mb-2">
                     <h3 className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Private</h3>
-                    <button
-                        onClick={() => { addNote(null); setViewMode('notes'); }}
-                        className="text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-lg"
-                        title="Add note"
-                    >
-                        +
-                    </button>
                 </div>
                 <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
                     <NoteList
@@ -115,7 +120,7 @@ export default function NoterSidebarContent() {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                     </svg>
-                    Kosz
+                    Trash
                 </button>
             </div>
         </div>

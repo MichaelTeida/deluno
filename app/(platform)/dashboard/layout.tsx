@@ -272,7 +272,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
                             <div className="space-y-1">
                                 <h3 className="px-3 text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Favorites:</h3>
-                                <div className="px-3 py-1.5 text-sm text-zinc-400 italic">Brak elementów</div>
+                                <div className="px-3 py-1.5 text-sm text-zinc-400 italic">No items</div>
                             </div>
                         </div>
                     )}
