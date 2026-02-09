@@ -40,12 +40,12 @@
   /* Dark Mode Overrides (Future Proofing) */
   @media (prefers-color-scheme: dark) {
     :root {
-      --background: #0a0a0a;
-      --foreground: #ededed;
-      --glass-border-color: rgba(255, 255, 255, 0.1);
-      --glass-panel-bg: rgba(0, 0, 0, 0.3);
-      --glass-content-bg: rgba(0, 0, 0, 0.4);
-      --glass-interactive-bg: rgba(255, 255, 255, 0.05);
+      --background: #050508;
+      --foreground: #f0f0f5;
+      --glass-border-color: rgba(255, 255, 255, 0.15);
+      --glass-panel-bg: rgba(15, 15, 25, 0.7);
+      --glass-content-bg: rgba(10, 10, 20, 0.6);
+      --glass-interactive-bg: rgba(255, 255, 255, 0.1);
     }
   }
 }
@@ -58,7 +58,7 @@ body {
     radial-gradient(at 100% 0%, rgba(220, 200, 255, 0.6) 0px, transparent 50%),
     radial-gradient(at 100% 100%, rgba(200, 240, 255, 0.6) 0px, transparent 50%),
     radial-gradient(at 0% 100%, rgba(220, 255, 220, 0.5) 0px, transparent 50%),
-    #f3f4f6;
+    var(--background);
   background-attachment: fixed;
   background-size: cover;
   font-family: var(--font-sans), system-ui, sans-serif;

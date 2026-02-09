@@ -53,14 +53,14 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     type="text"
                     value={note.title}
                     onChange={(e) => onUpdate({ title: e.target.value })}
-                    className="flex-1 text-2xl font-bold text-zinc-800 bg-transparent border-none outline-none placeholder-zinc-400"
+                    className="flex-1 text-2xl font-bold text-zinc-800 dark:text-zinc-100 bg-transparent border-none outline-none placeholder-zinc-400"
                     placeholder="Tytuł notatki..."
                 />
             </div>
 
             {/* Meta Info */}
-            <div className="text-xs text-zinc-400 mb-4">
-                Ostatnia edycja: {note.updatedAt.toLocaleString("pl-PL")}
+            <div className="text-xs text-zinc-400 dark:text-zinc-500 mb-4">
+                Ostatnia edycja: <span suppressHydrationWarning>{note.updatedAt.toLocaleString("pl-PL")}</span>
             </div>
 
             {/* Content */}
@@ -69,7 +69,7 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     ref={contentRef}
                     value={note.content}
                     onChange={(e) => onUpdate({ content: e.target.value })}
-                    className="w-full h-full min-h-[200px] text-zinc-700 bg-transparent border-none outline-none resize-none placeholder-zinc-400 leading-relaxed"
+                    className="w-full h-full min-h-[200px] text-zinc-700 dark:text-zinc-300 bg-transparent border-none outline-none resize-none placeholder-zinc-400 dark:placeholder-zinc-600 leading-relaxed"
                     placeholder="Zacznij pisać..."
                 />
             </div>
