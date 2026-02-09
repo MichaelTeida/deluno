@@ -77,6 +77,9 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, []);
 
+    const [isMounted, setIsMounted] = useState(false);
+    useEffect(() => setIsMounted(true), []);
+
     return (
         <div className="flex flex-col h-dvh w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}>
 
@@ -243,7 +246,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     `}
                     data-variant="panel"
                     style={{
-                        width: isSidebarVisible ? (window.innerWidth >= 768 ? sidebarWidth : '16rem') : 0,
+                        width: isSidebarVisible ? ((isMounted && window.innerWidth >= 768) ? sidebarWidth : '16rem') : 0,
                         opacity: isSidebarVisible ? 1 : 0,
                         transition: isResizing ? 'none' : 'width 300ms ease, opacity 300ms ease, transform 300ms ease'
                     }}

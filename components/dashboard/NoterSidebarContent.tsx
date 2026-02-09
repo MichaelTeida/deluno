@@ -5,12 +5,13 @@ import NoteList from "@/components/noter/NoteList";
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCorners, KeyboardSensor, DragOverlay } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useId } from "react";
 
 export default function NoterSidebarContent() {
     const { notes, activeNoteId, setActiveNoteId, addNote, deleteNote, updateNote, reorderNotes, viewMode, setViewMode } = useNoter();
     const router = useRouter();
     const [activeId, setActiveId] = useState<string | null>(null);
+    const dndId = useId();
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -127,7 +128,7 @@ export default function NoterSidebarContent() {
                         +
                     </button>
                 </div>
-                <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd} onDragStart={(e) => setActiveId(e.active.id as string)}>
+                <DndContext id={dndId} sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd} onDragStart={(e) => setActiveId(e.active.id as string)}>
                     <NoteList
                         notes={notes}
                         rootNotes={rootNotes}
