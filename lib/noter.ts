@@ -20,7 +20,7 @@ export interface NoterState {
 
 export const createNote = (parentId: string | null = null): Note => ({
     id: crypto.randomUUID(),
-    title: "New note",
+    title: "Nowa notatka",
     content: "",
     parentId,
     icon: "📄",

@@ -2,6 +2,7 @@
 
 import { Note } from "@/lib/noter";
 import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import NoteMenu from "./NoteMenu";
 
 interface NoteEditorProps {
@@ -14,6 +15,7 @@ const ICONS = ["📄", "📝", "💡", "📋", "📌", "⭐", "🎯", "📊", "�
 export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
     const [showIconPicker, setShowIconPicker] = useState(false);
     const contentRef = useRef<HTMLTextAreaElement>(null);
+    const buttonRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         if (contentRef.current) {
@@ -23,35 +25,43 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
     }, [note.content]);
 
     return (
-        <div className="h-full flex flex-col px-1 md:px-0">
+        <div className="h-full flex flex-col p-4 md:p-8 max-w-5xl mx-auto w-full">
             {/* Title Row */}
             <div className="flex items-center gap-3 mb-4">
                 {/* Icon Picker */}
                 <div className="relative">
                     <button
+                        ref={buttonRef}
                         onClick={() => !note.isLocked && setShowIconPicker(!showIconPicker)}
                         className={`relative z-10 text-3xl transition-colors rounded-lg p-2 ${note.isLocked ? "opacity-50 cursor-not-allowed" : "hover:bg-white/30 dark:hover:bg-white/10"}`}
                         disabled={note.isLocked}
-                        title={note.isLocked ? "Note is locked" : "Change icon"}
+                        title={note.isLocked ? "Page locked" : "Change icon"}
                     >
                         {note.icon}
                     </button>
-                    {showIconPicker && (
+                    {showIconPicker && createPortal(
                         <>
-                            <div className="fixed inset-0 z-40" onClick={() => setShowIconPicker(false)} />
-                            <div className="absolute top-full left-0 mt-3 glass p-4 grid grid-cols-5 gap-3 z-50 min-w-[240px] shadow-2xl animate-in fade-in slide-in-from-top-2 duration-200" data-variant="panel">
-                                <div className="col-span-5 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 px-1">Choose Icon</div>
+                            <div className="fixed inset-0 z-[9998]" onClick={() => setShowIconPicker(false)} />
+                            <div
+                                className="fixed z-[9999] glass p-3 grid grid-cols-5 gap-2 shadow-2xl"
+                                data-variant="panel"
+                                style={{
+                                    top: buttonRef.current?.getBoundingClientRect().bottom! + 8,
+                                    left: buttonRef.current?.getBoundingClientRect().left!,
+                                }}
+                            >
                                 {ICONS.map(icon => (
                                     <button
                                         key={icon}
                                         onClick={() => { onUpdate({ icon }); setShowIconPicker(false); }}
-                                        className="w-10 h-10 text-2xl flex items-center justify-center hover:bg-white/40 dark:hover:bg-white/20 rounded-xl transition-all hover:scale-110 active:scale-95"
+                                        className="text-xl hover:bg-white/40 dark:hover:bg-white/20 rounded p-1 transition-colors"
                                     >
                                         {icon}
                                     </button>
                                 ))}
                             </div>
-                        </>
+                        </>,
+                        document.body
                     )}
                 </div>
 
@@ -62,7 +72,7 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     readOnly={note.isLocked}
                     onChange={(e) => !note.isLocked && onUpdate({ title: e.target.value })}
                     className={`flex-1 text-2xl font-bold text-zinc-800 dark:text-zinc-100 bg-transparent border-none outline-none placeholder-zinc-400 ${note.isLocked ? "cursor-not-allowed opacity-80" : ""}`}
-                    placeholder={note.isLocked ? "Locked" : "Note title..."}
+                    placeholder={note.isLocked ? "Page Locked" : "Untitled"}
                 />
 
                 {/* Favorite Toggle */}
@@ -77,12 +87,13 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     </svg>
                 </button>
 
-                {/* Context Menu moved to header */}
+                {/* Context Menu */}
+                <NoteMenu />
             </div>
 
             {/* Meta Info */}
             <div className="text-xs text-zinc-400 dark:text-zinc-500 mb-4">
-                Last edited: <span suppressHydrationWarning>{note.updatedAt.toLocaleString("en-US")}</span>
+                Edited: <span suppressHydrationWarning>{note.updatedAt.toLocaleString("en-US")}</span>
             </div>
 
             {/* Content */}
@@ -93,7 +104,7 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     readOnly={note.isLocked}
                     onChange={(e) => !note.isLocked && onUpdate({ content: e.target.value })}
                     className={`w-full h-full min-h-[200px] text-zinc-700 dark:text-zinc-300 bg-transparent border-none outline-none resize-none placeholder-zinc-400 dark:placeholder-zinc-600 leading-relaxed ${note.isLocked ? "cursor-not-allowed opacity-80" : ""}`}
-                    placeholder={note.isLocked ? "Content is locked for editing." : "Start typing..."}
+                    placeholder={note.isLocked ? "Content is locked." : "Start writing..."}
                 />
             </div>
         </div>

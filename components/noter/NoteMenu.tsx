@@ -24,7 +24,7 @@ export default function NoteMenu() {
 
     const handleDuplicate = () => {
         const { id, createdAt, updatedAt, ...rest } = activeNote;
-        addNote(activeNote.parentId, { ...rest, title: `${activeNote.title} (Copy)` });
+        addNote(activeNote.parentId, { ...rest, title: `${activeNote.title} (Kopia)` });
         setIsOpen(false);
     };
 
@@ -39,7 +39,7 @@ export default function NoteMenu() {
     };
 
     const handleTrash = () => {
-        if (confirm("Are you sure you want to move this note to trash?")) {
+        if (confirm("Czy na pewno chcesz przenieść notatkę do kosza?")) {
             deleteNote(activeNote.id);
             setIsOpen(false);
         }
@@ -52,7 +52,7 @@ export default function NoteMenu() {
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(window.location.href);
-        alert("Link copied to clipboard!");
+        alert("Link skopiowany do schowka!");
         setIsOpen(false);
     };
 
@@ -64,7 +64,7 @@ export default function NoteMenu() {
                 onClick={() => setIsOpen(!isOpen)}
                 className={`glass w-6 h-6 flex items-center justify-center text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 rounded-lg transition-colors ${isOpen ? 'bg-white/20 dark:bg-white/10' : ''}`}
                 data-variant="interactive"
-                title="Note options"
+                title="Options"
             >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <circle cx="4" cy="10" r="1.5" />
@@ -74,25 +74,25 @@ export default function NoteMenu() {
             </button>
 
             {isOpen && (
-                <div className="absolute top-full left-0 mt-1 w-56 glass p-2 flex flex-col gap-1 z-50 shadow-xl" data-variant="panel">
+                <div className="absolute top-full right-0 mt-1 w-56 glass p-2 flex flex-col gap-1 z-50 shadow-xl" data-variant="panel">
                     <div className="px-2 py-1 text-[10px] font-bold text-zinc-400 uppercase tracking-widest border-b border-white/10 mb-1">
                         Actions
                     </div>
 
                     <MenuOption onClick={handleDuplicate} icon="📄" label="Duplicate" />
-                    <MenuOption onClick={handleFullWidth} icon={activeNote.isFullWidth ? "⬅➡" : "↔"} label={activeNote.isFullWidth ? "Standard width" : "Full width"} />
-                    <MenuOption onClick={handleLock} icon={activeNote.isLocked ? "🔓" : "🔒"} label={activeNote.isLocked ? "Unlock page" : "Lock page"} />
+                    <MenuOption onClick={handleFullWidth} icon={activeNote.isFullWidth ? "⬅➡" : "↔"} label={activeNote.isFullWidth ? "Standard Width" : "Full Width"} />
+                    <MenuOption onClick={handleLock} icon={activeNote.isLocked ? "🔓" : "🔒"} label={activeNote.isLocked ? "Unlock Page" : "Lock Page"} />
 
                     <div className="h-[1px] bg-white/10 my-1" />
 
-                    <MenuOption onClick={handleCopyLink} icon="🔗" label="Copy link" />
+                    <MenuOption onClick={handleCopyLink} icon="🔗" label="Copy Link" />
                     <MenuOption onClick={handleExportPDF} icon="📤" label="Export to PDF" />
                     <MenuOption onClick={() => setIsOpen(false)} icon="📥" label="Import (BETA)" disabled />
 
                     <div className="h-[1px] bg-white/10 my-1" />
 
                     <MenuOption onClick={() => { }} icon="➡" label="Move to..." disabled />
-                    <MenuOption onClick={handleTrash} icon="🗑️" label="Move to trash" destructive />
+                    <MenuOption onClick={handleTrash} icon="🗑️" label="Move to Trash" destructive />
 
                     <div className="h-[1px] bg-white/10 my-1" />
 

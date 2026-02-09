@@ -4,9 +4,12 @@ import { useNoter } from "@/lib/contexts/NoterContext";
 import NoteList from "@/components/noter/NoteList";
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCorners } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function NoterSidebarContent() {
     const { notes, activeNoteId, setActiveNoteId, addNote, deleteNote, updateNote, reorderNotes, viewMode, setViewMode } = useNoter();
+    const router = useRouter();
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -16,30 +19,51 @@ export default function NoterSidebarContent() {
         })
     );
 
+    // Listen for global "create-new-note" event from layout
+    useEffect(() => {
+        const handleCreateNewNote = () => {
+            addNote(null);
+            setViewMode('notes');
+        };
+
+        document.addEventListener('create-new-note', handleCreateNewNote);
+        return () => document.removeEventListener('create-new-note', handleCreateNewNote);
+    }, [addNote, setViewMode]);
+
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
+
         if (!over) return;
 
         if (active.id !== over.id) {
-            const activeNote = notes.find(n => n.id === active.id);
-            const overNote = notes.find(n => n.id === over.id);
+            const activeNoteIndex = notes.findIndex(n => n.id === active.id);
+            const overNoteIndex = notes.findIndex(n => n.id === over.id);
 
-            if (!activeNote || !overNote) return;
+            if (activeNoteIndex === -1 || overNoteIndex === -1) return;
 
-            // Find indices in the flat array
-            const oldIndex = notes.findIndex(n => n.id === active.id);
-            const newIndex = notes.findIndex(n => n.id === over.id);
+            const activeNote = notes[activeNoteIndex];
+            const overNote = notes[overNoteIndex];
 
-            let newNotes = [...notes];
+            // 1. Reparenting Check
+            // If dragging over a note that is NOT the current parent (and not the same note)
+            // We need to decide if we are dropping *inside* or *next to*
+            // For this simple list, we assume dropping ONTO a note means "make it a child" 
+            // BUT dnd-kit sortable flat list usually implies siblings. 
+            // To properly support robust nesting, we'd need complex collision detection.
+            // CURRENT SIMPLE LOGIC: 
+            // If we drag a note to a new position, we adopt the parent of the neighbor
+            // OR if specific keys are held, we might nest. 
+            // Let's stick to the current "adopt neighbor's parent" for now to keep it usable.
 
-            // If parenting is different, update the active note's parent to match the target
             if (activeNote.parentId !== overNote.parentId) {
-                const updatedActiveNote = { ...activeNote, parentId: overNote.parentId, updatedAt: new Date() };
-                newNotes[oldIndex] = updatedActiveNote;
+                updateNote(activeNote.id, { parentId: overNote.parentId });
             }
 
-            // Move the note in the array to the new position
-            reorderNotes(arrayMove(newNotes, oldIndex, newIndex));
+            // 2. Reorder
+            // We use arrayMove to physically move the item in the array
+            // detailed order reconstruction happens in backend/context usually, 
+            // but here we just update the local state.
+            reorderNotes(arrayMove(notes, activeNoteIndex, overNoteIndex));
         }
     };
 
@@ -48,25 +72,13 @@ export default function NoterSidebarContent() {
 
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pb-3">
-            {/* Noter Header with + New */}
-            <div className="flex items-center gap-3 py-3 border-b border-white/10">
-                <h2 className="text-sm font-bold text-zinc-700 dark:text-zinc-200 uppercase tracking-wider">Noter</h2>
-                <button
-                    onClick={() => { addNote(null); setViewMode('notes'); }}
-                    className="glass px-2 py-1 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors flex items-center gap-1"
-                    data-variant="interactive"
-                    title="New note"
-                >
-                    <span>+</span>
-                    <span>NEW</span>
-                </button>
-            </div>
-
             {/* Dashboard Link */}
-            <div>
+            {/* Dashboard Link */}
+            {/* Dashboard Link */}
+            <div className="py-2">
                 <div
-                    onClick={() => { setViewMode('dashboard'); setActiveNoteId(null); }}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-sm font-medium transition-colors ${viewMode === 'dashboard' ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/20 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100"}`}
+                    onClick={() => router.push('/panel')}
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 font-medium transition-colors"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
@@ -100,6 +112,13 @@ export default function NoterSidebarContent() {
             <div className="space-y-1">
                 <div className="flex items-center justify-between px-3 mb-2">
                     <h3 className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Private</h3>
+                    <button
+                        onClick={() => { addNote(null); setViewMode('notes'); }}
+                        className="text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-lg"
+                        title="Add note"
+                    >
+                        +
+                    </button>
                 </div>
                 <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
                     <NoteList

@@ -9,12 +9,12 @@ export default function TrashView() {
 
     return (
         <div className="h-full flex flex-col p-4 md:p-8">
-            <h1 className="text-3xl font-bold mb-4 text-zinc-800 dark:text-zinc-100 mt-12 md:mt-0">Kosz</h1>
-            <p className="text-zinc-500 mb-8">Notes in trash can be restored or permanently deleted.</p>
+            <h1 className="text-3xl font-bold mb-4 text-zinc-800 dark:text-zinc-100 mt-12 md:mt-0">Trash</h1>
+            <p className="text-zinc-500 mb-8">Notes in Trash can be restored or permanently deleted.</p>
 
             {trashedNotes.length === 0 ? (
                 <div className="flex-1 flex items-center justify-center text-zinc-400 italic">
-                    Kosz jest pusty.
+                    Trash is empty.
                 </div>
             ) : (
                 <div className="space-y-2 overflow-y-auto custom-scrollbar pb-10">
@@ -24,7 +24,7 @@ export default function TrashView() {
                                 <span className="text-xl">{note.icon}</span>
                                 <div className="overflow-hidden">
                                     <div className="font-semibold text-zinc-700 dark:text-zinc-300 truncate">{note.title}</div>
-                                    <div className="text-xs text-zinc-400">Ostatnia zmiana: {note.updatedAt.toLocaleDateString()}</div>
+                                    <div className="text-xs text-zinc-400">Last edited: {note.updatedAt.toLocaleDateString()}</div>
                                 </div>
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
@@ -42,7 +42,7 @@ export default function TrashView() {
                                     }}
                                     className="text-red-500 hover:text-red-700 dark:hover:text-red-400 px-3 py-1.5 text-xs font-medium bg-red-50 dark:bg-red-900/20 rounded-md transition-colors border border-red-200 dark:border-red-900/30"
                                 >
-                                    Delete forever
+                                    Delete Forever
                                 </button>
                             </div>
                         </div>

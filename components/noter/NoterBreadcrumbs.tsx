@@ -52,7 +52,7 @@ export default function NoterBreadcrumbs() {
     return (
         <div className="flex items-center gap-2 text-sm font-medium overflow-hidden">
             <Link
-                href="/panel/noter"
+                href="/dashboard/noter"
                 onClick={() => { setActiveNoteId(null); setViewMode('notes'); }}
                 className="text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             >
@@ -68,7 +68,7 @@ export default function NoterBreadcrumbs() {
                         {isLast ? (
                             <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate max-w-[150px]" data-variant="interactive">
                                 <span className="text-xs opacity-60 mr-1">{note.icon}</span>
-                                {note.title || "Untitled"}
+                                {note.title || "Bez tytułu"}
                             </div>
                         ) : (
                             <button

@@ -87,14 +87,14 @@ const NoteItem = memo(function NoteItem({
                     <button
                         onClick={(e) => { e.stopPropagation(); onAdd(note.id); }}
                         className="w-5 h-5 flex items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400"
-                        title="Add sub-note"
+                        title="Dodaj pod-notatkę"
                     >
                         +
                     </button>
                     <button
                         onClick={(e) => { e.stopPropagation(); onDelete(note.id); }}
                         className="w-5 h-5 flex items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-red-600 dark:hover:text-red-400"
-                        title="Delete"
+                        title="Usuń"
                     >
                         ×
                     </button>

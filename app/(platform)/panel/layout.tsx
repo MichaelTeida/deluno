@@ -17,10 +17,41 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     const [isSidebarVisible, setIsSidebarVisible] = useState(true);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [sidebarWidth, setSidebarWidth] = useState(256);
+    const [isResizing, setIsResizing] = useState(false);
     const pathname = usePathname();
     const { activeNote } = useNoter();
 
-    const isNoter = pathname?.startsWith('/dashboard/noter');
+    const startResizing = (e: React.MouseEvent) => {
+        setIsResizing(true);
+        e.preventDefault();
+    };
+
+    useEffect(() => {
+        if (!isResizing) return;
+
+        const handleMouseMove = (e: MouseEvent) => {
+            let newWidth = e.clientX;
+            // Add constraints
+            if (newWidth < 200) newWidth = 200;
+            if (newWidth > 400) newWidth = 400;
+            setSidebarWidth(newWidth);
+        };
+
+        const handleMouseUp = () => {
+            setIsResizing(false);
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isResizing]);
+
+    const isNoter = pathname?.startsWith('/panel/noter');
     const pageTitle = isNoter
         ? 'Noter'
         : 'Dashboard';
@@ -57,7 +88,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     </button>
 
                     {/* Logo */}
-                    <Link href="/dashboard" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity shrink-0">
+                    <Link href="/panel" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity shrink-0">
                         <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold text-[10px] md:text-xs shadow-lg">
                             DO
                         </div>
@@ -73,7 +104,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             <NoterBreadcrumbs />
                         ) : (
                             <>
-                                <Link href="/dashboard" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
+                                <Link href="/panel" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
                                     Przestrzeń
                                 </Link>
                                 <span className="text-zinc-400">/</span>
@@ -119,7 +150,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 `} data-variant="panel">
                     {/* App Icons */}
                     <div className={`flex flex-col gap-2 w-full flex-1 ${isRailExpanded ? 'items-start' : 'items-center'}`}>
-                        <Link href="/dashboard/noter" className="group relative w-full h-10 flex items-center">
+                        <Link href="/panel/noter" className="group relative w-full h-10 flex items-center">
                             {/* Active Indicator - Strictly hidden when expanded to avoid glitch */}
                             <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-indigo-500 rounded-r-full transition-all duration-300 
                                 ${isRailExpanded ? 'opacity-0 pointer-events-none' : (isNoter ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')}
@@ -192,13 +223,30 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 </aside>
 
                 {/* B. NAVIGATION SIDEBAR */}
-                <nav className={`
-                    ${isSidebarVisible ? 'w-64 md:w-56' : 'w-0 overflow-hidden opacity-0'} 
-                    glass flex flex-col z-[60] md:z-30 shrink-0
-                    fixed md:relative left-0 top-0 h-full md:h-auto
-                    transition-all duration-300 ease-out
-                    ${isNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-                `} data-variant="panel">
+                {/* B. NAVIGATION SIDEBAR */}
+                <nav
+                    className={`
+                        glass flex flex-col z-[60] md:z-30 shrink-0
+                        fixed md:relative left-0 top-0 h-full md:h-auto
+                        transition-transform duration-300 ease-out
+                        ${isNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+                        ${!isSidebarVisible && 'hidden md:flex'}
+                    `}
+                    data-variant="panel"
+                    style={{
+                        width: isSidebarVisible ? (window.innerWidth >= 768 ? sidebarWidth : '16rem') : 0,
+                        opacity: isSidebarVisible ? 1 : 0,
+                        transition: isResizing ? 'none' : 'width 300ms ease, opacity 300ms ease, transform 300ms ease'
+                    }}
+                >
+                    {/* Resizer Handle */}
+                    <div
+                        className="absolute right-0 top-0 bottom-0 w-1 hover:w-1.5 cursor-col-resize z-50 hover:bg-indigo-500/50 transition-colors group"
+                        onMouseDown={startResizing}
+                    >
+                        <div className="absolute top-1/2 right-0.5 w-[3px] h-8 bg-zinc-300 dark:bg-zinc-600 rounded-full group-hover:bg-white" />
+                    </div>
+
                     {/* Mobile Header */}
                     <div className="p-3 border-b border-white/10 flex items-center justify-between md:hidden">
                         <div className="flex items-center gap-2">
@@ -218,14 +266,14 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
                     {/* Mobile App Rail Integrated */}
                     <div className="flex items-center border-b border-white/10 md:hidden p-2 gap-2 overflow-x-auto scrollbar-hide">
-                        <Link href="/dashboard/noter" className={`glass p-2 shrink-0 ${isNoter ? 'text-indigo-600 bg-white/40' : 'text-zinc-500'}`} data-variant="interactive">
+                        <Link href="/panel/noter" className={`glass p-2 shrink-0 ${isNoter ? 'text-indigo-600 bg-white/40' : 'text-zinc-500'}`} data-variant="interactive">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                             </svg>
                         </Link>
-                        <Link href="/dashboard" className="glass p-2 shrink-0 text-zinc-500" data-variant="interactive">
+                        <Link href="/panel" className="glass p-2 shrink-0 text-zinc-500" data-variant="interactive">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                             </svg>
                         </Link>
                     </div>
@@ -263,9 +311,9 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         <NoterSidebarContent />
                     ) : (
                         <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pt-4 pb-3">
-                            <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/20 dark:bg-white/10 cursor-pointer text-sm text-indigo-700 dark:text-indigo-300 font-medium">
+                            <Link href="/panel" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/20 dark:bg-white/10 cursor-pointer text-sm text-indigo-700 dark:text-indigo-300 font-medium">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                                 </svg>
                                 Dashboard
                             </Link>
@@ -308,14 +356,16 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             <h1 className="text-base md:text-xl font-semibold text-zinc-800 dark:text-zinc-100 tracking-tight truncate">
                                 {pageTitle}
                             </h1>
-                        </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                            <button className="glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 flex items-center justify-center" data-variant="interactive">
-                                Export
-                            </button>
-                            <button className="glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none flex items-center justify-center" data-variant="interactive" data-no-shine="true">
+                            <button
+                                onClick={() => document.dispatchEvent(new CustomEvent('create-new-note'))}
+                                className="ml-4 glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none flex items-center justify-center"
+                                data-variant="interactive"
+                                data-no-shine="true"
+                            >
                                 + New
                             </button>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0">
                         </div>
                     </div>
 

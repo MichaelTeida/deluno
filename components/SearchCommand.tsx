@@ -46,7 +46,7 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
     const handleSelect = (noteId: string) => {
         setActiveNoteId(noteId);
         setViewMode('notes');
-        router.push("/panel/noter");
+        router.push("/dashboard/noter");
         onClose();
     };
 
@@ -68,7 +68,7 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="Search notes..."
+                        placeholder="Szukaj notatek..."
                         className="flex-1 bg-transparent border-none outline-none text-lg text-zinc-800 dark:text-zinc-100 placeholder-zinc-400"
                     />
                     <div className="text-xs text-zinc-400 border border-zinc-200 dark:border-zinc-700 rounded px-1.5 py-0.5">
@@ -80,7 +80,7 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
                 <div className="overflow-y-auto p-2">
                     {filteredNotes.length === 0 ? (
                         <div className="p-8 text-center text-zinc-500 dark:text-zinc-400">
-                            {query ? "No results." : "Start typing to search..."}
+                            {query ? "Brak wyników." : "Zacznij pisać, aby wyszukać..."}
                         </div>
                     ) : (
                         <div className="space-y-1">
@@ -93,7 +93,7 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
                                     <span className="text-xl shrink-0 group-hover:scale-110 transition-transform">{note.icon}</span>
                                     <div className="flex-1 min-w-0">
                                         <div className="font-medium text-zinc-700 dark:text-zinc-200 truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                                            {note.title || "Untitled"}
+                                            {note.title || "Bez tytułu"}
                                         </div>
                                         {note.content && (
                                             <div className="text-xs text-zinc-400 truncate opacity-70">
@@ -113,11 +113,11 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
                 {/* Footer */}
                 <div className="px-4 py-2 bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 text-[10px] text-zinc-400 flex justify-between shrink-0">
                     <span>
-                        Found: {filteredNotes.length}
+                        Znaleziono: {filteredNotes.length}
                     </span>
                     <span className="flex gap-2">
-                        <span>↑↓ navigate</span>
-                        <span>↵ select</span>
+                        <span>↑↓ nawigacja</span>
+                        <span>↵ wybierz</span>
                     </span>
                 </div>
             </div>

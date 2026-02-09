@@ -24,8 +24,8 @@ export default function DashboardView() {
         <div className="h-full flex flex-col p-4 md:p-8 overflow-y-auto custom-scrollbar">
             <div className="max-w-4xl mx-auto w-full">
                 {/* Greeting */}
-                <h1 className="text-3xl font-bold mb-2 text-zinc-800 dark:text-zinc-100 mt-12 md:mt-0">Welcome back!</h1>
-                <p className="text-zinc-500 mb-8">Here's your dashboard.</p>
+                <h1 className="text-3xl font-bold mb-2 text-zinc-800 dark:text-zinc-100 mt-12 md:mt-0">Good morning!</h1>
+                <p className="text-zinc-500 mb-8">Here is your dashboard.</p>
 
                 {/* Quick Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -39,7 +39,7 @@ export default function DashboardView() {
                             </svg>
                         </div>
                         <div className="text-left">
-                            <div className="font-semibold">New note</div>
+                            <div className="font-semibold">New Note</div>
                             <div className="text-xs text-indigo-100">Create a new page in Noter</div>
                         </div>
                     </button>
@@ -74,10 +74,10 @@ export default function DashboardView() {
 
                 {/* Recent */}
                 <div>
-                    <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">Recently edited</h2>
+                    <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">Recently Edited</h2>
                     <div className="bg-white/50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
                         {recentNotes.length === 0 ? (
-                            <div className="p-4 text-center text-zinc-400 italic">No notes yet.</div>
+                            <div className="p-4 text-center text-zinc-400 italic">No notes.</div>
                         ) : (
                             <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                                 {recentNotes.map(note => (
