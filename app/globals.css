@@ -260,26 +260,55 @@ html.dark body {
   .btn-glass[data-variant="cta"],
   .glass[data-variant="cta"] {
     background: linear-gradient(135deg,
-        rgba(99, 102, 241, 0.7) 0%,
-        rgba(139, 92, 246, 0.65) 50%,
-        rgba(168, 85, 247, 0.6) 100%);
+        rgba(99, 102, 241, 0.45) 0%,
+        rgba(79, 70, 229, 0.45) 100%);
     color: white;
     font-weight: 600;
-    /* Custom shadow for CTA that still feels "liquid" but stronger */
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.3),
-      0 4px 12px rgba(99, 102, 241, 0.4),
-      0 0 0 1px rgba(255, 255, 255, 0.1);
+    /* Glass border for definition */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* Use standard glass shadow for consistency */
+    box-shadow: var(--effect-glass-shadow);
 
-    /* Re-enable liquid effect */
-    backdrop-filter: blur(3px) saturate(var(--glass-saturation)) url(#glass-clean-v5);
+    /* Re-enable liquid effect with stronger blur */
+    backdrop-filter: blur(12px) saturate(1.6) url(#glass-clean-v5);
 
-    /* Gradient covers it - use semi-transparent if needed, but here we just want the displacement filter */
     height: var(--height-button);
     border-radius: var(--radius-button);
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  /* Specific Hover Logic - Override base .btn-glass hover */
+  .btn-glass[data-variant="cta"]:hover,
+  .glass[data-variant="cta"]:hover {
+    /* Do NOT change background to the mix-blend one */
+    background: linear-gradient(135deg,
+        rgba(99, 102, 241, 0.55) 0%,
+        rgba(79, 70, 229, 0.55) 100%);
+    transform: scale(1.03) translateY(-1px);
+    filter: brightness(1.1);
+    box-shadow: 0 8px 20px -4px rgba(99, 102, 241, 0.5);
+  }
+
+  .btn-glass[data-variant="cta"]:active,
+  .glass[data-variant="cta"]:active {
+    transform: scale(0.97) translateY(0);
+    filter: brightness(1.0);
+  }
+
+  /* Shimmer Animation Keyframes if needed */
+  @keyframes shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+
+    to {
+      transform: translateX(100%);
+    }
   }
 
   .btn-glass[data-variant="cta"]:hover,
