@@ -4,6 +4,7 @@ import { useNoter } from "@/lib/contexts/NoterContext";
 import NoteEditor from "@/components/noter/NoteEditor";
 import DashboardView from "@/components/noter/DashboardView";
 import TrashView from "@/components/noter/TrashView";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export default function NoterPage() {
     const { activeNote, updateNote, viewMode } = useNoter();
@@ -15,12 +16,16 @@ export default function NoterPage() {
     return (
         <div className="h-full">
             {activeNote ? (
-                <NoteEditor
-                    note={activeNote}
-                    onUpdate={(updates) => updateNote(activeNote.id, updates)}
-                />
+                <ErrorBoundary>
+                    <NoteEditor
+                        note={activeNote}
+                        onUpdate={(updates) => updateNote(activeNote.id, updates)}
+                    />
+                </ErrorBoundary>
             ) : (
-                <DashboardView />
+                <ErrorBoundary>
+                    <DashboardView />
+                </ErrorBoundary>
             )}
         </div>
     );

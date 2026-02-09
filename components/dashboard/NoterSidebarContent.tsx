@@ -2,20 +2,24 @@
 
 import { useNoter } from "@/lib/contexts/NoterContext";
 import NoteList from "@/components/noter/NoteList";
-import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCorners } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
+import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCorners, KeyboardSensor, DragOverlay } from "@dnd-kit/core";
+import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function NoterSidebarContent() {
     const { notes, activeNoteId, setActiveNoteId, addNote, deleteNote, updateNote, reorderNotes, viewMode, setViewMode } = useNoter();
     const router = useRouter();
+    const [activeId, setActiveId] = useState<string | null>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
                 distance: 8,
             },
+        }),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
         })
     );
 
@@ -62,9 +66,12 @@ export default function NoterSidebarContent() {
             // 2. Reorder
             // We use arrayMove to physically move the item in the array
             // detailed order reconstruction happens in backend/context usually, 
+            // but here we just            // detailed order reconstruction happens in backend/context usually, 
             // but here we just update the local state.
             reorderNotes(arrayMove(notes, activeNoteIndex, overNoteIndex));
         }
+
+        setActiveId(null);
     };
 
     const rootNotes = notes.filter(n => n.parentId === null && !n.isTrashed);
@@ -78,7 +85,7 @@ export default function NoterSidebarContent() {
             <div className="py-2">
                 <div
                     onClick={() => router.push('/panel')}
-                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 font-medium transition-colors"
+                    className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 font-medium transition-colors select-none"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
@@ -98,7 +105,7 @@ export default function NoterSidebarContent() {
                             <div
                                 key={note.id}
                                 onClick={() => { setActiveNoteId(note.id); setViewMode('notes'); }}
-                                className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-sm transition-colors ${activeNoteId === note.id && viewMode === 'notes' ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/20 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"}`}
+                                className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-sm transition-colors select-none ${activeNoteId === note.id && viewMode === 'notes' ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/20 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"}`}
                             >
                                 <span className="text-xs">{note.icon}</span>
                                 <span className="truncate">{note.title || "Untitled"}</span>
@@ -120,7 +127,7 @@ export default function NoterSidebarContent() {
                         +
                     </button>
                 </div>
-                <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+                <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd} onDragStart={(e) => setActiveId(e.active.id as string)}>
                     <NoteList
                         notes={notes}
                         rootNotes={rootNotes}
@@ -130,6 +137,16 @@ export default function NoterSidebarContent() {
                         onDelete={deleteNote}
                         onToggle={(id) => updateNote(id, { isExpanded: !notes.find(n => n.id === id)?.isExpanded })}
                     />
+                    <DragOverlay>
+                        {activeId ? (
+                            <div className="opacity-80 rotate-2 cursor-grabbing pointer-events-none">
+                                <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg bg-white/40 dark:bg-white/10 text-zinc-800 dark:text-zinc-100 shadow-xl border border-white/20 backdrop-blur-md">
+                                    <span className="text-sm">{notes.find(n => n.id === activeId)?.icon}</span>
+                                    <span className="font-medium text-sm">{notes.find(n => n.id === activeId)?.title || "Untitled"}</span>
+                                </div>
+                            </div>
+                        ) : null}
+                    </DragOverlay>
                 </DndContext>
             </div>
 
@@ -150,6 +167,6 @@ export default function NoterSidebarContent() {
                     Trash
                 </button>
             </div>
-        </div>
+        </div >
     );
 }

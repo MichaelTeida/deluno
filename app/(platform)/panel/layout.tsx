@@ -31,23 +31,32 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         if (!isResizing) return;
 
         const handleMouseMove = (e: MouseEvent) => {
+            // Disable resizing on mobile strictly
+            if (typeof window !== 'undefined' && window.innerWidth < 768) return;
+
             let newWidth = e.clientX;
             // Add constraints
             if (newWidth < 200) newWidth = 200;
-            if (newWidth > 400) newWidth = 400;
+            if (newWidth > 480) newWidth = 480; // Increased max width slightly for large screens
             setSidebarWidth(newWidth);
         };
 
         const handleMouseUp = () => {
             setIsResizing(false);
+            // Optional: Save to local storage here for persistence
         };
 
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
+        // Add cursor style to body to prevent flickering
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
 
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
         };
     }, [isResizing]);
 
@@ -69,7 +78,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     }, []);
 
     return (
-        <div className="flex flex-col h-screen w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}>
+        <div className="flex flex-col h-dvh w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}>
 
             {/* 1. TOP HEADER */}
             <header className="h-14 md:h-16 shrink-0 glass flex items-center justify-between px-3 md:px-6 z-40" data-variant="panel">

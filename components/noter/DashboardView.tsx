@@ -77,7 +77,17 @@ export default function DashboardView() {
                     <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">Recently Edited</h2>
                     <div className="bg-white/50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
                         {recentNotes.length === 0 ? (
-                            <div className="p-4 text-center text-zinc-400 italic">No notes.</div>
+                            <div className="p-8 text-center flex flex-col items-center justify-center gap-2">
+                                <div className="text-4xl">📝</div>
+                                <h3 className="font-medium text-zinc-900 dark:text-zinc-100">No notes yet</h3>
+                                <p className="text-sm text-zinc-500 mb-4">Create your first note to get started.</p>
+                                <button
+                                    onClick={handleCreateNote}
+                                    className="text-indigo-600 hover:text-indigo-700 font-medium text-sm hover:underline"
+                                >
+                                    Create Note &rarr;
+                                </button>
+                            </div>
                         ) : (
                             <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                                 {recentNotes.map(note => (
@@ -87,15 +97,15 @@ export default function DashboardView() {
                                         className="p-3 hover:bg-white/50 dark:hover:bg-white/5 cursor-pointer flex items-center gap-3 transition-colors group"
                                     >
                                         <span className="text-xl group-hover:scale-110 transition-transform">{note.icon}</span>
-                                        <div className="flex-1">
-                                            <div className="font-medium text-zinc-700 dark:text-zinc-200 group-hover:text-indigo-500 transition-colors">
+                                        <div className="flex-1 min-w-0">
+                                            <div className="font-medium text-zinc-700 dark:text-zinc-200 group-hover:text-indigo-500 transition-colors truncate">
                                                 {note.title || "Untitled"}
                                             </div>
-                                            <div className="text-xs text-zinc-400">
-                                                {note.content.substring(0, 50).replace(/\n/g, ' ')}...
+                                            <div className="text-xs text-zinc-400 truncate">
+                                                {(note.content || "").substring(0, 50).replace(/\n/g, ' ') || "No additional text"}
                                             </div>
                                         </div>
-                                        <div className="text-xs text-zinc-400">
+                                        <div className="text-xs text-zinc-400 whitespace-nowrap">
                                             {note.updatedAt.toLocaleDateString()}
                                         </div>
                                     </div>
