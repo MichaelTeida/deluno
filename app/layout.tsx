@@ -14,8 +14,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Deluno",
-  description: "SaaS Platform",
+  title: "Deluno | Twoja przestrzeń do pracy",
+  description: "Organizuj projekty, notatki i zadania w jednym miejscu. Nowoczesna platforma SaaS z unikalnym designem Liquid Glass.",
+  keywords: ["notatki", "projekty", "zarządzanie zadaniami", "SaaS", "produktywność", "Deluno"],
+  authors: [{ name: "Deluno Team" }],
+  openGraph: {
+    title: "Deluno | Twoja przestrzeń do pracy",
+    description: "Nowoczesna platforma do organizacji pracy.",
+    type: "website",
+  }
 };
 
 export default function RootLayout({

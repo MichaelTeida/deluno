@@ -48,7 +48,7 @@ export default function DashboardLayout({
                     {/* Breadcrumbs - Simplified on mobile */}
                     <nav className="hidden lg:flex items-center gap-2 text-sm font-medium overflow-hidden">
                         <div className="glass px-3 py-1.5 text-zinc-600 hover:text-indigo-600 transition-colors truncate" data-variant="interactive">
-                            Workspace
+                            Przestrzeń
                         </div>
                         <span className="text-zinc-400">/</span>
                         <div className="glass px-3 py-1.5 text-zinc-600 hover:text-indigo-600 transition-colors truncate" data-variant="interactive">
