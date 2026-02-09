@@ -88,7 +88,7 @@ export default function HomePage() {
             Join the alpha test and try Deluno for free.
           </p>
           <Link
-            href="/dashboard"
+            href="/panel"
             className="glass h-12 px-8 text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none inline-flex items-center justify-center rounded-full transition-colors"
             data-variant="interactive"
             data-no-shine="true"

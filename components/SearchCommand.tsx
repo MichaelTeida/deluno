@@ -46,7 +46,7 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
     const handleSelect = (noteId: string) => {
         setActiveNoteId(noteId);
         setViewMode('notes');
-        router.push("/dashboard/noter");
+        router.push("/panel/noter");
         onClose();
     };
 

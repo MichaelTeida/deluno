@@ -52,7 +52,7 @@ export default function NoterBreadcrumbs() {
     return (
         <div className="flex items-center gap-2 text-sm font-medium overflow-hidden">
             <Link
-                href="/dashboard/noter"
+                href="/panel/noter"
                 onClick={() => { setActiveNoteId(null); setViewMode('notes'); }}
                 className="text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             >

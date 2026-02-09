@@ -20,7 +20,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const { activeNote } = useNoter();
 
-    const isNoter = pathname?.startsWith('/dashboard/noter');
+    const isNoter = pathname?.startsWith('/panel/noter');
     const pageTitle = isNoter
         ? 'Noter'
         : 'Dashboard';
@@ -57,7 +57,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     </button>
 
                     {/* Logo */}
-                    <Link href="/dashboard" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity shrink-0">
+                    <Link href="/panel" className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity shrink-0">
                         <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold text-[10px] md:text-xs shadow-lg">
                             DO
                         </div>
@@ -73,7 +73,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             <NoterBreadcrumbs />
                         ) : (
                             <>
-                                <Link href="/dashboard" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
+                                <Link href="/panel" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
                                     Workspace
                                 </Link>
                                 <span className="text-zinc-400">/</span>
@@ -119,7 +119,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 `} data-variant="panel">
                     {/* App Icons */}
                     <div className={`flex flex-col gap-2 w-full flex-1 ${isRailExpanded ? 'items-start' : 'items-center'}`}>
-                        <Link href="/dashboard/noter" className="group relative w-full h-10 flex items-center">
+                        <Link href="/panel/noter" className="group relative w-full h-10 flex items-center">
                             {/* Active Indicator - Strictly hidden when expanded to avoid glitch */}
                             <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-indigo-500 rounded-r-full transition-all duration-300 
                                 ${isRailExpanded ? 'opacity-0 pointer-events-none' : (isNoter ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')}
@@ -218,12 +218,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
                     {/* Mobile App Rail Integrated */}
                     <div className="flex items-center border-b border-white/10 md:hidden p-2 gap-2 overflow-x-auto scrollbar-hide">
-                        <Link href="/dashboard/noter" className={`glass p-2 shrink-0 ${isNoter ? 'text-indigo-600 bg-white/40' : 'text-zinc-500'}`} data-variant="interactive">
+                        <Link href="/panel/noter" className={`glass p-2 shrink-0 ${isNoter ? 'text-indigo-600 bg-white/40' : 'text-zinc-500'}`} data-variant="interactive">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                             </svg>
                         </Link>
-                        <Link href="/dashboard" className="glass p-2 shrink-0 text-zinc-500" data-variant="interactive">
+                        <Link href="/panel" className="glass p-2 shrink-0 text-zinc-500" data-variant="interactive">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                             </svg>
@@ -263,7 +263,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         <NoterSidebarContent />
                     ) : (
                         <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pt-4 pb-3">
-                            <Link href="/dashboard" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/20 dark:bg-white/10 cursor-pointer text-sm text-indigo-700 dark:text-indigo-300 font-medium">
+                            <Link href="/panel" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/20 dark:bg-white/10 cursor-pointer text-sm text-indigo-700 dark:text-indigo-300 font-medium">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                                 </svg>

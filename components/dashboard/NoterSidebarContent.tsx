@@ -57,7 +57,7 @@ export default function NoterSidebarContent() {
             {/* Dashboard Link */}
             <div>
                 <div
-                    onClick={() => window.location.href = '/dashboard'}
+                    onClick={() => window.location.href = '/panel'}
                     className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 font-medium transition-colors"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
