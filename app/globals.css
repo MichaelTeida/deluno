@@ -117,16 +117,38 @@ body {
     background: var(--glass-interactive-bg);
     border-radius: var(--radius-button);
     cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .glass[data-variant="interactive"]:hover {
-    background: rgba(255, 255, 255, 0.5);
-    transform: translateY(-1px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow:
+      0 12px 24px rgba(0, 0, 0, 0.1),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.3);
   }
 
-  /* 3. The Liquid Shine (Pseudo-element) */
-  /* Applied to any .glass element that doesn't explicitly opt-out */
+  .dark .glass[data-variant="interactive"]:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  /* 3. The Liquid Shine (Pseudo-elements) */
+  .glass:not([data-no-shine="true"])::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.5), transparent 50%, rgba(255, 255, 255, 0.1));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 3;
+  }
+
   .glass:not([data-no-shine="true"])::after {
     content: '';
     position: absolute;
@@ -135,19 +157,19 @@ body {
 
     /* The Liquid Gradient */
     background: linear-gradient(var(--shine-angle),
-        rgba(255, 255, 255, 0.4) 0%,
-        rgba(255, 255, 255, 0.1) 40%,
-        transparent 60%);
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0) 50%,
+        rgba(255, 255, 255, 0.1) 100%);
 
     /* Internal Shadows for Gel/Liquid look */
     box-shadow:
-      inset -10px -8px 0px -11px rgba(255, 255, 255, 0.5),
-      inset 0px -9px 0px -8px rgba(255, 255, 255, 0.6);
+      inset 0 20px 40px rgba(255, 255, 255, 0.1),
+      inset 0 -10px 20px rgba(0, 0, 0, 0.05);
 
     opacity: var(--shine-opacity);
     pointer-events: none;
     z-index: 2;
-    mix-blend-mode: overlay;
+    mix-blend-mode: soft-light;
   }
 
   /* Scrollbar Styling */
