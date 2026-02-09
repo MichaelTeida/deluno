@@ -13,8 +13,8 @@ interface NoterContextType {
     restoreNote: (id: string) => void;
     permanentlyDeleteNote: (id: string) => void;
     reorderNotes: (newNotes: Note[]) => void;
-    viewMode: 'notes' | 'trash';
-    setViewMode: (mode: 'notes' | 'trash') => void;
+    viewMode: 'notes' | 'trash' | 'dashboard';
+    setViewMode: (mode: 'notes' | 'trash' | 'dashboard') => void;
     activeNote: Note | null;
 }
 
@@ -29,7 +29,7 @@ const initialNotes: Note[] = [
 export function NoterProvider({ children }: { children: React.ReactNode }) {
     const [notes, setNotes] = useState<Note[]>(initialNotes);
     const [activeNoteId, setActiveNoteId] = useState<string | null>("1");
-    const [viewMode, setViewMode] = useState<'notes' | 'trash'>('notes');
+    const [viewMode, setViewMode] = useState<'notes' | 'trash' | 'dashboard'>('notes');
 
     const activeNote = notes.find(n => n.id === activeNoteId) || null;
 

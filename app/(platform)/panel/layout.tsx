@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { NoterProvider, useNoter } from "@/lib/contexts/NoterContext";
 import NoterSidebarContent from "@/components/dashboard/NoterSidebarContent";
@@ -21,6 +21,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     const [isResizing, setIsResizing] = useState(false);
     const pathname = usePathname();
     const { activeNote } = useNoter();
+    const { user } = useUser();
 
     const startResizing = (e: React.MouseEvent) => {
         setIsResizing(true);
@@ -126,12 +127,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         ) : (
                             <>
                                 <Link href="/panel" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
-                                    Przestrzeń
+                                    {user?.firstName || user?.username || 'Workspace'}
                                 </Link>
                                 <span className="text-zinc-400">/</span>
                                 <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate" data-variant="interactive">
                                     <span className="text-xs opacity-60 mr-1">📊</span>
-                                    Dashboard
+                                    Panel
                                 </div>
                             </>
                         )}
@@ -140,7 +141,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     {/* Compact breadcrumb on tablet */}
                     <div className="hidden md:flex lg:hidden items-center">
                         <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 text-sm" data-variant="interactive">
-                            {isNoter ? '📝 Notatki' : '📊 Dashboard'}
+                            {isNoter ? '📝 Notes' : '📊 Panel'}
                         </div>
                     </div>
                 </div>
@@ -171,6 +172,26 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 `} data-variant="panel">
                     {/* App Icons */}
                     <div className={`flex flex-col gap-2 w-full flex-1 ${isRailExpanded ? 'items-start' : 'items-center'}`}>
+                        {/* Apps - Home */}
+                        <Link href="/panel" className="group relative w-full h-10 flex items-center">
+                            <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-indigo-500 rounded-r-full transition-all duration-300 
+                                ${isRailExpanded ? 'opacity-0 pointer-events-none' : (!isNoter ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')}
+                            `}></div>
+                            <div className={`flex h-10 w-full items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`}>
+                                <div className={`w-10 h-10 glass flex items-center justify-center shrink-0 transition-all ${!isNoter ? 'text-indigo-600 bg-white/40 dark:bg-white/10' : 'text-zinc-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400'}`} data-variant="interactive">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                    </svg>
+                                </div>
+                                {isRailExpanded && (
+                                    <span className="text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden ml-4">
+                                        Apps
+                                    </span>
+                                )}
+                            </div>
+                        </Link>
+
+                        {/* Noter */}
                         <Link href="/panel/noter" className="group relative w-full h-10 flex items-center">
                             {/* Active Indicator - Strictly hidden when expanded to avoid glitch */}
                             <div className={`absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-indigo-500 rounded-r-full transition-all duration-300 
@@ -196,7 +217,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         <button
                             onClick={() => setIsRailExpanded(!isRailExpanded)}
                             className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`}
-                            title={isRailExpanded ? "Zwiń" : "Rozwiń"}
+                            title={isRailExpanded ? "Collapse" : "Expand"}
                         >
                             <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
                                 <svg className={`w-5 h-5 transition-transform ${isRailExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -205,7 +226,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             </div>
                             {isRailExpanded && (
                                 <span className={`text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden ml-4`}>
-                                    Zwiń
+                                    Collapse
                                 </span>
                             )}
                         </button>
@@ -213,7 +234,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         <button
                             onClick={() => setIsSettingsOpen(true)}
                             className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`}
-                            title="Ustawienia"
+                            title="Settings"
                         >
                             <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -223,12 +244,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             </div>
                             {isRailExpanded && (
                                 <span className="ml-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden">
-                                    Ustawienia
+                                    Settings
                                 </span>
                             )}
                         </button>
 
-                        <Link href="/" className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`} title="Strona główna">
+                        <Link href="/" className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`} title="Home">
                             <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -236,7 +257,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             </div>
                             {isRailExpanded && (
                                 <span className="ml-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden">
-                                    Główna
+                                    Home
                                 </span>
                             )}
                         </Link>
@@ -318,7 +339,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                                 onClick={() => setIsSidebarVisible(false)}
                                 className="glass w-8 h-8 items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-200 shrink-0 hidden md:flex"
                                 data-variant="interactive"
-                                title="Zwiń panel"
+                                title="Collapse panel"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
@@ -332,31 +353,15 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         <NoterSidebarContent />
                     ) : (
                         <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pt-4 pb-3">
-                            <Link href="/panel" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-white/20 dark:bg-white/10 cursor-pointer text-sm text-indigo-700 dark:text-indigo-300 font-medium">
+                            <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm font-medium">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
                                 </svg>
-                                Dashboard
-                            </Link>
-
-                            <div className="space-y-1">
-                                <h3 className="px-3 text-xs font-semibold text-zinc-400 uppercase tracking-wider mb-2">Favorites:</h3>
-                                <div className="px-3 py-1.5 text-sm text-zinc-400 italic">Brak elementów</div>
+                                Panel
                             </div>
                         </div>
                     )}
 
-                    {/* Trash Row (Optional, if not already in content) */}
-                    {!isNoter && (
-                        <div className="p-3 border-t border-white/10 mt-auto">
-                            <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 cursor-pointer text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 font-medium transition-colors">
-                                <svg className="w-4 h-4 opacity-60 dark:opacity-50 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                                </svg>
-                                <span className="truncate">Trash</span>
-                            </div>
-                        </div>
-                    )}
                 </nav>
 
                 {/* C. MAIN CONTENT */}
