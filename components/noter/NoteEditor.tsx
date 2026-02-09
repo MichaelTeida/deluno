@@ -80,24 +80,23 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     <HeaderActionsPortal note={note} onUpdate={onUpdate} />
                 )}
             </div>
-        </div>
 
-            {/* Meta Info */ }
-    <div className="text-xs text-zinc-400 dark:text-zinc-500 mb-4">
-        Edited: <span suppressHydrationWarning>{note.updatedAt.toLocaleString("en-US")}</span>
-    </div>
+            {/* Meta Info */}
+            <div className="text-xs text-zinc-400 dark:text-zinc-500 mb-4">
+                Edited: <span suppressHydrationWarning>{note.updatedAt.toLocaleString("en-US")}</span>
+            </div>
 
-    {/* Content */ }
-    <div className="flex-1 relative">
-        <textarea
-            ref={contentRef}
-            value={note.content}
-            readOnly={note.isLocked}
-            onChange={(e) => !note.isLocked && onUpdate({ content: e.target.value })}
-            className={`w-full h-full min-h-[200px] text-zinc-700 dark:text-zinc-300 bg-transparent border-none outline-none resize-none placeholder-zinc-400 dark:placeholder-zinc-600 leading-relaxed ${note.isLocked ? "cursor-not-allowed opacity-80" : ""}`}
-            placeholder={note.isLocked ? "Content is locked." : "Start writing..."}
-        />
-    </div>
+            {/* Content */}
+            <div className="flex-1 relative">
+                <textarea
+                    ref={contentRef}
+                    value={note.content}
+                    readOnly={note.isLocked}
+                    onChange={(e) => !note.isLocked && onUpdate({ content: e.target.value })}
+                    className={`w-full h-full min-h-[200px] text-zinc-700 dark:text-zinc-300 bg-transparent border-none outline-none resize-none placeholder-zinc-400 dark:placeholder-zinc-600 leading-relaxed ${note.isLocked ? "cursor-not-allowed opacity-80" : ""}`}
+                    placeholder={note.isLocked ? "Content is locked." : "Start writing..."}
+                />
+            </div>
         </div >
     );
 }
