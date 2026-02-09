@@ -36,6 +36,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
             let newWidth = e.clientX;
             // Add constraints
+            if (newWidth < 100) {
+                // Snap to close
+                setIsSidebarVisible(false);
+                setIsResizing(false);
+                return;
+            }
             if (newWidth < 200) newWidth = 200;
             if (newWidth > 480) newWidth = 480; // Increased max width slightly for large screens
             setSidebarWidth(newWidth);
@@ -44,6 +50,9 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         const handleMouseUp = () => {
             setIsResizing(false);
             // Optional: Save to local storage here for persistence
+            if (sidebarWidth >= 200) { // Only save if visible
+                // save sidebarWidth
+            }
         };
 
         window.addEventListener('mousemove', handleMouseMove);
