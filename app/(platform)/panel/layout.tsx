@@ -99,9 +99,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 {/* Left: Mobile Menu + Logo & Breadcrumbs */}
                 <div className="flex items-center gap-2 md:gap-4 lg:gap-6 overflow-hidden min-w-0 pr-2">
                     {/* Mobile Menu Toggle */}
+                    {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsNavOpen(!isNavOpen)}
-                        className="md:hidden glass w-9 h-9 flex items-center justify-center text-zinc-600"
+                        className="md:hidden glass w-10 h-10 flex items-center justify-center text-zinc-600 rounded-full"
                         data-variant="interactive"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -126,12 +127,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             <NoterBreadcrumbs />
                         ) : (
                             <>
-                                <Link href="/panel" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
+                                <Link href="/panel" className="btn-glass px-4 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
                                     {user?.firstName || user?.username || 'Workspace'}
                                 </Link>
                                 <span className="text-zinc-400">/</span>
-                                <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate" data-variant="interactive">
-                                    <span className="text-xs opacity-60 mr-1">📊</span>
+                                <div className="btn-glass px-4 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate" data-variant="interactive">
+                                    <span className="text-xs opacity-60 mr-2">📊</span>
                                     Panel
                                 </div>
                             </>
@@ -139,8 +140,9 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     </nav>
 
                     {/* Compact breadcrumb on tablet */}
+                    {/* Compact breadcrumb on tablet */}
                     <div className="hidden md:flex lg:hidden items-center">
-                        <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 text-sm" data-variant="interactive">
+                        <div className="btn-glass px-4 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 text-sm" data-variant="interactive">
                             {isNoter ? '📝 Notes' : '📊 Panel'}
                         </div>
                     </div>
@@ -384,16 +386,18 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             <h1 className="text-base md:text-xl font-semibold text-zinc-800 dark:text-zinc-100 tracking-tight truncate">
                                 {pageTitle}
                             </h1>
-                            <button
-                                onClick={() => document.dispatchEvent(new CustomEvent('create-new-note'))}
-                                className="ml-4 glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm flex items-center justify-center gap-1.5"
-                                data-variant="cta"
-                            >
-                                <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                </svg>
-                                <span>New</span>
-                            </button>
+                            {!pathname?.endsWith('/panel') && (
+                                <button
+                                    onClick={() => document.dispatchEvent(new CustomEvent('create-new-note'))}
+                                    className="ml-4 btn-glass gap-2"
+                                    data-variant="cta"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                    </svg>
+                                    <span>New</span>
+                                </button>
+                            )}
                         </div>
                         <div className="flex items-center gap-2 shrink-0" id="header-actions">
                             {/* Portal Target for Note Actions */}

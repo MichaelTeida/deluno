@@ -57,9 +57,9 @@ export const NoteItem = memo(function NoteItem({
     return (
         <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
             <div
-                className={`group flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer text-sm transition-colors min-w-0 select-none ${isActive ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/30 dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-300"
+                className={`group flex items-center gap-2 px-2 rounded-lg cursor-pointer text-sm transition-colors min-w-0 select-none ${isActive ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/30 dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-300"
                     }`}
-                style={{ paddingLeft: `${8 + depth * 24}px` }}
+                style={{ paddingLeft: `${8 + depth * 24}px`, height: 'var(--height-button)' }}
                 onClick={() => onSelect(note.id)}
             >
                 {/* Expand/Collapse */}

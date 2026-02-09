@@ -8,73 +8,79 @@
     --foreground: #171717;
 
     /* --- THEME ENGINE: CORE TOKENS --- */
-
-    /* 1. Layout & Spacing */
     --gap-main: 1rem;
-    /* Gap between floating islands */
     --radius-panel: 1.5rem;
-    /* Rounded corners (24px) */
     --radius-button: 9999px;
-    /* Pills */
+    --height-button: 2.5rem;
+    /* Standard 40px height for all buttons */
 
-    /* 2. Glass Base Properties */
-    --glass-border-color: rgba(255, 255, 255, 0.15);
-    /* More subtle */
-    --glass-border-width: 1px;
-    --glass-blur: 24px;
-    /* Increased blur */
-    /* Frosted effect intensity */
-    --glass-saturate: 180%;
-    /* Vibrancy */
+    /* --- LIQUID GLASS v5: VARIABLES --- */
+    /* Light Mode Palette */
+    --c-glass: #bbbbbc;
+    --c-light: #fff;
+    --c-dark: #000;
 
-    /* 3. Panel Colors (Aurora Theme) */
-    --glass-panel-bg: rgba(255, 255, 255, 0.65);
-    /* Slightly more opaque for better contrast */
-    /* Rail/Sidebar */
-    --glass-content-bg: rgba(255, 255, 255, 0.75);
-    /* Main Content */
-    --glass-interactive-bg: rgba(255, 255, 255, 0.4);
-    /* Buttons */
+    --glass-reflex-dark: 1;
+    --glass-reflex-light: 1;
+    --glass-saturation: 150%;
 
-    /* 4. Liquid Shine Effect (Toggleable) */
-    /* Set to 0 to disable liquid effect globally */
-    --shine-opacity: 0.3;
-    /* Subtle shine */
-    --shine-angle: 125deg;
+    /* Mixes for consistent application */
+    --effect-glass-bg: color-mix(in srgb, var(--c-glass) 16%, transparent);
+    --effect-glass-border: color-mix(in srgb, var(--c-light) 40%, transparent);
+    /* Simplified for border property */
+
+    /* The Complex Shadow Layering from v5 */
+    --effect-glass-shadow:
+      inset 0 0 0 1px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light)*10%), transparent),
+      inset 1.8px 3px 0 -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light)*90%), transparent),
+      inset -2px -2px 0 -2px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light)*80%), transparent),
+      inset -3px -8px 1px -6px color-mix(in srgb, var(--c-light) calc(var(--glass-reflex-light)*60%), transparent),
+      inset -0.3px -1px 4px 0 color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark)*12%), transparent),
+      inset -1.5px 2.5px 0 -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark)*20%), transparent),
+      inset 0 3px 4px -2px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark)*20%), transparent),
+      inset 2px -6.5px 1px -4px color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark)*10%), transparent),
+      0 1px 5px 0 color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark)*10%), transparent),
+      0 6px 16px 0 color-mix(in srgb, var(--c-dark) calc(var(--glass-reflex-dark)*8%), transparent);
   }
 
   /* Light Mode - explicit selector for next-themes */
   .light {
     --background: #ffffff;
     --foreground: #171717;
-    --glass-border-color: rgba(255, 255, 255, 0.15);
-    --glass-panel-bg: rgba(255, 255, 255, 0.65);
-    --glass-content-bg: rgba(255, 255, 255, 0.75);
-    --glass-interactive-bg: rgba(255, 255, 255, 0.4);
-    --shine-opacity: 0.3;
+    --c-glass: #bbbbbc;
+    --c-light: #fff;
+    --c-dark: #000;
   }
 
   /* Dark Mode Overrides - Class selector for next-themes */
   .dark {
     --background: #000000;
     --foreground: #f5f5f7;
-    --glass-border-color: rgba(255, 255, 255, 0.08);
-    --glass-panel-bg: rgba(28, 28, 30, 0.75);
-    --glass-content-bg: rgba(28, 28, 30, 0.65);
-    --glass-interactive-bg: rgba(255, 255, 255, 0.06);
-    --shine-opacity: 0.15;
+
+    /* Dark Mode Palette Adjustments */
+    --c-glass: #1e1e24;
+    /* Darker base for glass */
+    --c-light: #ffffff;
+    /* Highlights remain white */
+    --c-dark: #000000;
+    /* Shadows remain black */
+
+    --glass-reflex-dark: 0.8;
+    /* Slightly reduced shadow intensity */
+    --glass-reflex-light: 0.6;
+    /* Reduced highlight intensity */
   }
 
-  /* Dark Mode Overrides - Media query fallback for system preference */
+  /* Dark Mode Overrides - Media query fallback */
   @media (prefers-color-scheme: dark) {
     :root:not(.light) {
       --background: #000000;
       --foreground: #f5f5f7;
-      --glass-border-color: rgba(255, 255, 255, 0.08);
-      --glass-panel-bg: rgba(28, 28, 30, 0.75);
-      --glass-content-bg: rgba(28, 28, 30, 0.65);
-      --glass-interactive-bg: rgba(255, 255, 255, 0.06);
-      --shine-opacity: 0.15;
+      --c-glass: #1e1e24;
+      --c-light: #ffffff;
+      --c-dark: #000000;
+      --glass-reflex-dark: 0.8;
+      --glass-reflex-light: 0.6;
     }
   }
 }
@@ -94,10 +100,9 @@ body {
   min-height: 100vh;
   margin: 0;
   overflow: hidden;
-  /* App-like feel */
 }
 
-/* Dark mode specific gradients for stronger immersion */
+/* Dark mode specific gradients */
 .dark body,
 html.dark body {
   background:
@@ -123,126 +128,124 @@ html.dark body {
 
 @layer components {
 
-  /* 1. The Universal Glass Class */
-  .glass {
+  /* 1. The Liquid Glass v5 Class (Base) */
+  .glass,
+  .liquid-glass {
     position: relative;
-    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-    border: var(--glass-border-width) solid var(--glass-border-color);
-    box-shadow:
-      0 10px 40px -10px rgba(0, 0, 0, 0.08),
-      0 0 0 1px rgba(255, 255, 255, 0.1) inset;
-    /* Inner glow */
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    /* Smoother bezier */
+    /* overflow: hidden; -- Removed to allow shadows/tooltips if needed, add manually if needed */
+    background: var(--effect-glass-bg);
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    backdrop-filter: blur(3px) saturate(var(--glass-saturation)) url(#glass-clean-v5);
+    -webkit-backdrop-filter: blur(3px) saturate(var(--glass-saturation)) url(#glass-clean-v5);
+    box-shadow: var(--effect-glass-shadow);
+    border: 0;
+    /* Box-shadow handles the border feel */
   }
 
-  /* 2. Variants via Data Modifier */
+  /* 2. Variants */
 
-  /* Panel: Used for Rail, Sidebar, Content Areas */
+  /* Panel: Rail, Sidebar */
   .glass[data-variant="panel"] {
-    background: var(--glass-panel-bg);
     border-radius: var(--radius-panel);
-    /* Inner light for depth */
-    box-shadow:
-      0 4px 24px -1px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
   }
 
-  /* Content: Used for the main workspace */
+  /* Content: Main workspace */
   .glass[data-variant="content"] {
-    background: var(--glass-content-bg);
     border-radius: var(--radius-panel);
-    box-shadow:
-      0 4px 24px -1px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
 
-  /* Interactive: Buttons, Pills, Cards */
+  /* Interactive: Cards, Elements */
   .glass[data-variant="interactive"] {
-    background: var(--glass-interactive-bg);
-    border-radius: var(--radius-button);
     cursor: pointer;
+    border-radius: var(--radius-button);
+    /* Default to pill for interactive elements inside panels */
   }
 
   .glass[data-variant="interactive"]:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: color-mix(in srgb, var(--c-glass) 25%, transparent);
     transform: translateY(-1px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 
-  /* CTA: Primary Action Buttons (e.g., "+ New") */
+  /* Card Variant (Square-ish) */
+  .glass[data-variant="card"] {
+    border-radius: var(--radius-panel);
+    cursor: pointer;
+  }
+
+  .glass[data-variant="card"]:hover {
+    background: color-mix(in srgb, var(--c-glass) 20%, transparent);
+    transform: translateY(-2px);
+  }
+
+  /* 3. Button Component (.btn-glass) - The Standard */
+  .btn-glass {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: var(--height-button);
+    padding: 0 1.25rem;
+    border-radius: var(--radius-button);
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+
+    /* Liquid Glass Effect */
+    background: var(--effect-glass-bg);
+    backdrop-filter: blur(3px) saturate(var(--glass-saturation)) url(#glass-clean-v5);
+    box-shadow: var(--effect-glass-shadow);
+    color: var(--foreground);
+    text-decoration: none;
+    user-select: none;
+  }
+
+  .btn-glass:hover {
+    background: color-mix(in srgb, var(--c-glass) 30%, transparent);
+    transform: translateY(-1px);
+  }
+
+  .btn-glass:active {
+    transform: translateY(0);
+  }
+
+  /* CTA Variant for Buttons - Inherently mostly opaque/gradient */
+  .btn-glass[data-variant="cta"],
   .glass[data-variant="cta"] {
     background: linear-gradient(135deg,
         rgba(99, 102, 241, 0.9) 0%,
         rgba(139, 92, 246, 0.85) 50%,
         rgba(168, 85, 247, 0.8) 100%);
-    border-radius: var(--radius-button);
-    border-color: rgba(255, 255, 255, 0.25);
-    cursor: pointer;
     color: white;
     font-weight: 600;
+    /* Custom shadow for CTA that still feels "liquid" but stronger */
     box-shadow:
-      0 4px 16px -2px rgba(99, 102, 241, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 4px 12px rgba(99, 102, 241, 0.4),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
+
+    /* Re-enable liquid effect */
+    backdrop-filter: blur(3px) saturate(var(--glass-saturation)) url(#glass-clean-v5);
+
+    /* Gradient covers it - use semi-transparent if needed, but here we just want the displacement filter */
+    height: var(--height-button);
+    border-radius: var(--radius-button);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
+  .btn-glass[data-variant="cta"]:hover,
   .glass[data-variant="cta"]:hover {
     background: linear-gradient(135deg,
         rgba(99, 102, 241, 1) 0%,
         rgba(139, 92, 246, 0.95) 50%,
         rgba(168, 85, 247, 0.9) 100%);
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-1px);
     box-shadow:
-      0 8px 24px -4px rgba(99, 102, 241, 0.5),
-      0 0 20px rgba(139, 92, 246, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  }
-
-  .glass[data-variant="cta"]:active {
-    transform: translateY(0) scale(0.98);
-  }
-
-  .dark .glass[data-variant="cta"] {
-    background: linear-gradient(135deg,
-        rgba(99, 102, 241, 0.85) 0%,
-        rgba(139, 92, 246, 0.8) 50%,
-        rgba(168, 85, 247, 0.75) 100%);
-    box-shadow:
-      0 4px 20px -2px rgba(99, 102, 241, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  }
-
-  .dark .glass[data-variant="cta"]:hover {
-    box-shadow:
-      0 8px 28px -4px rgba(99, 102, 241, 0.6),
-      0 0 24px rgba(139, 92, 246, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  }
-
-  /* 3. The Liquid Shine (Pseudo-element) */
-  /* Applied to any .glass element that doesn't explicitly opt-out */
-  .glass:not([data-no-shine="true"])::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-
-    /* The Liquid Gradient */
-    background: linear-gradient(var(--shine-angle),
-        rgba(255, 255, 255, 0.4) 0%,
-        rgba(255, 255, 255, 0.1) 40%,
-        transparent 60%);
-
-    /* Internal Shadows for Gel/Liquid look */
-    box-shadow:
-      inset -10px -8px 0px -11px rgba(255, 255, 255, 0.5),
-      inset 0px -9px 0px -8px rgba(255, 255, 255, 0.6);
-
-    opacity: var(--shine-opacity);
-    pointer-events: none;
-    z-index: 2;
-    mix-blend-mode: overlay;
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      0 8px 20px rgba(99, 102, 241, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.2);
   }
 
   /* Scrollbar Styling */
@@ -273,63 +276,9 @@ html.dark body {
     background: rgba(0, 0, 0, 0.2);
   }
 
-  /* Global Focus Ring for Accessibility */
+  /* Global Focus Ring */
   :focus-visible {
     outline: 2px solid theme('colors.indigo.500');
     outline-offset: 2px;
   }
-}
-
-/* CTA Button - Outside of layer for higher specificity */
-button.glass[data-variant="cta"],
-a.glass[data-variant="cta"] {
-  background: linear-gradient(135deg,
-      rgba(99, 102, 241, 0.95) 0%,
-      rgba(139, 92, 246, 0.9) 50%,
-      rgba(168, 85, 247, 0.85) 100%) !important;
-  border-radius: 9999px !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  cursor: pointer;
-  color: white !important;
-  font-weight: 600;
-  box-shadow:
-    0 4px 16px -2px rgba(99, 102, 241, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-}
-
-button.glass[data-variant="cta"]:hover,
-a.glass[data-variant="cta"]:hover {
-  background: linear-gradient(135deg,
-      rgba(99, 102, 241, 1) 0%,
-      rgba(139, 92, 246, 0.95) 50%,
-      rgba(168, 85, 247, 0.9) 100%) !important;
-  transform: translateY(-2px) scale(1.02);
-  box-shadow:
-    0 8px 24px -4px rgba(99, 102, 241, 0.5),
-    0 0 20px rgba(139, 92, 246, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
-}
-
-button.glass[data-variant="cta"]:active,
-a.glass[data-variant="cta"]:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.dark button.glass[data-variant="cta"],
-.dark a.glass[data-variant="cta"] {
-  background: linear-gradient(135deg,
-      rgba(99, 102, 241, 0.9) 0%,
-      rgba(139, 92, 246, 0.85) 50%,
-      rgba(168, 85, 247, 0.8) 100%) !important;
-  box-shadow:
-    0 4px 20px -2px rgba(99, 102, 241, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-}
-
-.dark button.glass[data-variant="cta"]:hover,
-.dark a.glass[data-variant="cta"]:hover {
-  box-shadow:
-    0 8px 28px -4px rgba(99, 102, 241, 0.6),
-    0 0 24px rgba(139, 92, 246, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
 }
