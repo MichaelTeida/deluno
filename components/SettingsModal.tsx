@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 import { UserProfile } from "@clerk/nextjs";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface SettingsModalProps {
     isOpen: boolean;
@@ -10,8 +10,13 @@ interface SettingsModalProps {
 }
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-    const { theme, setTheme } = useTheme();
+    const { theme, setTheme, resolvedTheme } = useTheme();
     const [activeTab, setActiveTab] = useState<'general' | 'account'>('general');
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     if (!isOpen) return null;
 
@@ -21,7 +26,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
                 {/* Sidebar */}
                 <div className="w-64 bg-zinc-50 dark:bg-zinc-950 border-r border-zinc-200 dark:border-zinc-800 p-4 flex flex-col gap-2">
-                    <h2 className="text-lg font-bold px-2 mb-4 text-zinc-900 dark:text-zinc-100">Ustawienia</h2>
+                    <h2 className="text-lg font-bold px-2 mb-4 text-zinc-900 dark:text-zinc-100">Settings</h2>
 
                     <button
                         onClick={() => setActiveTab('general')}
@@ -33,7 +38,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         onClick={() => setActiveTab('account')}
                         className={`text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'account' ? 'bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300' : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200/50 dark:hover:bg-zinc-800/50'}`}
                     >
-                        Konto
+                        Account
                     </button>
                 </div>
 
@@ -65,24 +70,24 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                                             <div className="grid grid-cols-3 gap-3">
                                                 <button
                                                     onClick={() => setTheme("light")}
-                                                    className={`p-3 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${theme === 'light' ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/20' : 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'}`}
+                                                    className={`p-3 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${mounted && theme === 'light' ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/20' : 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'}`}
                                                 >
                                                     <div className="w-full aspect-video bg-white rounded-md border border-zinc-200 shadow-sm"></div>
-                                                    <span className="text-xs font-medium">Jasny</span>
+                                                    <span className="text-xs font-medium">Light</span>
                                                 </button>
                                                 <button
                                                     onClick={() => setTheme("dark")}
-                                                    className={`p-3 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${theme === 'dark' ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/20' : 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'}`}
+                                                    className={`p-3 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${mounted && theme === 'dark' ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/20' : 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'}`}
                                                 >
                                                     <div className="w-full aspect-video bg-zinc-900 rounded-md border border-zinc-700 shadow-sm"></div>
-                                                    <span className="text-xs font-medium">Ciemny</span>
+                                                    <span className="text-xs font-medium">Dark</span>
                                                 </button>
                                                 <button
                                                     onClick={() => setTheme("system")}
-                                                    className={`p-3 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${theme === 'system' ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/20' : 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'}`}
+                                                    className={`p-3 rounded-xl border-2 flex flex-col items-center gap-2 transition-all ${mounted && theme === 'system' ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/20' : 'border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600'}`}
                                                 >
                                                     <div className="w-full aspect-video bg-gradient-to-br from-white to-zinc-900 rounded-md border border-zinc-200 dark:border-zinc-700 shadow-sm"></div>
-                                                    <span className="text-xs font-medium">Systemowy</span>
+                                                    <span className="text-xs font-medium">System</span>
                                                 </button>
                                             </div>
                                         </div>
