@@ -5,9 +5,12 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
+    // Temporarily disabled per user request
+    /*
     if (isProtectedRoute(req)) {
         await auth.protect();
     }
+    */
 });
 
 export const config = {
