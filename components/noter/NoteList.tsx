@@ -40,7 +40,7 @@ function NoteItem({
             <div
                 className={`group flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer text-sm transition-colors ${isActive ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/30 dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-300"
                     }`}
-                style={{ paddingLeft: `${8 + depth * 16}px` }}
+                style={{ paddingLeft: `${8 + depth * 24}px` }}
                 onClick={() => onSelect(note.id)}
             >
                 {/* Expand/Collapse */}

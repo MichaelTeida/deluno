@@ -26,7 +26,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
             <header className="h-14 md:h-16 shrink-0 glass flex items-center justify-between px-3 md:px-6 z-40" data-variant="panel">
 
                 {/* Left: Mobile Menu + Logo & Breadcrumbs */}
-                <div className="flex items-center gap-2 md:gap-4 lg:gap-6 overflow-hidden min-w-0">
+                <div className="flex items-center gap-2 md:gap-4 lg:gap-6 overflow-hidden min-w-0 pr-2">
                     {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsNavOpen(!isNavOpen)}
@@ -43,7 +43,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold text-[10px] md:text-xs shadow-lg">
                             DO
                         </div>
-                        <span className="font-bold text-base md:text-lg tracking-tight text-zinc-900 dark:text-zinc-100 hidden sm:block shrink-0">Deluno</span>
+                        <span className="font-bold text-base md:text-lg tracking-tight text-zinc-900 dark:text-zinc-100 hidden sm:block shrink-0 mt-[-1px]">Deluno</span>
                     </Link>
 
                     {/* Separator - Hidden on mobile */}
@@ -55,12 +55,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             Przestrzeń
                         </Link>
                         <span className="text-zinc-400">/</span>
-                        <div className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
+                        <Link href="/dashboard/noter" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
                             {isNoter ? 'Narzędzia' : 'Główna'}
-                        </div>
+                        </Link>
                         <span className="text-zinc-400">/</span>
                         <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate" data-variant="interactive">
-                            <span className="opacity-60 mr-1">{isNoter ? '📝' : '📊'}</span>
+                            <span className="text-xs opacity-60 mr-1">{isNoter ? '📝' : '📊'}</span>
                             {isNoter ? 'Notatki' : 'Dashboard'}
                         </div>
                     </nav>
@@ -112,14 +112,14 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                                 ${isRailExpanded ? 'opacity-0 pointer-events-none' : (isNoter ? 'opacity-100' : 'opacity-0 group-hover:opacity-100')}
                             `}></div>
 
-                            <div className={`flex h-10 w-full items-center ${isRailExpanded ? 'gap-3 px-1' : 'justify-center'}`}>
-                                <div className={`w-9 h-9 md:w-10 md:h-10 glass flex items-center justify-center shrink-0 transition-all ${isNoter ? 'text-indigo-600 bg-white/40 dark:bg-white/10' : 'text-zinc-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400'}`} data-variant="interactive">
-                                    <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                            <div className={`flex h-10 w-full items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`}>
+                                <div className={`w-10 h-10 glass flex items-center justify-center shrink-0 transition-all ${isNoter ? 'text-indigo-600 bg-white/40 dark:bg-white/10' : 'text-zinc-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400'}`} data-variant="interactive">
+                                    <svg className="w-5 h-5 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
                                 </div>
                                 {isRailExpanded && (
-                                    <span className="text-sm font-medium text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden ml-3">
+                                    <span className="text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden ml-4">
                                         Notatki
                                     </span>
                                 )}
@@ -133,39 +133,39 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`}
                             title={isRailExpanded ? "Zwiń" : "Rozwiń"}
                         >
-                            <div className="w-9 h-9 md:w-10 md:h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
-                                <svg className={`w-4 h-4 md:w-5 md:h-5 transition-transform ${isRailExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                            <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
+                                <svg className={`w-5 h-5 transition-transform ${isRailExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" />
                                 </svg>
                             </div>
                             {isRailExpanded && (
-                                <span className={`text-sm font-medium text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden ml-3`}>
+                                <span className={`text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden ml-4`}>
                                     Zwiń
                                 </span>
                             )}
                         </button>
 
                         <button className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`} title="Ustawienia">
-                            <div className="w-9 h-9 md:w-10 md:h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
-                                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                            <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 2v12m-5-9v3c0 2.5 2 4.5 5 4.5s5-2 5-4.5V5M12 14v7" />
                                 </svg>
                             </div>
                             {isRailExpanded && (
-                                <span className="ml-3 text-sm font-medium text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden">
+                                <span className="ml-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden">
                                     Ustawienia
                                 </span>
                             )}
                         </button>
 
                         <Link href="/" className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`} title="Strona główna">
-                            <div className="w-9 h-9 md:w-10 md:h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
-                                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                            <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                                 </svg>
                             </div>
                             {isRailExpanded && (
-                                <span className="ml-3 text-sm font-medium text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden">
+                                <span className="ml-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden">
                                     Główna
                                 </span>
                             )}
@@ -183,7 +183,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 `} data-variant="panel">
                     {/* Mobile Header */}
                     <div className="p-3 border-b border-white/10 flex items-center justify-between md:hidden">
-                        <span className="font-semibold text-zinc-800">Menu</span>
+                        <div className="flex items-center gap-2">
+                            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold text-[10px]">DO</div>
+                            <span className="font-semibold text-zinc-800 dark:text-zinc-100">Deluno</span>
+                        </div>
                         <button
                             onClick={() => setIsNavOpen(false)}
                             className="glass w-8 h-8 flex items-center justify-center text-zinc-500"
@@ -193,6 +196,20 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
+                    </div>
+
+                    {/* Mobile App Rail Integrated */}
+                    <div className="flex items-center border-b border-white/10 md:hidden p-2 gap-2 overflow-x-auto scrollbar-hide">
+                        <Link href="/dashboard/noter" className={`glass p-2 shrink-0 ${isNoter ? 'text-indigo-600 bg-white/40' : 'text-zinc-500'}`} data-variant="interactive">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                        </Link>
+                        <Link href="/dashboard" className="glass p-2 shrink-0 text-zinc-500" data-variant="interactive">
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                            </svg>
+                        </Link>
                     </div>
 
                     {/* Search Row */}
@@ -280,8 +297,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     </div>
 
                     {/* Scrollable Canvas */}
-                    <div className="flex-1 overflow-y-auto p-4 md:p-8 relative">
-                        {children}
+                    <div className="flex-1 overflow-y-auto p-4 md:p-8 relative custom-scrollbar">
+                        <div className="max-w-4xl mx-auto w-full px-2 md:px-0">
+                            {children}
+                        </div>
                     </div>
 
                     {/* FAB Help */}

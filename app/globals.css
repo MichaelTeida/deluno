@@ -40,12 +40,13 @@
   /* Dark Mode Overrides (Future Proofing) */
   @media (prefers-color-scheme: dark) {
     :root {
-      --background: #050508;
+      --background: #020204;
       --foreground: #f0f0f5;
-      --glass-border-color: rgba(255, 255, 255, 0.15);
-      --glass-panel-bg: rgba(15, 15, 25, 0.7);
-      --glass-content-bg: rgba(10, 10, 20, 0.6);
-      --glass-interactive-bg: rgba(255, 255, 255, 0.1);
+      --glass-border-color: rgba(255, 255, 255, 0.12);
+      --glass-panel-bg: rgba(10, 10, 18, 0.8);
+      --glass-content-bg: rgba(8, 8, 15, 0.7);
+      --glass-interactive-bg: rgba(255, 255, 255, 0.08);
+      --shine-opacity: 0.25;
     }
   }
 }
@@ -66,6 +67,18 @@ body {
   margin: 0;
   overflow: hidden;
   /* App-like feel */
+}
+
+/* Dark mode specific gradients for stronger immersion */
+@media (prefers-color-scheme: dark) {
+  body {
+    background:
+      radial-gradient(at 0% 0%, rgba(40, 50, 100, 0.5) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, rgba(60, 40, 110, 0.4) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(30, 70, 100, 0.4) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(40, 80, 50, 0.4) 0px, transparent 50%),
+      var(--background);
+  }
 }
 
 /* --- THEME ENGINE: COMPONENT CLASSES --- */
@@ -153,6 +166,16 @@ body {
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 10px;
+  }
+
+  .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+    }
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {

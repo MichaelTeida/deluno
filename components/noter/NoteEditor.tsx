@@ -22,29 +22,32 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
     }, [note.content]);
 
     return (
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col px-1 md:px-0">
             {/* Title Row */}
             <div className="flex items-center gap-3 mb-4">
                 {/* Icon Picker */}
                 <div className="relative">
                     <button
                         onClick={() => setShowIconPicker(!showIconPicker)}
-                        className="text-3xl hover:bg-white/30 rounded-lg p-2 transition-colors"
+                        className="relative z-10 text-3xl hover:bg-white/30 dark:hover:bg-white/10 rounded-lg p-2 transition-colors"
                     >
                         {note.icon}
                     </button>
                     {showIconPicker && (
-                        <div className="absolute top-full left-0 mt-2 glass p-3 grid grid-cols-5 gap-2 z-10" data-variant="panel">
-                            {ICONS.map(icon => (
-                                <button
-                                    key={icon}
-                                    onClick={() => { onUpdate({ icon }); setShowIconPicker(false); }}
-                                    className="text-xl hover:bg-white/40 rounded p-1 transition-colors"
-                                >
-                                    {icon}
-                                </button>
-                            ))}
-                        </div>
+                        <>
+                            <div className="fixed inset-0 z-40" onClick={() => setShowIconPicker(false)} />
+                            <div className="absolute top-full left-0 mt-2 glass p-3 grid grid-cols-5 gap-2 z-50" data-variant="panel">
+                                {ICONS.map(icon => (
+                                    <button
+                                        key={icon}
+                                        onClick={() => { onUpdate({ icon }); setShowIconPicker(false); }}
+                                        className="text-xl hover:bg-white/40 dark:hover:bg-white/20 rounded p-1 transition-colors"
+                                    >
+                                        {icon}
+                                    </button>
+                                ))}
+                            </div>
+                        </>
                     )}
                 </div>
 
