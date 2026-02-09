@@ -5,6 +5,10 @@ export interface Note {
     parentId: string | null;
     icon: string;
     isExpanded: boolean;
+    isFavorite: boolean;
+    isFullWidth: boolean;
+    isLocked: boolean;
+    isTrashed: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -21,6 +25,10 @@ export const createNote = (parentId: string | null = null): Note => ({
     parentId,
     icon: "📄",
     isExpanded: true,
+    isFavorite: false,
+    isFullWidth: false,
+    isLocked: false,
+    isTrashed: false,
     createdAt: new Date(),
     updatedAt: new Date(),
 });

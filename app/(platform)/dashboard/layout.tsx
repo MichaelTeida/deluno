@@ -16,7 +16,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
     const isNoter = pathname?.startsWith('/dashboard/noter');
     const pageTitle = isNoter
-        ? (activeNote?.title || 'Notatki')
+        ? 'Noter'
         : 'Dashboard';
 
     return (
@@ -76,13 +76,6 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 {/* Right: User & Theme Menu */}
                 <div className="flex items-center gap-2 md:gap-3 shrink-0">
                     <UserButton afterSignOutUrl="/" />
-                    <button className="glass w-8 h-8 md:w-9 md:h-9 flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100" data-variant="interactive">
-                        <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <circle cx="4" cy="10" r="2" />
-                            <circle cx="10" cy="10" r="2" />
-                            <circle cx="16" cy="10" r="2" />
-                        </svg>
-                    </button>
                 </div>
             </header>
 
@@ -120,7 +113,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                                 </div>
                                 {isRailExpanded && (
                                     <span className="text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden ml-4">
-                                        Notatki
+                                        Noter
                                     </span>
                                 )}
                             </div>
@@ -148,7 +141,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         <button className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`} title="Ustawienia">
                             <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 2v12m-5-9v3c0 2.5 2 4.5 5 4.5s5-2 5-4.5V5M12 14v7" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                             </div>
                             {isRailExpanded && (

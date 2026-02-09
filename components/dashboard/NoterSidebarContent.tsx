@@ -7,10 +7,21 @@ export default function NoterSidebarContent() {
     const { notes, activeNoteId, setActiveNoteId, addNote, deleteNote, updateNote } = useNoter();
 
     const rootNotes = notes.filter(n => n.parentId === null);
+    const favoriteNotes = notes.filter(n => n.isFavorite);
 
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pb-3">
             {/* Dashboard Link */}
+            <div className="flex items-center justify-between px-3 pt-2">
+                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">Menu</span>
+                <button className="glass w-6 h-6 flex items-center justify-center text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 rounded-lg transition-colors" data-variant="interactive">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <circle cx="4" cy="10" r="1.5" />
+                        <circle cx="10" cy="10" r="1.5" />
+                        <circle cx="16" cy="10" r="1.5" />
+                    </svg>
+                </button>
+            </div>
             <div className="py-2">
                 <div className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 cursor-pointer text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 font-medium transition-colors">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -23,7 +34,22 @@ export default function NoterSidebarContent() {
             {/* Favorites */}
             <div className="space-y-1">
                 <h3 className="px-3 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2">Favorites</h3>
-                <div className="px-3 py-1.5 text-xs text-zinc-400 dark:text-zinc-500 italic">Brak ulubionych</div>
+                {favoriteNotes.length === 0 ? (
+                    <div className="px-3 py-1.5 text-xs text-zinc-400 dark:text-zinc-500 italic">Brak ulubionych</div>
+                ) : (
+                    <div className="space-y-0.5">
+                        {favoriteNotes.map(note => (
+                            <div
+                                key={note.id}
+                                onClick={() => setActiveNoteId(note.id)}
+                                className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-sm transition-colors ${activeNoteId === note.id ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/20 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"}`}
+                            >
+                                <span className="text-xs">{note.icon}</span>
+                                <span className="truncate">{note.title || "Bez tytułu"}</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Private */}
