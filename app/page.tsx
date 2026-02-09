@@ -13,7 +13,7 @@ export default function HomePage() {
             <span className="font-bold text-lg tracking-tight text-zinc-900">Deluno</span>
           </Link>
           <Link
-            href="/dashboard"
+            href="/sign-in"
             className="glass h-10 px-6 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none flex items-center justify-center rounded-full transition-colors"
             data-variant="interactive"
             data-no-shine="true"
@@ -34,7 +34,7 @@ export default function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/dashboard"
+              href="/sign-in"
               className="glass h-12 px-8 text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none flex items-center justify-center rounded-full transition-colors"
               data-variant="interactive"
               data-no-shine="true"
