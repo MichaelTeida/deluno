@@ -41,16 +41,16 @@ export default function NoterSidebarContent() {
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pb-3">
             {/* Noter Header with + New */}
-            <div className="flex items-center justify-between py-3 border-b border-white/10">
+            <div className="flex items-center gap-3 py-3 border-b border-white/10">
                 <h2 className="text-sm font-bold text-zinc-700 dark:text-zinc-200 uppercase tracking-wider">Noter</h2>
                 <button
                     onClick={() => { addNote(null); setViewMode('notes'); }}
-                    className="glass px-2 py-1 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors flex items-center gap-1"
+                    className="glass px-2 py-1 text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-colors flex items-center gap-1"
                     data-variant="interactive"
                     title="New note"
                 >
                     <span>+</span>
-                    <span>New</span>
+                    <span>NEW</span>
                 </button>
             </div>
 

@@ -76,8 +76,7 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     </svg>
                 </button>
 
-                {/* Context Menu */}
-                <NoteMenu />
+                {/* Context Menu moved to header */}
             </div>
 
             {/* Meta Info */}

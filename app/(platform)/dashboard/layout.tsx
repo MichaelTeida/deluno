@@ -9,6 +9,7 @@ import NoterSidebarContent from "@/components/dashboard/NoterSidebarContent";
 import NoterBreadcrumbs from "@/components/noter/NoterBreadcrumbs";
 import SettingsModal from "@/components/SettingsModal";
 import SearchCommand from "@/components/SearchCommand";
+import NoteMenu from "@/components/noter/NoteMenu";
 import { useEffect } from "react";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
@@ -18,7 +19,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const pathname = usePathname();
-    const { activeNote } = useNoter();
+    const { activeNote, addNote, setViewMode } = useNoter();
 
     const isNoter = pathname?.startsWith('/panel/noter');
     const pageTitle = isNoter
@@ -308,14 +309,17 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             <h1 className="text-base md:text-xl font-semibold text-zinc-800 dark:text-zinc-100 tracking-tight truncate">
                                 {pageTitle}
                             </h1>
+                            <button
+                                onClick={() => { addNote(null); setViewMode('notes'); }}
+                                className="glass h-7 px-2.5 text-[10px] font-bold text-white bg-indigo-600 hover:bg-indigo-700 border-none flex items-center justify-center ml-2"
+                                data-variant="interactive"
+                                data-no-shine="true"
+                            >
+                                + NEW
+                            </button>
                         </div>
                         <div className="flex items-center gap-2 shrink-0">
-                            <button className="glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100 flex items-center justify-center" data-variant="interactive">
-                                Export
-                            </button>
-                            <button className="glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 border-none flex items-center justify-center" data-variant="interactive" data-no-shine="true">
-                                + New
-                            </button>
+                            {isNoter && <NoteMenu />}
                         </div>
                     </div>
 
