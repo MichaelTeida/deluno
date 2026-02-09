@@ -31,17 +31,26 @@ export default function DashboardView() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                     <button
                         onClick={handleCreateNote}
-                        className="btn-glass p-0 h-auto w-full justify-start gap-4 transition-all hover:scale-[1.02] active:scale-[0.98] group relative overflow-hidden"
+                        className="btn-glass p-0 h-auto w-full justify-start gap-4 transition-all hover:scale-[1.03] hover:brightness-110 active:scale-[0.97] group relative overflow-hidden"
                         style={{
-                            background: `linear-gradient(135deg, rgba(99, 102, 241, 0.6) 0%, rgba(79, 70, 229, 0.6) 100%)`,
+                            background: `linear-gradient(135deg, rgba(99, 102, 241, 0.45) 0%, rgba(79, 70, 229, 0.45) 100%)`,
                             minHeight: '80px',
                             padding: '1rem',
                             borderRadius: 'var(--radius-panel)', // Standardized radius
-                            backdropFilter: 'blur(10px) saturate(1.5) url(#glass-clean-v5)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            backdropFilter: 'blur(12px) saturate(1.6) url(#glass-clean-v5)',
                             boxShadow: 'var(--effect-glass-shadow)'
                         }}
                     >
-                        <div className="glass w-12 h-12 flex items-center justify-center rounded-full shadow-lg group-hover:bg-white/40 transition-colors" data-variant="interactive">
+                        <div
+                            className="w-12 h-12 flex items-center justify-center rounded-full shadow-lg group-hover:bg-white/20 transition-colors"
+                            style={{
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                backdropFilter: 'blur(12px) saturate(1.6) url(#glass-clean-v5)',
+                                boxShadow: 'inset 0 0 10px rgba(255, 255, 255, 0.1)'
+                            }}
+                        >
                             <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
