@@ -74,7 +74,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         ) : (
                             <>
                                 <Link href="/dashboard" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
-                                    Przestrzeń
+                                    Workspace
                                 </Link>
                                 <span className="text-zinc-400">/</span>
                                 <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate" data-variant="interactive">
@@ -144,7 +144,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         <button
                             onClick={() => setIsRailExpanded(!isRailExpanded)}
                             className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`}
-                            title={isRailExpanded ? "Zwiń" : "Rozwiń"}
+                            title={isRailExpanded ? "Collapse" : "Expand"}
                         >
                             <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
                                 <svg className={`w-5 h-5 transition-transform ${isRailExpanded ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -153,7 +153,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             </div>
                             {isRailExpanded && (
                                 <span className={`text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden ml-4`}>
-                                    Zwiń
+                                    Collapse
                                 </span>
                             )}
                         </button>
@@ -176,7 +176,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             )}
                         </button>
 
-                        <Link href="/" className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`} title="Strona główna">
+                        <Link href="/" className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`} title="Home page">
                             <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
@@ -184,7 +184,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             </div>
                             {isRailExpanded && (
                                 <span className="ml-4 text-sm font-semibold text-zinc-600 dark:text-zinc-300 transition-all duration-300 whitespace-nowrap overflow-hidden">
-                                    Główna
+                                    Home
                                 </span>
                             )}
                         </Link>
@@ -249,7 +249,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                                 onClick={() => setIsSidebarVisible(false)}
                                 className="glass w-8 h-8 items-center justify-center text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-200 shrink-0 hidden md:flex"
                                 data-variant="interactive"
-                                title="Zwiń panel"
+                                title="Collapse panel"
                             >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 19.5l-7.5-7.5 7.5-7.5m-6 15L5.25 12l7.5-7.5" />
@@ -298,7 +298,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                                     onClick={() => setIsSidebarVisible(true)}
                                     className="glass w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-zinc-700 hidden md:flex"
                                     data-variant="interactive"
-                                    title="Pokaż panel"
+                                    title="Show panel"
                                 >
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 4.5l7.5 7.5-7.5 7.5m6-15l7.5 7.5-7.5 7.5" />

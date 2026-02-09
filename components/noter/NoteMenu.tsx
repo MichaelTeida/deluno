@@ -39,7 +39,7 @@ export default function NoteMenu() {
     };
 
     const handleTrash = () => {
-        if (confirm("Czy na pewno chcesz przenieść notatkę do kosza?")) {
+        if (confirm("Are you sure you want to move this note to trash?")) {
             deleteNote(activeNote.id);
             setIsOpen(false);
         }
@@ -80,24 +80,24 @@ export default function NoteMenu() {
                     </div>
 
                     <MenuOption onClick={handleDuplicate} icon="📄" label="Duplikuj" />
-                    <MenuOption onClick={handleFullWidth} icon={activeNote.isFullWidth ? "⬅➡" : "↔"} label={activeNote.isFullWidth ? "Standardowa szerokość" : "Pełna szerokość"} />
-                    <MenuOption onClick={handleLock} icon={activeNote.isLocked ? "🔓" : "🔒"} label={activeNote.isLocked ? "Odblokuj stronę" : "Zablokuj stronę"} />
+                    <MenuOption onClick={handleFullWidth} icon={activeNote.isFullWidth ? "⬅➡" : "↔"} label={activeNote.isFullWidth ? "Standard width" : "Full width"} />
+                    <MenuOption onClick={handleLock} icon={activeNote.isLocked ? "🔓" : "🔒"} label={activeNote.isLocked ? "Unlock page" : "Lock page"} />
 
                     <div className="h-[1px] bg-white/10 my-1" />
 
-                    <MenuOption onClick={handleCopyLink} icon="🔗" label="Kopiuj link" />
-                    <MenuOption onClick={handleExportPDF} icon="📤" label="Eksportuj do PDF" />
+                    <MenuOption onClick={handleCopyLink} icon="🔗" label="Copy link" />
+                    <MenuOption onClick={handleExportPDF} icon="📤" label="Export to PDF" />
                     <MenuOption onClick={() => setIsOpen(false)} icon="📥" label="Import (BETA)" disabled />
 
                     <div className="h-[1px] bg-white/10 my-1" />
 
-                    <MenuOption onClick={() => { }} icon="➡" label="Przenieś do..." disabled />
-                    <MenuOption onClick={handleTrash} icon="🗑️" label="Przenieś do kosza" destructive />
+                    <MenuOption onClick={() => { }} icon="➡" label="Move to..." disabled />
+                    <MenuOption onClick={handleTrash} icon="🗑️" label="Move to trash" destructive />
 
                     <div className="h-[1px] bg-white/10 my-1" />
 
                     <div className="px-2 py-1 flex justify-between text-xs text-zinc-500">
-                        <span>Słów:</span>
+                        <span>Words:</span>
                         <span className="font-mono">{wordCount}</span>
                     </div>
                 </div>

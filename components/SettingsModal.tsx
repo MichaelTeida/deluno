@@ -61,7 +61,7 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                                     <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4 uppercase tracking-wider">Appearance</h4>
                                     <div className="space-y-4">
                                         <div className="flex flex-col gap-3">
-                                            <label className="text-sm text-zinc-600 dark:text-zinc-400">Motyw aplikacji</label>
+                                            <label className="text-sm text-zinc-600 dark:text-zinc-400">App theme</label>
                                             <div className="grid grid-cols-3 gap-3">
                                                 <button
                                                     onClick={() => setTheme("light")}

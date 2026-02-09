@@ -69,7 +69,7 @@ export default function NoterSidebarContent() {
                                 className={`flex items-center gap-2 px-3 py-1.5 cursor-pointer text-sm transition-colors ${activeNoteId === note.id && viewMode === 'notes' ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/20 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"}`}
                             >
                                 <span className="text-xs">{note.icon}</span>
-                                <span className="truncate">{note.title || "Bez tytułu"}</span>
+                                <span className="truncate">{note.title || "Untitled"}</span>
                             </div>
                         ))}
                     </div>
@@ -83,7 +83,7 @@ export default function NoterSidebarContent() {
                     <button
                         onClick={() => { addNote(null); setViewMode('notes'); }}
                         className="text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-lg"
-                        title="Dodaj notatkę"
+                        title="Add note"
                     >
                         +
                     </button>

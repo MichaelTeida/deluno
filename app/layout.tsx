@@ -17,10 +17,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Deluno | Twoja przestrzeń do pracy",
   description: "Organizuj projekty, notatki i zadania w jednym miejscu. Nowoczesna platforma SaaS z unikalnym designem Liquid Glass.",
-  keywords: ["notatki", "projekty", "zarządzanie zadaniami", "SaaS", "produktywność", "Deluno"],
+  keywords: ["notes", "projects", "task management", "SaaS", "productivity", "Deluno"],
   authors: [{ name: "Deluno Team" }],
   openGraph: {
-    title: "Deluno | Twoja przestrzeń do pracy",
+    title: "Deluno | Your workspace",
     description: "Nowoczesna platforma do organizacji pracy.",
     type: "website",
   }

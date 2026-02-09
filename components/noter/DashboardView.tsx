@@ -24,8 +24,8 @@ export default function DashboardView() {
         <div className="h-full flex flex-col p-4 md:p-8 overflow-y-auto custom-scrollbar">
             <div className="max-w-4xl mx-auto w-full">
                 {/* Greeting */}
-                <h1 className="text-3xl font-bold mb-2 text-zinc-800 dark:text-zinc-100 mt-12 md:mt-0">Dzień dobry!</h1>
-                <p className="text-zinc-500 mb-8">Oto Twój pulpit nawigacyjny.</p>
+                <h1 className="text-3xl font-bold mb-2 text-zinc-800 dark:text-zinc-100 mt-12 md:mt-0">Welcome back!</h1>
+                <p className="text-zinc-500 mb-8">Here's your dashboard.</p>
 
                 {/* Quick Actions */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -39,8 +39,8 @@ export default function DashboardView() {
                             </svg>
                         </div>
                         <div className="text-left">
-                            <div className="font-semibold">Nowa notatka</div>
-                            <div className="text-xs text-indigo-100">Utwórz nową stronę w Noterze</div>
+                            <div className="font-semibold">New note</div>
+                            <div className="text-xs text-indigo-100">Create a new page in Noter</div>
                         </div>
                     </button>
                 </div>
@@ -49,7 +49,7 @@ export default function DashboardView() {
                 {favoriteNotes.length > 0 && (
                     <div className="mb-8">
                         <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
-                            <span className="text-amber-400">★</span> Ulubione
+                            <span className="text-amber-400">★</span> Favorites
                         </h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                             {favoriteNotes.map(note => (
@@ -74,10 +74,10 @@ export default function DashboardView() {
 
                 {/* Recent */}
                 <div>
-                    <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">Ostatnio edytowane</h2>
+                    <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">Recently edited</h2>
                     <div className="bg-white/50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
                         {recentNotes.length === 0 ? (
-                            <div className="p-4 text-center text-zinc-400 italic">Brak notatek.</div>
+                            <div className="p-4 text-center text-zinc-400 italic">No notes yet.</div>
                         ) : (
                             <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
                                 {recentNotes.map(note => (
@@ -89,7 +89,7 @@ export default function DashboardView() {
                                         <span className="text-xl group-hover:scale-110 transition-transform">{note.icon}</span>
                                         <div className="flex-1">
                                             <div className="font-medium text-zinc-700 dark:text-zinc-200 group-hover:text-indigo-500 transition-colors">
-                                                {note.title || "Bez tytułu"}
+                                                {note.title || "Untitled"}
                                             </div>
                                             <div className="text-xs text-zinc-400">
                                                 {note.content.substring(0, 50).replace(/\n/g, ' ')}...
