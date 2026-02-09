@@ -61,7 +61,7 @@ export default function DashboardView() {
                                 >
                                     <div className="text-2xl mb-2">{note.icon}</div>
                                     <div className="font-semibold text-zinc-700 dark:text-zinc-200 truncate group-hover:text-indigo-500 transition-colors">
-                                        {note.title || "Bez tytułu"}
+                                        {note.title || "Untitled"}
                                     </div>
                                     <div className="text-xs text-zinc-400 mt-1">
                                         {note.updatedAt.toLocaleDateString()}
