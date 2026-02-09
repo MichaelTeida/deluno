@@ -3,8 +3,14 @@
 import { useNoter } from "@/lib/contexts/NoterContext";
 import NoteEditor from "@/components/noter/NoteEditor";
 
+import TrashView from "@/components/noter/TrashView";
+
 export default function NoterPage() {
-    const { activeNote, updateNote } = useNoter();
+    const { activeNote, updateNote, viewMode } = useNoter();
+
+    if (viewMode === 'trash') {
+        return <TrashView />;
+    }
 
     return (
         <div className="h-full">

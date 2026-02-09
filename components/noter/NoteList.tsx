@@ -1,6 +1,8 @@
 "use client";
 
 import { Note } from "@/lib/noter";
+import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface NoteListProps {
     notes: Note[];
@@ -31,12 +33,27 @@ function NoteItem({
     onDelete: (id: string) => void;
     onToggle: (id: string) => void;
 }) {
-    const children = notes.filter(n => n.parentId === note.id);
+    const children = notes.filter(n => n.parentId === note.id && !n.isTrashed);
     const hasChildren = children.length > 0;
     const isActive = note.id === activeNoteId;
 
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: note.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.5 : 1,
+    };
+
     return (
-        <div>
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
             <div
                 className={`group flex items-center gap-2 px-2 py-1.5 rounded-lg cursor-pointer text-sm transition-colors ${isActive ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/30 dark:hover:bg-white/10 text-zinc-700 dark:text-zinc-300"
                     }`}
@@ -85,19 +102,21 @@ function NoteItem({
             {/* Children */}
             {hasChildren && note.isExpanded && (
                 <div>
-                    {children.map(child => (
-                        <NoteItem
-                            key={child.id}
-                            note={child}
-                            notes={notes}
-                            activeNoteId={activeNoteId}
-                            depth={depth + 1}
-                            onSelect={onSelect}
-                            onAdd={onAdd}
-                            onDelete={onDelete}
-                            onToggle={onToggle}
-                        />
-                    ))}
+                    <SortableContext items={children.map(n => n.id)} strategy={verticalListSortingStrategy}>
+                        {children.map(child => (
+                            <NoteItem
+                                key={child.id}
+                                note={child}
+                                notes={notes}
+                                activeNoteId={activeNoteId}
+                                depth={depth + 1}
+                                onSelect={onSelect}
+                                onAdd={onAdd}
+                                onDelete={onDelete}
+                                onToggle={onToggle}
+                            />
+                        ))}
+                    </SortableContext>
                 </div>
             )}
         </div>
@@ -107,18 +126,20 @@ function NoteItem({
 export default function NoteList({ notes, rootNotes, activeNoteId, onSelect, onAdd, onDelete, onToggle }: NoteListProps) {
     return (
         <div className="space-y-0.5">
-            {rootNotes.map(note => (
-                <NoteItem
-                    key={note.id}
-                    note={note}
-                    notes={notes}
-                    activeNoteId={activeNoteId}
-                    onSelect={onSelect}
-                    onAdd={onAdd}
-                    onDelete={onDelete}
-                    onToggle={onToggle}
-                />
-            ))}
+            <SortableContext items={rootNotes.map(n => n.id)} strategy={verticalListSortingStrategy}>
+                {rootNotes.map(note => (
+                    <NoteItem
+                        key={note.id}
+                        note={note}
+                        notes={notes}
+                        activeNoteId={activeNoteId}
+                        onSelect={onSelect}
+                        onAdd={onAdd}
+                        onDelete={onDelete}
+                        onToggle={onToggle}
+                    />
+                ))}
+            </SortableContext>
         </div>
     );
 }

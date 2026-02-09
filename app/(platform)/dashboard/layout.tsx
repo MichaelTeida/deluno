@@ -292,7 +292,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
                     {/* Scrollable Canvas */}
                     <div className="flex-1 overflow-y-auto p-4 md:p-8 relative custom-scrollbar">
-                        <div className="max-w-4xl mx-auto w-full px-2 md:px-0">
+                        <div className={`${activeNote?.isFullWidth ? 'max-w-full' : 'max-w-4xl'} mx-auto w-full px-2 md:px-0 transition-all duration-300 ease-in-out`}>
                             {children}
                         </div>
                     </div>

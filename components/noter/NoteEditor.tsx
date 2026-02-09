@@ -28,8 +28,10 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                 {/* Icon Picker */}
                 <div className="relative">
                     <button
-                        onClick={() => setShowIconPicker(!showIconPicker)}
-                        className="relative z-10 text-3xl hover:bg-white/30 dark:hover:bg-white/10 rounded-lg p-2 transition-colors"
+                        onClick={() => !note.isLocked && setShowIconPicker(!showIconPicker)}
+                        className={`relative z-10 text-3xl transition-colors rounded-lg p-2 ${note.isLocked ? "opacity-50 cursor-not-allowed" : "hover:bg-white/30 dark:hover:bg-white/10"}`}
+                        disabled={note.isLocked}
+                        title={note.isLocked ? "Notatka zablokowana" : "Zmień ikonę"}
                     >
                         {note.icon}
                     </button>
@@ -67,9 +69,10 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                 <input
                     type="text"
                     value={note.title}
-                    onChange={(e) => onUpdate({ title: e.target.value })}
-                    className="flex-1 text-2xl font-bold text-zinc-800 dark:text-zinc-100 bg-transparent border-none outline-none placeholder-zinc-400"
-                    placeholder="Tytuł notatki..."
+                    readOnly={note.isLocked}
+                    onChange={(e) => !note.isLocked && onUpdate({ title: e.target.value })}
+                    className={`flex-1 text-2xl font-bold text-zinc-800 dark:text-zinc-100 bg-transparent border-none outline-none placeholder-zinc-400 ${note.isLocked ? "cursor-not-allowed opacity-80" : ""}`}
+                    placeholder={note.isLocked ? "Zablokowana" : "Tytuł notatki..."}
                 />
             </div>
 
@@ -83,9 +86,10 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                 <textarea
                     ref={contentRef}
                     value={note.content}
-                    onChange={(e) => onUpdate({ content: e.target.value })}
-                    className="w-full h-full min-h-[200px] text-zinc-700 dark:text-zinc-300 bg-transparent border-none outline-none resize-none placeholder-zinc-400 dark:placeholder-zinc-600 leading-relaxed"
-                    placeholder="Zacznij pisać..."
+                    readOnly={note.isLocked}
+                    onChange={(e) => !note.isLocked && onUpdate({ content: e.target.value })}
+                    className={`w-full h-full min-h-[200px] text-zinc-700 dark:text-zinc-300 bg-transparent border-none outline-none resize-none placeholder-zinc-400 dark:placeholder-zinc-600 leading-relaxed ${note.isLocked ? "cursor-not-allowed opacity-80" : ""}`}
+                    placeholder={note.isLocked ? "Treść zablokowana do edycji." : "Zacznij pisać..."}
                 />
             </div>
         </div>
