@@ -140,6 +140,57 @@ body {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   }
 
+  /* CTA: Primary Action Buttons (e.g., "+ New") */
+  .glass[data-variant="cta"] {
+    background: linear-gradient(135deg,
+        rgba(99, 102, 241, 0.9) 0%,
+        rgba(139, 92, 246, 0.85) 50%,
+        rgba(168, 85, 247, 0.8) 100%);
+    border-radius: var(--radius-button);
+    border-color: rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    box-shadow:
+      0 4px 16px -2px rgba(99, 102, 241, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  .glass[data-variant="cta"]:hover {
+    background: linear-gradient(135deg,
+        rgba(99, 102, 241, 1) 0%,
+        rgba(139, 92, 246, 0.95) 50%,
+        rgba(168, 85, 247, 0.9) 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow:
+      0 8px 24px -4px rgba(99, 102, 241, 0.5),
+      0 0 20px rgba(139, 92, 246, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  .glass[data-variant="cta"]:active {
+    transform: translateY(0) scale(0.98);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .glass[data-variant="cta"] {
+      background: linear-gradient(135deg,
+          rgba(99, 102, 241, 0.85) 0%,
+          rgba(139, 92, 246, 0.8) 50%,
+          rgba(168, 85, 247, 0.75) 100%);
+      box-shadow:
+        0 4px 20px -2px rgba(99, 102, 241, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .glass[data-variant="cta"]:hover {
+      box-shadow:
+        0 8px 28px -4px rgba(99, 102, 241, 0.6),
+        0 0 24px rgba(139, 92, 246, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+  }
+
   /* 3. The Liquid Shine (Pseudo-element) */
   /* Applied to any .glass element that doesn't explicitly opt-out */
   .glass:not([data-no-shine="true"])::after {
@@ -197,5 +248,62 @@ body {
   :focus-visible {
     outline: 2px solid theme('colors.indigo.500');
     outline-offset: 2px;
+  }
+}
+
+/* CTA Button - Outside of layer for higher specificity */
+button.glass[data-variant="cta"],
+a.glass[data-variant="cta"] {
+  background: linear-gradient(135deg,
+      rgba(99, 102, 241, 0.95) 0%,
+      rgba(139, 92, 246, 0.9) 50%,
+      rgba(168, 85, 247, 0.85) 100%) !important;
+  border-radius: 9999px !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  cursor: pointer;
+  color: white !important;
+  font-weight: 600;
+  box-shadow:
+    0 4px 16px -2px rgba(99, 102, 241, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+button.glass[data-variant="cta"]:hover,
+a.glass[data-variant="cta"]:hover {
+  background: linear-gradient(135deg,
+      rgba(99, 102, 241, 1) 0%,
+      rgba(139, 92, 246, 0.95) 50%,
+      rgba(168, 85, 247, 0.9) 100%) !important;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow:
+    0 8px 24px -4px rgba(99, 102, 241, 0.5),
+    0 0 20px rgba(139, 92, 246, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+}
+
+button.glass[data-variant="cta"]:active,
+a.glass[data-variant="cta"]:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@media (prefers-color-scheme: dark) {
+
+  button.glass[data-variant="cta"],
+  a.glass[data-variant="cta"] {
+    background: linear-gradient(135deg,
+        rgba(99, 102, 241, 0.9) 0%,
+        rgba(139, 92, 246, 0.85) 50%,
+        rgba(168, 85, 247, 0.8) 100%) !important;
+    box-shadow:
+      0 4px 20px -2px rgba(99, 102, 241, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  }
+
+  button.glass[data-variant="cta"]:hover,
+  a.glass[data-variant="cta"]:hover {
+    box-shadow:
+      0 8px 28px -4px rgba(99, 102, 241, 0.6),
+      0 0 24px rgba(139, 92, 246, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
   }
 }

@@ -381,10 +381,13 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             </h1>
                             <button
                                 onClick={() => document.dispatchEvent(new CustomEvent('create-new-note'))}
-                                className="ml-4 glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm font-medium text-indigo-600 dark:text-indigo-400 flex items-center justify-center"
-                                data-variant="interactive"
+                                className="ml-4 glass h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm flex items-center justify-center gap-1.5"
+                                data-variant="cta"
                             >
-                                + New
+                                <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                                <span>New</span>
                             </button>
                         </div>
                         <div className="flex items-center gap-2 shrink-0" id="header-actions">

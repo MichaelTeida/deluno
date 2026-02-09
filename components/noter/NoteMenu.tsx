@@ -62,11 +62,11 @@ export default function NoteMenu() {
         <div className="relative" ref={menuRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="glass w-8 h-8 md:w-9 md:h-9 flex items-center justify-center text-zinc-400 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"
+                className={`glass w-8 h-8 md:w-9 md:h-9 flex items-center justify-center transition-all duration-200 ${isOpen ? "text-zinc-700 dark:text-zinc-200 bg-white/30 dark:bg-white/10" : "text-zinc-400 dark:text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200"}`}
                 data-variant="interactive"
                 title="Options"
             >
-                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <svg className={`w-4 h-4 md:w-5 md:h-5 transition-transform duration-200 ${isOpen ? "rotate-90" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                 </svg>
             </button>
