@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer theme {
   :root {
     --background: #ffffff;
@@ -39,6 +41,17 @@
     --shine-opacity: 0.3;
     /* Subtle shine */
     --shine-angle: 125deg;
+  }
+
+  /* Light Mode - explicit selector for next-themes */
+  .light {
+    --background: #ffffff;
+    --foreground: #171717;
+    --glass-border-color: rgba(255, 255, 255, 0.15);
+    --glass-panel-bg: rgba(255, 255, 255, 0.65);
+    --glass-content-bg: rgba(255, 255, 255, 0.75);
+    --glass-interactive-bg: rgba(255, 255, 255, 0.4);
+    --shine-opacity: 0.3;
   }
 
   /* Dark Mode Overrides - Class selector for next-themes */
