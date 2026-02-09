@@ -68,7 +68,7 @@ export default function NoterBreadcrumbs() {
                         {isLast ? (
                             <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate max-w-[150px]" data-variant="interactive">
                                 <span className="text-xs opacity-60 mr-1">{note.icon}</span>
-                                {note.title || "Bez tytułu"}
+                                {note.title || "Untitled"}
                             </div>
                         ) : (
                             <button

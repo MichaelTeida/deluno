@@ -7,11 +7,16 @@ import { usePathname } from "next/navigation";
 import { NoterProvider, useNoter } from "@/lib/contexts/NoterContext";
 import NoterSidebarContent from "@/components/dashboard/NoterSidebarContent";
 import NoterBreadcrumbs from "@/components/noter/NoterBreadcrumbs";
+import SettingsModal from "@/components/SettingsModal";
+import SearchCommand from "@/components/SearchCommand";
+import { useEffect } from "react";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
     const [isNavOpen, setIsNavOpen] = useState(false);
     const [isRailExpanded, setIsRailExpanded] = useState(false);
     const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const pathname = usePathname();
     const { activeNote } = useNoter();
 
@@ -20,8 +25,20 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         ? 'Noter'
         : 'Dashboard';
 
+    // Toggle Command Palette with Cmd+K
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+                e.preventDefault();
+                setIsSearchOpen(prev => !prev);
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, []);
+
     return (
-        <div className="flex flex-col h-screen w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden">
+        <div className="flex flex-col h-screen w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}>
 
             {/* 1. TOP HEADER */}
             <header className="h-14 md:h-16 shrink-0 glass flex items-center justify-between px-3 md:px-6 z-40" data-variant="panel">
@@ -88,7 +105,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 {/* Mobile Overlay */}
                 {isNavOpen && (
                     <div
-                        className="fixed inset-0 bg-black/20 backdrop-blur-sm z-30 md:hidden"
+                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 md:hidden"
                         onClick={() => setIsNavOpen(false)}
                     />
                 )}
@@ -141,7 +158,11 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             )}
                         </button>
 
-                        <button className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`} title="Ustawienia">
+                        <button
+                            onClick={() => setIsSettingsOpen(true)}
+                            className={`w-full h-10 flex items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`}
+                            title="Ustawienia"
+                        >
                             <div className="w-10 h-10 glass flex items-center justify-center text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors shrink-0" data-variant="interactive">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -173,7 +194,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 {/* B. NAVIGATION SIDEBAR */}
                 <nav className={`
                     ${isSidebarVisible ? 'w-64 md:w-56' : 'w-0 overflow-hidden opacity-0'} 
-                    glass flex flex-col z-50 md:z-30 shrink-0
+                    glass flex flex-col z-[60] md:z-30 shrink-0
                     fixed md:relative left-0 top-0 h-full md:h-auto
                     transition-all duration-300 ease-out
                     ${isNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
@@ -212,7 +233,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     {/* Search Row */}
                     <div className="p-3 border-b border-white/10">
                         <div className="flex items-center gap-2">
-                            <div className="glass flex-1 px-3 py-2 flex items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 text-sm cursor-pointer" data-variant="interactive" data-no-shine="true">
+                            <div
+                                onClick={() => setIsSearchOpen(true)}
+                                className="glass flex-1 px-3 py-2 flex items-center gap-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100 text-sm cursor-pointer"
+                                data-variant="interactive"
+                                data-no-shine="true"
+                            >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                                 </svg>
@@ -309,6 +335,8 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 </main>
 
             </div>
+            <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+            <SearchCommand isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         </div>
     );
 }

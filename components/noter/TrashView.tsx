@@ -10,7 +10,7 @@ export default function TrashView() {
     return (
         <div className="h-full flex flex-col p-4 md:p-8">
             <h1 className="text-3xl font-bold mb-4 text-zinc-800 dark:text-zinc-100 mt-12 md:mt-0">Kosz</h1>
-            <p className="text-zinc-500 mb-8">Notatki w koszu mogą zostać przywrócone lub trwale usunięte.</p>
+            <p className="text-zinc-500 mb-8">Notes in trash can be restored or permanently deleted.</p>
 
             {trashedNotes.length === 0 ? (
                 <div className="flex-1 flex items-center justify-center text-zinc-400 italic">
@@ -32,17 +32,17 @@ export default function TrashView() {
                                     onClick={() => restoreNote(note.id)}
                                     className="text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 px-3 py-1.5 text-xs font-medium bg-white/50 dark:bg-white/10 rounded-md transition-colors"
                                 >
-                                    Przywróć
+                                    Restore
                                 </button>
                                 <button
                                     onClick={() => {
-                                        if (confirm("Czy na pewno chcesz trwale usunąć tę notatkę? Tej operacji nie można cofnąć.")) {
+                                        if (confirm("Are you sure you want to permanently delete this note? This action cannot be undone.")) {
                                             permanentlyDeleteNote(note.id);
                                         }
                                     }}
                                     className="text-red-500 hover:text-red-700 dark:hover:text-red-400 px-3 py-1.5 text-xs font-medium bg-red-50 dark:bg-red-900/20 rounded-md transition-colors border border-red-200 dark:border-red-900/30"
                                 >
-                                    Usuń na zawsze
+                                    Delete forever
                                 </button>
                             </div>
                         </div>

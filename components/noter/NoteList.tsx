@@ -3,6 +3,7 @@
 import { Note } from "@/lib/noter";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { memo, useMemo } from "react";
 
 interface NoteListProps {
     notes: Note[];
@@ -14,7 +15,7 @@ interface NoteListProps {
     onToggle: (id: string) => void;
 }
 
-function NoteItem({
+const NoteItem = memo(function NoteItem({
     note,
     notes,
     activeNoteId,
@@ -33,7 +34,8 @@ function NoteItem({
     onDelete: (id: string) => void;
     onToggle: (id: string) => void;
 }) {
-    const children = notes.filter(n => n.parentId === note.id && !n.isTrashed);
+    // Memoize children filtering
+    const children = useMemo(() => notes.filter(n => n.parentId === note.id && !n.isTrashed), [notes, note.id]);
     const hasChildren = children.length > 0;
     const isActive = note.id === activeNoteId;
 
@@ -121,7 +123,20 @@ function NoteItem({
             )}
         </div>
     );
-}
+}, (prev, next) => {
+    // Custom comparison to avoid re-render if note didn't change and its children/status didn't change
+    if (prev.activeNoteId !== next.activeNoteId) {
+        if (prev.note.id === prev.activeNoteId || next.note.id === next.activeNoteId) return false;
+    }
+    if (prev.note !== next.note) return false;
+    if (prev.notes !== next.notes) {
+        // Deep check if any children changed? Expensive. 
+        // For now, if notes array ref changes, we re-render. 
+        // We can't easily avoid this without more complex state management.
+        return false;
+    }
+    return true;
+});
 
 export default function NoteList({ notes, rootNotes, activeNoteId, onSelect, onAdd, onDelete, onToggle }: NoteListProps) {
     return (
