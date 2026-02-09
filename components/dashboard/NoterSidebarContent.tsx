@@ -2,7 +2,6 @@
 
 import { useNoter } from "@/lib/contexts/NoterContext";
 import NoteList from "@/components/noter/NoteList";
-import NoteMenu from "@/components/noter/NoteMenu";
 import { DndContext, DragEndEvent, PointerSensor, useSensor, useSensors, closestCorners } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
 
@@ -43,10 +42,7 @@ export default function NoterSidebarContent() {
         <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pb-3">
             {/* Dashboard Link */}
             {/* Dashboard Link */}
-            <div className="flex items-center justify-between px-3 pt-2">
-                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-widest">Menu</span>
-                <NoteMenu />
-            </div>
+            {/* Dashboard Link */}
             <div className="py-2">
                 <div
                     onClick={() => window.location.href = '/dashboard'}

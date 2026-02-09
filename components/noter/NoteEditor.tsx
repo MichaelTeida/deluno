@@ -2,6 +2,7 @@
 
 import { Note } from "@/lib/noter";
 import { useState, useRef, useEffect } from "react";
+import NoteMenu from "./NoteMenu";
 
 interface NoteEditorProps {
     note: Note;
@@ -53,6 +54,16 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     )}
                 </div>
 
+                {/* Title Input */}
+                <input
+                    type="text"
+                    value={note.title}
+                    readOnly={note.isLocked}
+                    onChange={(e) => !note.isLocked && onUpdate({ title: e.target.value })}
+                    className={`flex-1 text-2xl font-bold text-zinc-800 dark:text-zinc-100 bg-transparent border-none outline-none placeholder-zinc-400 ${note.isLocked ? "cursor-not-allowed opacity-80" : ""}`}
+                    placeholder={note.isLocked ? "Zablokowana" : "Tytuł notatki..."}
+                />
+
                 {/* Favorite Toggle */}
                 <button
                     onClick={() => onUpdate({ isFavorite: !note.isFavorite })}
@@ -65,15 +76,8 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                     </svg>
                 </button>
 
-                {/* Title Input */}
-                <input
-                    type="text"
-                    value={note.title}
-                    readOnly={note.isLocked}
-                    onChange={(e) => !note.isLocked && onUpdate({ title: e.target.value })}
-                    className={`flex-1 text-2xl font-bold text-zinc-800 dark:text-zinc-100 bg-transparent border-none outline-none placeholder-zinc-400 ${note.isLocked ? "cursor-not-allowed opacity-80" : ""}`}
-                    placeholder={note.isLocked ? "Zablokowana" : "Tytuł notatki..."}
-                />
+                {/* Context Menu */}
+                <NoteMenu />
             </div>
 
             {/* Meta Info */}

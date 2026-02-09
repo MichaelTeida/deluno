@@ -6,6 +6,7 @@ import { UserButton } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { NoterProvider, useNoter } from "@/lib/contexts/NoterContext";
 import NoterSidebarContent from "@/components/dashboard/NoterSidebarContent";
+import NoterBreadcrumbs from "@/components/noter/NoterBreadcrumbs";
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
     const [isNavOpen, setIsNavOpen] = useState(false);
@@ -51,18 +52,20 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
                     {/* Breadcrumbs - Simplified on mobile */}
                     <nav className="hidden lg:flex items-center gap-2 text-sm font-medium overflow-hidden">
-                        <Link href="/dashboard" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
-                            Przestrzeń
-                        </Link>
-                        <span className="text-zinc-400">/</span>
-                        <Link href="/dashboard/noter" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
-                            {isNoter ? 'Narzędzia' : 'Główna'}
-                        </Link>
-                        <span className="text-zinc-400">/</span>
-                        <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate" data-variant="interactive">
-                            <span className="text-xs opacity-60 mr-1">{isNoter ? '📝' : '📊'}</span>
-                            {isNoter ? 'Notatki' : 'Dashboard'}
-                        </div>
+                        {isNoter ? (
+                            <NoterBreadcrumbs />
+                        ) : (
+                            <>
+                                <Link href="/dashboard" className="glass px-3 py-1.5 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
+                                    Przestrzeń
+                                </Link>
+                                <span className="text-zinc-400">/</span>
+                                <div className="glass px-3 py-1.5 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate" data-variant="interactive">
+                                    <span className="text-xs opacity-60 mr-1">📊</span>
+                                    Dashboard
+                                </div>
+                            </>
+                        )}
                     </nav>
 
                     {/* Compact breadcrumb on tablet */}
