@@ -99,10 +99,9 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 {/* Left: Mobile Menu + Logo & Breadcrumbs */}
                 <div className="flex items-center gap-2 md:gap-4 lg:gap-6 overflow-hidden min-w-0 pr-2">
                     {/* Mobile Menu Toggle */}
-                    {/* Mobile Menu Toggle */}
                     <button
                         onClick={() => setIsNavOpen(!isNavOpen)}
-                        className="md:hidden glass w-10 h-10 flex items-center justify-center text-zinc-600 rounded-full"
+                        className="md:hidden glass w-12 h-12 flex items-center justify-center text-zinc-600 rounded-full"
                         data-variant="interactive"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -202,7 +201,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
                             <div className={`flex h-10 w-full items-center ${isRailExpanded ? 'px-1' : 'justify-center'}`}>
                                 <div className={`w-10 h-10 glass flex items-center justify-center shrink-0 transition-all ${isNoter ? 'text-indigo-600 bg-white/40 dark:bg-white/10' : 'text-zinc-500 dark:text-zinc-400 hover:text-indigo-600 dark:hover:text-indigo-400'}`} data-variant="interactive">
-                                    <svg className="w-5 h-5 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                                     </svg>
                                 </div>
@@ -284,9 +283,12 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 >
                     {/* Resizer Handle */}
                     <div
-                        className="absolute right-0 top-0 bottom-0 w-1 hover:w-1.5 cursor-col-resize z-50 hover:bg-indigo-500/50 transition-colors group"
+                        className="absolute right-0 top-0 bottom-0 w-3 hover:w-3 cursor-col-resize z-50 transition-colors group flex justify-center"
                         onMouseDown={startResizing}
                     >
+                        {/* Visual Line */}
+                        <div className="w-[1px] h-full group-hover:bg-indigo-500/50 transition-colors"></div>
+                        {/* Handle pill */}
                         <div className="absolute top-1/2 right-0.5 w-[3px] h-8 bg-zinc-300 dark:bg-zinc-600 rounded-full group-hover:bg-white" />
                     </div>
 
@@ -301,7 +303,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                             className="glass w-8 h-8 flex items-center justify-center text-zinc-500"
                             data-variant="interactive"
                         >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>

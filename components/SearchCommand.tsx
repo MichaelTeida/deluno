@@ -57,7 +57,7 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
                 onClick={onClose}
             />
 
-            <div className="w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-zinc-200 dark:border-zinc-800 overflow-hidden relative z-10 animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[60vh]">
+            <div className="w-full max-w-2xl glass rounded-xl shadow-2xl border border-zinc-200/50 dark:border-zinc-700/50 overflow-hidden relative z-10 animate-in fade-in zoom-in-95 duration-200 flex flex-col max-h-[60vh]" data-variant="panel">
                 {/* Search Input */}
                 <div className="flex items-center gap-3 px-4 py-3 border-b border-zinc-200 dark:border-zinc-800 shrink-0">
                     <svg className="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
