@@ -75,6 +75,11 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         ? 'Noter'
         : 'Dashboard';
 
+    // Auto-close mobile menu on navigation
+    useEffect(() => {
+        setIsNavOpen(false);
+    }, [pathname, activeNote?.id]);
+
     // Toggle Command Palette with Cmd+K
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
