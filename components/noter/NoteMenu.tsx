@@ -24,7 +24,7 @@ export default function NoteMenu() {
 
     const handleDuplicate = () => {
         const { id, createdAt, updatedAt, ...rest } = activeNote;
-        addNote(activeNote.parentId, { ...rest, title: `${activeNote.title} (Kopia)` });
+        addNote(activeNote.parentId, { ...rest, title: `${activeNote.title} (Copy)` });
         setIsOpen(false);
     };
 
@@ -39,7 +39,7 @@ export default function NoteMenu() {
     };
 
     const handleTrash = () => {
-        if (confirm("Czy na pewno chcesz przenieść notatkę do kosza?")) {
+        if (confirm("Are you sure you want to move this note to trash?")) {
             deleteNote(activeNote.id);
             setIsOpen(false);
         }
@@ -52,7 +52,7 @@ export default function NoteMenu() {
 
     const handleCopyLink = () => {
         navigator.clipboard.writeText(window.location.href);
-        alert("Link skopiowany do schowka!");
+        alert("Link copied to clipboard!");
         setIsOpen(false);
     };
 

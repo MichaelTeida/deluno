@@ -85,7 +85,7 @@ export const NoteItem = memo(function NoteItem({
                 )}
 
                 {/* Icon */}
-                <span className="text-sm shrink-0">{note.icon}</span>
+                <span className="text-sm shrink-0 transition-transform duration-200 group-hover:scale-125 cursor-default" title="Icon">{note.icon}</span>
 
                 {/* Title */}
                 <span className="flex-1 truncate">{note.title}</span>
