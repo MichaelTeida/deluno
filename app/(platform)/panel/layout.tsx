@@ -94,7 +94,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col h-dvh w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}>
 
             {/* 1. TOP HEADER */}
-            <header className="h-14 md:h-16 shrink-0 glass flex items-center justify-between px-3 md:px-6 z-40" data-variant="panel">
+            <header className="h-14 md:h-16 shrink-0 glass bg-white/40 dark:bg-black/30 flex items-center justify-between px-3 md:px-6 z-40" data-variant="panel">
 
                 {/* Left: Mobile Menu + Logo & Breadcrumbs */}
                 <div className="flex items-center gap-2 md:gap-4 lg:gap-6 overflow-hidden min-w-0 pr-2">
@@ -168,7 +168,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 {/* A. APPS RAIL - Hidden on mobile, shown on tablet+ */}
                 <aside className={`
                     ${isRailExpanded ? 'w-52 px-3' : 'w-14 md:w-16 items-center'} 
-                    glass flex flex-col py-3 md:py-4 gap-2 z-40 shrink-0 
+                    glass bg-white/40 dark:bg-black/30 flex flex-col py-3 md:py-4 gap-2 z-40 shrink-0 
                     transition-all duration-300 ease-out
                     hidden md:flex
                 `} data-variant="panel">
@@ -270,7 +270,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 {/* B. NAVIGATION SIDEBAR */}
                 <nav
                     className={`
-                        glass flex flex-col z-[60] md:z-30 shrink-0
+                        glass bg-white/40 dark:bg-black/30 flex flex-col z-[60] md:z-30 shrink-0
                         fixed md:relative left-0 top-0 h-full md:h-auto
                         transition-transform duration-300 ease-out
                         ${isNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
@@ -367,7 +367,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 </nav>
 
                 {/* C. MAIN CONTENT */}
-                <main className="flex-1 glass relative z-20 flex flex-col overflow-hidden min-w-0" data-variant="content">
+                <main className="flex-1 glass bg-white/40 dark:bg-black/30 relative z-20 flex flex-col overflow-hidden min-w-0" data-variant="content">
                     {/* Content Header */}
                     <div className="h-12 md:h-14 shrink-0 border-b border-white/20 flex items-center justify-between px-4 md:px-6">
                         <div className="flex items-center gap-3 max-w-[70%]">
