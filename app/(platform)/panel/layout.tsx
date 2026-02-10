@@ -422,7 +422,11 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
                     {/* FAB Help */}
                     <div className="absolute bottom-4 md:bottom-6 right-4 md:right-6">
-                        <button className="glass w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg md:text-xl shadow-xl hover:scale-105 transition-transform" data-variant="interactive">
+                        <button
+                            onClick={() => setIsSearchOpen(true)}
+                            className="glass w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center text-indigo-600 font-bold text-lg md:text-xl shadow-xl hover:scale-105 transition-transform"
+                            data-variant="interactive"
+                        >
                             ?
                         </button>
                     </div>

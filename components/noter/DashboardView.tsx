@@ -97,18 +97,33 @@ export default function DashboardView() {
                     <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">Recently Edited</h2>
                     <div className="bg-white/50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
                         {recentNotes.length === 0 ? (
-                            <div className="min-h-[300px] p-8 text-center flex flex-col items-center justify-center gap-4">
-                                <div className="text-5xl opacity-50">📝</div>
-                                <div className="flex flex-col gap-1">
-                                    <h3 className="font-semibold text-lg text-zinc-900 dark:text-zinc-100">No notes yet</h3>
-                                    <p className="text-sm text-zinc-500">Create your first note to get started.</p>
+                            <div className="min-h-[300px] p-8 flex flex-col items-center justify-center gap-6">
+                                <div className="text-center space-y-2">
+                                    <h3 className="font-semibold text-lg text-zinc-900 dark:text-zinc-100">Welcome to Deluno</h3>
+                                    <p className="text-sm text-zinc-500 max-w-xs mx-auto">Get started with your personal knowledge base.</p>
                                 </div>
+
+                                <div className="grid gap-3 w-full max-w-sm text-sm text-zinc-600 dark:text-zinc-400">
+                                    <div className="flex items-center gap-3 p-3 rounded-lg bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800">
+                                        <div className="w-6 h-6 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center text-indigo-600 dark:text-indigo-400 text-xs font-bold">1</div>
+                                        <span>Create your first note</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 p-3 rounded-lg bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800">
+                                        <div className="w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 text-xs font-bold">2</div>
+                                        <span>Use <kbd className="font-sans px-1 py-0.5 rounded bg-zinc-200 dark:bg-zinc-700 text-xs">Ctrl K</kbd> to search</span>
+                                    </div>
+                                    <div className="flex items-center gap-3 p-3 rounded-lg bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800">
+                                        <div className="w-6 h-6 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-500 text-xs font-bold">3</div>
+                                        <span>Organize with drag & drop</span>
+                                    </div>
+                                </div>
+
                                 <button
                                     onClick={handleCreateNote}
-                                    className="btn-glass px-6 py-2 text-indigo-600 hover:text-indigo-700 font-medium text-sm"
+                                    className="btn-glass px-6 py-2 text-indigo-600 hover:text-indigo-700 font-medium text-sm mt-2"
                                     data-variant="interactive"
                                 >
-                                    Create Noter &rarr;
+                                    Create Note &rarr;
                                 </button>
                             </div>
                         ) : (

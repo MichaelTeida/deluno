@@ -37,7 +37,8 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
 
     if (!isOpen) return null;
 
-    const filteredNotes = notes.filter(note =>
+    // Require at least 2 characters
+    const filteredNotes = query.trim().length < 2 ? [] : notes.filter(note =>
         !note.isTrashed &&
         (note.title.toLowerCase().includes(query.toLowerCase()) ||
             note.content.toLowerCase().includes(query.toLowerCase()))

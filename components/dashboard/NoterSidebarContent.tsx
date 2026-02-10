@@ -214,8 +214,8 @@ export default function NoterSidebarContent() {
                         onDragEnd={handleDragEnd}
                     >
                         <NoteList
-                            notes={notes}
-                            rootNotes={rootNotes}
+                            notes={notes.filter(n => !n.isFavorite)}
+                            rootNotes={rootNotes.filter(n => !n.isFavorite)}
                             activeNoteId={viewMode === 'notes' ? activeNoteId : null}
                             onSelect={(id) => { setActiveNoteId(id); setViewMode('notes'); }}
                             onAdd={(parentId) => { addNote(parentId); setViewMode('notes'); }}
