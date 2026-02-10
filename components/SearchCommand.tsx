@@ -113,7 +113,7 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
                 {/* Footer */}
                 <div className="px-4 py-2 bg-zinc-50 dark:bg-zinc-950 border-t border-zinc-200 dark:border-zinc-800 text-[10px] text-zinc-400 flex justify-between shrink-0">
                     <span>
-                        Found: {filteredNotes.length}
+                        {filteredNotes.length > 0 && `Found: ${filteredNotes.length}`}
                     </span>
                     <span className="flex gap-2">
                         <span>↑↓ navigate</span>

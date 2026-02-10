@@ -61,37 +61,47 @@ export default function NoterSidebarContent() {
     const rootNotes = notes.filter(n => n.parentId === null && !n.isTrashed);
     const favoriteNotes = notes.filter(n => n.isFavorite && !n.isTrashed);
 
+    const isDescendant = (parentId: string, childId: string, notesList: typeof notes) => {
+        let current = notesList.find(n => n.id === childId);
+        while (current && current.parentId) {
+            if (current.parentId === parentId) return true;
+            current = notesList.find(n => n.id === current.parentId);
+        }
+        return false;
+    };
+
+    const handleDragOver = (event: any) => {
+        const { active, over } = event;
+        if (!over) return;
+        const activeId = active.id as string;
+        const overId = over.id as string;
+        if (activeId === overId) return;
+        if (isDescendant(activeId, overId, notes)) return;
+    };
+
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
+        setActiveId(null);
 
-        if (!over) {
-            setActiveId(null);
-            return;
-        }
+        if (!over) return;
 
         if (active.id !== over.id) {
             const activeNoteIndex = notes.findIndex(n => n.id === active.id);
             const overNoteIndex = notes.findIndex(n => n.id === over.id);
 
-            if (activeNoteIndex === -1 || overNoteIndex === -1) {
-                setActiveId(null);
-                return;
-            }
+            if (activeNoteIndex === -1 || overNoteIndex === -1) return;
 
             const activeNote = notes[activeNoteIndex];
             const overNote = notes[overNoteIndex];
 
-            // 1. Reparenting Check (Simple Sibling Adoption)
-            // If dragging between lists (different parents), adopt the new parent
+            if (isDescendant(activeNote.id, overNote.id, notes)) return;
+
             if (activeNote.parentId !== overNote.parentId) {
                 updateNote(activeNote.id, { parentId: overNote.parentId });
             }
 
-            // 2. Reorder
             reorderNotes(arrayMove(notes, activeNoteIndex, overNoteIndex));
         }
-
-        setActiveId(null);
     };
 
     return (
@@ -197,32 +207,7 @@ export default function NoterSidebarContent() {
                         sensors={sensors}
                         collisionDetection={closestCenter}
                         onDragStart={(e) => setActiveId(e.active.id as string)}
-                        onDragOver={(event) => {
-                            const { active, over } = event;
-                            if (!over) return;
-
-                            // Identify the notes involved
-                            const activeNoteId = active.id as string;
-                            const overNoteId = over.id as string;
-
-                            // Find the note objects
-                            const activeNote = notes.find(n => n.id === activeNoteId);
-                            const overNote = notes.find(n => n.id === overNoteId);
-
-                            if (!activeNote || !overNote) return;
-
-                            // Let's implement robust Parent Change on DragOver.
-                            if (activeNote.parentId !== overNote.parentId) {
-                                // We are moving into a different scope.
-                                // Active note should adopt the overNote's parent.
-                                // This allows moving between folders and to root (if overNote is root).
-                                if (activeNote.parentId !== overNote.parentId) {
-                                    // updateNote(activeNote.id, { parentId: overNote.parentId }); 
-                                    // ^ This causes state update -> re-render. `dnd-kit` supports this pattern (virtualized lists do it).
-                                    // Let's try it.
-                                }
-                            }
-                        }}
+                        onDragOver={handleDragOver}
                         onDragEnd={handleDragEnd}
                     >
                         <NoteList
