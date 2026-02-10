@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { UserProfile } from "@clerk/nextjs";
+import { UserProfile, useUser } from "@clerk/nextjs";
 import { useState } from "react";
 
 interface SettingsModalProps {
@@ -11,6 +11,7 @@ interface SettingsModalProps {
 
 export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     const { theme, setTheme, resolvedTheme } = useTheme();
+    const { isLoaded, isSignedIn } = useUser();
     const [activeTab, setActiveTab] = useState<'general' | 'account'>('general');
 
     if (!isOpen) return null;
@@ -92,17 +93,25 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                         )}
 
                         {activeTab === 'account' && (
-                            <div className="h-full">
-                                <UserProfile
-                                    appearance={{
-                                        elements: {
-                                            rootBox: "w-full h-full",
-                                            card: "shadow-none border-none w-full h-full",
-                                            navbar: "hidden",
-                                            pageScrollBox: "p-0"
-                                        }
-                                    }}
-                                />
+                            <div className="h-full w-full">
+                                {isLoaded && isSignedIn ? (
+                                    <UserProfile
+                                        appearance={{
+                                            elements: {
+                                                rootBox: "w-full h-full",
+                                                card: "shadow-none border-none w-full h-full bg-transparent",
+                                                navbar: "hidden",
+                                                pageScrollBox: "p-0",
+                                                headerTitle: "hidden",
+                                                headerSubtitle: "hidden"
+                                            }
+                                        }}
+                                    />
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-zinc-500">
+                                        Loading account settings...
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

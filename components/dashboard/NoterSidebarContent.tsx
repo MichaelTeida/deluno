@@ -5,13 +5,28 @@ import NoteList from "@/components/noter/NoteList";
 import { DndContext, DragEndEvent, MouseSensor, TouchSensor, useSensor, useSensors, closestCenter, KeyboardSensor, DragOverlay } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useId } from "react";
+import { useEffect, useState, useId, useRef } from "react";
 
 export default function NoterSidebarContent() {
     const { notes, activeNoteId, setActiveNoteId, addNote, deleteNote, updateNote, reorderNotes, viewMode, setViewMode } = useNoter();
     const router = useRouter();
     const [activeId, setActiveId] = useState<string | null>(null);
     const dndId = useId();
+    // Use ref for immediate blocking synchronously
+    const isCreatingRef = useRef(false);
+
+    const handleCreateNote = () => {
+        if (isCreatingRef.current) return;
+        isCreatingRef.current = true;
+
+        addNote(null);
+        setViewMode('notes');
+
+        // Debounce release
+        setTimeout(() => {
+            isCreatingRef.current = false;
+        }, 500);
+    };
 
     const sensors = useSensors(
         useSensor(MouseSensor, {
@@ -118,98 +133,128 @@ export default function NoterSidebarContent() {
                 )}
             </div>
 
-            {/* Private */}
-            <div className="space-y-1">
-                <div className="flex items-center justify-between px-3 mb-2">
-                    <h3 className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Private</h3>
-                    <button
-                        onClick={() => { addNote(null); setViewMode('notes'); }}
-                        className="text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-lg"
-                        title="Add note"
-                    >
-                        +
-                    </button>
-                </div>
-                <DndContext
-                    id={dndId}
-                    sensors={sensors}
-                    collisionDetection={closestCenter}
-                    onDragStart={(e) => setActiveId(e.active.id as string)}
-                    onDragOver={(event) => {
-                        const { active, over } = event;
-                        if (!over) return;
-
-                        // Identify the notes involved
-                        const activeNoteId = active.id as string;
-                        const overNoteId = over.id as string;
-
-                        // Find the note objects
-                        const activeNote = notes.find(n => n.id === activeNoteId);
-                        const overNote = notes.find(n => n.id === overNoteId);
-
-                        if (!activeNote || !overNote) return;
-
-                        // If moving between different parents, we update the parentId immediately for visual feedback
-                        // BUT `dnd-kit` usually recommends just updating the `items` in the SortableContext
-                        // Since our state `notes` drives everything, updating `activeNote.parentId` will move it.
-                        // However, doing this on DragOver might be too aggressive if not debounced or handled carefully.
-                        // Ideally, we move it between lists visually.
-
-                        // For simplicity in this flat-data structure:
-                        // If we are over a note that has a DIFFERENT parent than active note,
-                        // we can temporarily change the active note's parentId in the state to simulate the move?
-                        // No, that causes re-renders and potential jumpiness.
-
-                        // Better appraoch: WE JUST USE DRAG END for simplicity, but we ensure collision is robust.
-                        // The user said "cannot move nested elements and nest/unnest them".
-                        // This usually means they can't drag FROM a folder TO the root.
-                        // Why? Because root is a different SortableContext.
-                        // DndKit handles this IF the `SortableContext` items are updated.
-                        // But `NoteItem` recursively verifies availability.
-
-                        // Let's implement robust Parent Change on DragOver.
-                        if (activeNote.parentId !== overNote.parentId) {
-                            // We are moving into a different scope.
-                            // Active note should adopt the overNote's parent.
-                            // This allows moving between folders and to root (if overNote is root).
-                            if (activeNote.parentId !== overNote.parentId) {
-                                // updateNote(activeNote.id, { parentId: overNote.parentId }); 
-                                // ^ This causes state update -> re-render. `dnd-kit` supports this pattern (virtualized lists do it).
-                                // Let's try it.
-                            }
-                        }
-                    }}
-                    onDragEnd={handleDragEnd}
-                >
-                    <NoteList
-                        notes={notes}
-                        rootNotes={rootNotes}
-                        activeNoteId={viewMode === 'notes' ? activeNoteId : null}
-                        onSelect={(id) => { setActiveNoteId(id); setViewMode('notes'); }}
-                        onAdd={(parentId) => { addNote(parentId); setViewMode('notes'); }}
-                        onDelete={deleteNote}
-                        onToggle={(id) => updateNote(id, { isExpanded: !notes.find(n => n.id === id)?.isExpanded })}
-                    />
-                    <DragOverlay zIndex={9999}>
-                        {activeId ? (
-                            <div className="opacity-90 rotate-2 cursor-grabbing pointer-events-none scale-105 transition-transform" style={{ width: 'var(--sidebar-width, 240px)' }}>
+            {/* Trash View / List */}
+            {viewMode === 'trash' ? (
+                <div className="space-y-1">
+                    <div className="flex items-center justify-between px-3 mb-2">
+                        <h3 className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Trash</h3>
+                        <button
+                            onClick={() => {
+                                // Empty trash logic could go here
+                            }}
+                            className="text-xs text-red-500 hover:text-red-600 transition-colors"
+                        >
+                            {/* Empty Trash */}
+                        </button>
+                    </div>
+                    {notes.filter(n => n.isTrashed).length === 0 ? (
+                        <div className="px-3 py-4 text-center">
+                            <p className="text-zinc-400 dark:text-zinc-600 text-sm italic">Trash is empty</p>
+                        </div>
+                    ) : (
+                        <div className="space-y-0.5">
+                            {notes.filter(n => n.isTrashed).map(note => (
                                 <div
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-white shadow-xl backdrop-blur-md"
-                                    style={{
-                                        background: `linear-gradient(135deg, rgba(99, 102, 241, 0.55) 0%, rgba(79, 70, 229, 0.55) 100%)`,
-                                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                                        boxShadow: '0 8px 32px rgba(31, 38, 135, 0.37)',
-                                        height: 'var(--height-button)'
-                                    }}
+                                    key={note.id}
+                                    className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg group hover:bg-white/20 dark:hover:bg-white/10 transition-colors"
                                 >
-                                    <span className="text-sm">{notes.find(n => n.id === activeId)?.icon}</span>
-                                    <span className="font-semibold text-sm truncate">{notes.find(n => n.id === activeId)?.title || "Untitled"}</span>
+                                    <div className="flex items-center gap-2 overflow-hidden">
+                                        <span className="text-xs opacity-50">{note.icon}</span>
+                                        <span className="text-sm text-zinc-500 dark:text-zinc-400 truncate decoration-line-through">{note.title || "Untitled"}</span>
+                                    </div>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            updateNote(note.id, { isTrashed: false });
+                                        }}
+                                        className="text-indigo-500 hover:text-indigo-600 p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        title="Restore"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
+                                        </svg>
+                                    </button>
                                 </div>
-                            </div>
-                        ) : null}
-                    </DragOverlay>
-                </DndContext>
-            </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            ) : (
+                /* Private Notes (Standard View) */
+                <div className="space-y-1">
+                    <div className="flex items-center justify-between px-3 mb-2">
+                        <h3 className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Private</h3>
+                        <button
+                            onClick={handleCreateNote}
+                            className={`text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-lg`}
+                            title="Add note"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <DndContext
+                        id={dndId}
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragStart={(e) => setActiveId(e.active.id as string)}
+                        onDragOver={(event) => {
+                            const { active, over } = event;
+                            if (!over) return;
+
+                            // Identify the notes involved
+                            const activeNoteId = active.id as string;
+                            const overNoteId = over.id as string;
+
+                            // Find the note objects
+                            const activeNote = notes.find(n => n.id === activeNoteId);
+                            const overNote = notes.find(n => n.id === overNoteId);
+
+                            if (!activeNote || !overNote) return;
+
+                            // Let's implement robust Parent Change on DragOver.
+                            if (activeNote.parentId !== overNote.parentId) {
+                                // We are moving into a different scope.
+                                // Active note should adopt the overNote's parent.
+                                // This allows moving between folders and to root (if overNote is root).
+                                if (activeNote.parentId !== overNote.parentId) {
+                                    // updateNote(activeNote.id, { parentId: overNote.parentId }); 
+                                    // ^ This causes state update -> re-render. `dnd-kit` supports this pattern (virtualized lists do it).
+                                    // Let's try it.
+                                }
+                            }
+                        }}
+                        onDragEnd={handleDragEnd}
+                    >
+                        <NoteList
+                            notes={notes}
+                            rootNotes={rootNotes}
+                            activeNoteId={viewMode === 'notes' ? activeNoteId : null}
+                            onSelect={(id) => { setActiveNoteId(id); setViewMode('notes'); }}
+                            onAdd={(parentId) => { addNote(parentId); setViewMode('notes'); }}
+                            onDelete={deleteNote}
+                            onToggle={(id) => updateNote(id, { isExpanded: !notes.find(n => n.id === id)?.isExpanded })}
+                        />
+                        <DragOverlay zIndex={9999}>
+                            {activeId ? (
+                                <div className="opacity-90 rotate-2 cursor-grabbing pointer-events-none scale-105 transition-transform" style={{ width: 'var(--sidebar-width, 240px)' }}>
+                                    <div
+                                        className="flex items-center gap-2 px-3 py-2 rounded-lg text-white shadow-xl backdrop-blur-md"
+                                        style={{
+                                            background: `linear-gradient(135deg, rgba(99, 102, 241, 0.55) 0%, rgba(79, 70, 229, 0.55) 100%)`,
+                                            border: '1px solid rgba(255, 255, 255, 0.3)',
+                                            boxShadow: '0 8px 32px rgba(31, 38, 135, 0.37)',
+                                            height: 'var(--height-button)'
+                                        }}
+                                    >
+                                        <span className="text-sm">{notes.find(n => n.id === activeId)?.icon}</span>
+                                        <span className="font-semibold text-sm truncate">{notes.find(n => n.id === activeId)?.title || "Untitled"}</span>
+                                    </div>
+                                </div>
+                            ) : null}
+                        </DragOverlay>
+                    </DndContext>
+                </div>
+            )}
 
             {/* Shared */}
             <div className="space-y-1">

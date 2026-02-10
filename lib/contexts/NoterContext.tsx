@@ -30,6 +30,39 @@ export function NoterProvider({ children }: { children: React.ReactNode }) {
     const [notes, setNotes] = useState<Note[]>(initialNotes);
     const [activeNoteId, setActiveNoteId] = useState<string | null>("1");
     const [viewMode, setViewMode] = useState<'notes' | 'trash' | 'dashboard'>('notes');
+    const [isInitialized, setIsInitialized] = useState(false);
+
+    // Load from LocalStorage on mount
+    useEffect(() => {
+        const savedNotes = localStorage.getItem('deluno-notes');
+        const savedActiveId = localStorage.getItem('deluno-active-note');
+        if (savedNotes) {
+            try {
+                // Parse dates back to Date objects
+                const parsed = JSON.parse(savedNotes, (key, value) => {
+                    if (key === 'createdAt' || key === 'updatedAt') return new Date(value);
+                    return value;
+                });
+                setNotes(parsed);
+            } catch (e) {
+                console.error("Failed to parse notes", e);
+            }
+        }
+        if (savedActiveId) setActiveNoteId(savedActiveId);
+        setIsInitialized(true);
+    }, []);
+
+    // Save to LocalStorage on change
+    useEffect(() => {
+        if (!isInitialized) return;
+        localStorage.setItem('deluno-notes', JSON.stringify(notes));
+    }, [notes, isInitialized]);
+
+    useEffect(() => {
+        if (!isInitialized) return;
+        if (activeNoteId) localStorage.setItem('deluno-active-note', activeNoteId);
+        else localStorage.removeItem('deluno-active-note');
+    }, [activeNoteId, isInitialized]);
 
     const activeNote = notes.find(n => n.id === activeNoteId) || null;
 
