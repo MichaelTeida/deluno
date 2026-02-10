@@ -186,7 +186,7 @@ html.dark body {
     position: relative;
     /* overflow: hidden; -- Removed to allow shadows/tooltips if needed, add manually if needed */
     background: var(--effect-glass-bg);
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s cubic-bezier(0.25, 1, 0.5, 1), backdrop-filter 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     backdrop-filter: blur(3px) saturate(var(--glass-saturation)) url(#glass-clean-v5);
     -webkit-backdrop-filter: blur(3px) saturate(var(--glass-saturation)) url(#glass-clean-v5);
     box-shadow: var(--effect-glass-shadow);
@@ -241,7 +241,7 @@ html.dark body {
     font-weight: 500;
     font-size: 0.875rem;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 
     /* Liquid Glass Effect */
     background: var(--effect-glass-bg);

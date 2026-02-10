@@ -94,7 +94,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col h-dvh w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}>
 
             {/* 1. TOP HEADER */}
-            <header className="h-14 md:h-16 shrink-0 glass bg-white/40 dark:bg-black/30 flex items-center justify-between px-3 md:px-6 z-40" data-variant="panel">
+            <header className="h-14 md:h-16 shrink-0 glass bg-white/40 dark:bg-black/30 flex items-center justify-between px-3 md:px-6 z-50" data-variant="panel">
 
                 {/* Left: Mobile Menu + Logo & Breadcrumbs */}
                 <div className="flex items-center gap-2 md:gap-4 lg:gap-6 overflow-hidden min-w-0 pr-2">
@@ -335,7 +335,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                                 </svg>
                                 <span>Search</span>
-                                <span className="ml-auto text-xs opacity-50 dark:opacity-40 hidden sm:block">⌘K</span>
+                                <span className="ml-auto text-xs opacity-50 dark:opacity-40 hidden sm:block">Ctrl K</span>
                             </div>
                             <button
                                 onClick={() => setIsSidebarVisible(false)}
