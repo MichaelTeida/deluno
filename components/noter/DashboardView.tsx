@@ -97,15 +97,18 @@ export default function DashboardView() {
                     <h2 className="text-xl font-bold mb-4 text-zinc-800 dark:text-zinc-200">Recently Edited</h2>
                     <div className="bg-white/50 dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
                         {recentNotes.length === 0 ? (
-                            <div className="p-8 text-center flex flex-col items-center justify-center gap-2">
-                                <div className="text-4xl">📝</div>
-                                <h3 className="font-medium text-zinc-900 dark:text-zinc-100">No notes yet</h3>
-                                <p className="text-sm text-zinc-500 mb-4">Create your first note to get started.</p>
+                            <div className="min-h-[300px] p-8 text-center flex flex-col items-center justify-center gap-4">
+                                <div className="text-5xl opacity-50">📝</div>
+                                <div className="flex flex-col gap-1">
+                                    <h3 className="font-semibold text-lg text-zinc-900 dark:text-zinc-100">No notes yet</h3>
+                                    <p className="text-sm text-zinc-500">Create your first note to get started.</p>
+                                </div>
                                 <button
                                     onClick={handleCreateNote}
-                                    className="text-indigo-600 hover:text-indigo-700 font-medium text-sm hover:underline"
+                                    className="btn-glass px-6 py-2 text-indigo-600 hover:text-indigo-700 font-medium text-sm"
+                                    data-variant="interactive"
                                 >
-                                    Create Note &rarr;
+                                    Create Noter &rarr;
                                 </button>
                             </div>
                         ) : (

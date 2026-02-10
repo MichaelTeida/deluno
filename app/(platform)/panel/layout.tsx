@@ -115,7 +115,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                         <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-bold text-[10px] md:text-xs shadow-lg">
                             DO
                         </div>
-                        <span className="font-bold text-base md:text-lg tracking-tight text-zinc-900 dark:text-zinc-100 hidden sm:block shrink-0 mt-[-1px]">Deluno</span>
+                        <span className="font-bold text-base md:text-lg tracking-tight text-zinc-900 dark:text-zinc-100 hidden sm:block shrink-0">Deluno</span>
                     </Link>
 
                     {/* Separator - Hidden on mobile */}
@@ -160,7 +160,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                 {/* Mobile Overlay */}
                 {isNavOpen && (
                     <div
-                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 md:hidden"
+                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-[59] md:hidden"
                         onClick={() => setIsNavOpen(false)}
                     />
                 )}
@@ -280,7 +280,6 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
                     style={{
                         width: isSidebarVisible ? ((isMounted && window.innerWidth >= 768) ? sidebarWidth : '16rem') : 0,
                         opacity: isSidebarVisible ? 1 : 0,
-                        transition: isResizing ? 'none' : 'width 300ms ease, opacity 300ms ease, transform 300ms ease'
                     }}
                 >
                     {/* Resizer Handle */}

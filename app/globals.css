@@ -357,6 +357,20 @@ html.dark body {
     background: rgba(0, 0, 0, 0.2);
   }
 
+  /* Hide scrollbar on mobile */
+  @media (max-width: 768px) {
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+  }
+
   /* Global Focus Ring */
   :focus-visible {
     outline: 2px solid theme('colors.indigo.500');
