@@ -149,6 +149,14 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
 
                 {/* Right: User & Theme Menu */}
                 <div className="flex items-center gap-2 md:gap-3 shrink-0">
+                    <button
+                        onClick={() => setIsSearchOpen(true)}
+                        className="md:hidden w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                    </button>
                     <UserButton afterSignOutUrl="/" />
                 </div>
             </header>
