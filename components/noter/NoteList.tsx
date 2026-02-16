@@ -62,18 +62,27 @@ export const NoteItem = memo(function NoteItem({
                     <DragIcon />
                 </span>
 
-                {hasChildren && (
-                    <button
-                        onClick={(e) => { e.stopPropagation(); onToggle(note.id); }}
-                        className="absolute left-1.5 w-5 h-full flex items-center justify-center z-10 transition-colors"
-                        style={{ color: 'var(--sidebar-item-muted)' }}
-                    >
-                        <ChevronIcon expanded={!!note.isExpanded} />
-                    </button>
-                )}
 
-                <div className="w-4 flex items-center justify-center shrink-0 relative z-0">
-                    <span className="text-sm transition-transform duration-200 group-hover:scale-125 cursor-default">{note.icon}</span>
+
+                <div className="w-5 h-5 flex items-center justify-center shrink-0 relative z-10 mr-1">
+                    {hasChildren ? (
+                        <>
+                            <span className="text-sm transition-all duration-200 group-hover:opacity-0 group-hover:scale-50 absolute inset-0 flex items-center justify-center cursor-default">
+                                {note.icon}
+                            </span>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onToggle(note.id); }}
+                                className="absolute inset-0 flex items-center justify-center transition-all duration-200 opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100"
+                                style={{ color: 'var(--sidebar-item-muted)' }}
+                            >
+                                <ChevronIcon expanded={!!note.isExpanded} />
+                            </button>
+                        </>
+                    ) : (
+                        <span className="text-sm transition-transform duration-200 group-hover:scale-110 cursor-default">
+                            {note.icon}
+                        </span>
+                    )}
                 </div>
 
                 <span className="flex-1 truncate relative z-0">{note.title}</span>
