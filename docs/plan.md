@@ -25,10 +25,6 @@ domain.com/                                 ← Landing page
     └── /panel/[app-c]                      ← App C (future)
 ```
 
-### Why `sign-in` and `sign-up` are separate folders
-
-Clerk requires **catch-all routes** (`[[...sign-in]]/page.tsx`). Next.js App Router needs physical folders for this. This is a library requirement, not an architectural choice. Clerk automatically handles multi-step flows (MFA, OAuth callback) within a single catch-all route.
-
 ---
 
 ## 2. Layout Zones
@@ -306,16 +302,4 @@ All UI panels use the `.glass` class from `globals.css`. Apps inherit the Liquid
 - Controlled by `theme-provider.tsx`
 - Toggle in Settings modal
 
----
 
-## 9. Current Audit Status
-
-| # | Issue | Status |
-|---|-------|--------|
-| 1 | Duplicate layout (`panel/` + `dashboard/`) | ✅ Fixed — `dashboard/` deleted |
-| 2 | Noter hardcoded in shell | ⚠️ Partial — NoterProvider still at shell level (acceptable until 2nd app) |
-| 3 | No Rail/Sidebar separation | ✅ Fixed — `AppRail.tsx` + `SidebarLayout.tsx` extracted |
-| 4 | `components/dashboard/` mixed contexts | ✅ Fixed — split to `platform/` and `noter/` |
-| 5 | Landing page not in `(website)/` | 📋 Deferred — move when website pages are created |
-| 6 | No `PlatformContext` | ✅ Fixed — created with full state management |
-| 7 | Mixed PL/EN in UI | ✅ Fixed — all EN + i18n foundation created |
