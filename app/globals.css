@@ -12,7 +12,16 @@
     --radius-panel: 1.5rem;
     --radius-button: 9999px;
     --height-button: 2.5rem;
-    /* Standard 40px height for all buttons */
+
+    /* --- SIDEBAR ITEM TOKENS --- */
+    --sidebar-item-active-bg: rgba(99, 102, 241, 0.12);
+    --sidebar-item-active-text: #4338ca;
+    --sidebar-item-hover-bg: rgba(255, 255, 255, 0.30);
+    --sidebar-item-text: #3f3f46;
+    --sidebar-item-muted: #a1a1aa;
+    --sidebar-item-accent: #4f46e5;
+    --sidebar-item-accent-danger: #dc2626;
+    --sidebar-item-depth-indent: 16px;
 
     /* --- LIQUID GLASS v5: VARIABLES --- */
     /* Light Mode Palette */
@@ -66,9 +75,15 @@
     /* Shadows remain black */
 
     --glass-reflex-dark: 0.8;
-    /* Slightly reduced shadow intensity */
     --glass-reflex-light: 0.6;
-    /* Reduced highlight intensity */
+
+    --sidebar-item-active-bg: rgba(99, 102, 241, 0.18);
+    --sidebar-item-active-text: #a5b4fc;
+    --sidebar-item-hover-bg: rgba(255, 255, 255, 0.10);
+    --sidebar-item-text: #d4d4d8;
+    --sidebar-item-muted: #71717a;
+    --sidebar-item-accent: #818cf8;
+    --sidebar-item-accent-danger: #f87171;
   }
 
   /* Dark Mode Overrides - Media query fallback */
