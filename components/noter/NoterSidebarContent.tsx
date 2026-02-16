@@ -2,117 +2,128 @@
 
 import { useNoter } from "@/lib/contexts/NoterContext";
 import NoteList from "@/components/noter/NoteList";
-import { DndContext, DragEndEvent, MouseSensor, TouchSensor, useSensor, useSensors, closestCenter, KeyboardSensor, DragOverlay } from "@dnd-kit/core";
-import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { useRouter } from "next/navigation";
-import { useEffect, useState, useId, useRef } from "react";
+import { usePlatform } from "@/lib/contexts/PlatformContext";
+import { DndContext, DragEndEvent, MouseSensor, TouchSensor, useSensor, useSensors, closestCenter, KeyboardSensor, DragOverlay, Modifier } from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { useEffect, useState, useId, useRef, useMemo, useCallback } from "react";
+
+const adjustForContainerOffset: Modifier = ({ transform, draggingNodeRect, containerNodeRect }) => {
+    if (!draggingNodeRect || !containerNodeRect) return transform;
+    const nav = document.querySelector('nav[data-variant="panel"]');
+    if (!nav) return transform;
+    const navRect = nav.getBoundingClientRect();
+    return {
+        ...transform,
+        x: transform.x - navRect.left,
+        y: transform.y - navRect.top,
+    };
+};
 
 export default function NoterSidebarContent() {
     const { notes, activeNoteId, setActiveNoteId, addNote, deleteNote, updateNote, reorderNotes, viewMode, setViewMode } = useNoter();
-    const router = useRouter();
     const [activeId, setActiveId] = useState<string | null>(null);
+    const { sidebarWidth } = usePlatform();
     const dndId = useId();
-    // Use ref for immediate blocking synchronously
     const isCreatingRef = useRef(false);
 
     const handleCreateNote = () => {
         if (isCreatingRef.current) return;
         isCreatingRef.current = true;
-
         addNote(null);
         setViewMode('notes');
-
-        // Debounce release
-        setTimeout(() => {
-            isCreatingRef.current = false;
-        }, 500);
+        setTimeout(() => { isCreatingRef.current = false; }, 500);
     };
 
     const sensors = useSensors(
-        useSensor(MouseSensor, {
-            activationConstraint: {
-                distance: 5, // Start dragging after 5px movement
-            },
-        }),
-        useSensor(TouchSensor, {
-            activationConstraint: {
-                delay: 200, // Wait 200ms before dragging to allow scrolling
-                tolerance: 5, // Allow 5px movement during delay
-            },
-        }),
-        useSensor(KeyboardSensor, {
-            coordinateGetter: sortableKeyboardCoordinates,
-        })
+        useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
+        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
     );
 
-    // Listen for global "create-new-note" event from layout
     useEffect(() => {
-        const handleCreateNewNote = () => {
-            addNote(null);
-            setViewMode('notes');
-        };
-
-        document.addEventListener('create-new-note', handleCreateNewNote);
-        return () => document.removeEventListener('create-new-note', handleCreateNewNote);
+        const handler = () => { addNote(null); setViewMode('notes'); };
+        document.addEventListener('create-new-note', handler);
+        return () => document.removeEventListener('create-new-note', handler);
     }, [addNote, setViewMode]);
 
+    const nonTrashedNotes = useMemo(() => notes.filter(n => !n.isTrashed), [notes]);
+    const rootNotes = useMemo(() => nonTrashedNotes.filter(n => n.parentId === null), [nonTrashedNotes]);
+    const favoriteNotes = useMemo(() => nonTrashedNotes.filter(n => n.isFavorite), [nonTrashedNotes]);
+    const privateRootNotes = useMemo(() => rootNotes.filter(n => !n.isFavorite), [rootNotes]);
 
+    const draggedNote = useMemo(() => activeId ? notes.find(n => n.id === activeId) : null, [activeId, notes]);
 
-    const rootNotes = notes.filter(n => n.parentId === null && !n.isTrashed);
-    const favoriteNotes = notes.filter(n => n.isFavorite && !n.isTrashed);
-
-    const isDescendant = (parentId: string, childId: string, notesList: typeof notes) => {
-        let current = notesList.find(n => n.id === childId);
-        while (current && current.parentId) {
+    const isDescendant = (parentId: string, childId: string) => {
+        let current = notes.find(n => n.id === childId);
+        while (current?.parentId) {
             if (current.parentId === parentId) return true;
-            current = notesList.find(n => n.id === current!.parentId);
+            current = notes.find(n => n.id === current!.parentId);
         }
         return false;
-    };
-
-    const handleDragOver = (event: any) => {
-        const { active, over } = event;
-        if (!over) return;
-        const activeId = active.id as string;
-        const overId = over.id as string;
-        if (activeId === overId) return;
-        if (isDescendant(activeId, overId, notes)) return;
     };
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
         setActiveId(null);
+        if (!over || active.id === over.id) return;
 
-        if (!over) return;
+        const activeNote = notes.find(n => n.id === active.id);
+        const overNote = notes.find(n => n.id === over.id);
+        if (!activeNote || !overNote) return;
+        if (isDescendant(activeNote.id, overNote.id)) return;
 
-        if (active.id !== over.id) {
-            const activeNoteIndex = notes.findIndex(n => n.id === active.id);
-            const overNoteIndex = notes.findIndex(n => n.id === over.id);
+        const targetParentId = overNote.parentId;
 
-            if (activeNoteIndex === -1 || overNoteIndex === -1) return;
+        const getSiblings = (parentId: string | null) =>
+            notes.filter(n => n.parentId === parentId && !n.isTrashed && !n.isFavorite);
 
-            const activeNote = notes[activeNoteIndex];
-            const overNote = notes[overNoteIndex];
+        const updatedNotes = [...notes];
 
-            if (isDescendant(activeNote.id, overNote.id, notes)) return;
-
-            if (activeNote.parentId !== overNote.parentId) {
-                updateNote(activeNote.id, { parentId: overNote.parentId });
-            }
-
-            reorderNotes(arrayMove(notes, activeNoteIndex, overNoteIndex));
+        if (activeNote.parentId !== targetParentId) {
+            const idx = updatedNotes.findIndex(n => n.id === activeNote.id);
+            updatedNotes[idx] = { ...updatedNotes[idx], parentId: targetParentId, updatedAt: new Date() };
         }
+
+        const siblings = getSiblings(targetParentId);
+        const siblingIds = siblings.map(n => n.id);
+        const fromIdx = siblingIds.indexOf(activeNote.id);
+        const toIdx = siblingIds.indexOf(overNote.id);
+
+        if (fromIdx === -1 || toIdx === -1) {
+            reorderNotes(updatedNotes);
+            return;
+        }
+
+        siblingIds.splice(fromIdx, 1);
+        siblingIds.splice(toIdx, 0, activeNote.id);
+
+        const siblingOrder = new Map(siblingIds.map((id, i) => [id, i]));
+        updatedNotes.sort((a, b) => {
+            const aOrder = siblingOrder.get(a.id);
+            const bOrder = siblingOrder.get(b.id);
+            if (aOrder !== undefined && bOrder !== undefined) return aOrder - bOrder;
+            if (aOrder !== undefined) return -1;
+            if (bOrder !== undefined) return 1;
+            return 0;
+        });
+
+        reorderNotes(updatedNotes);
     };
+
+    const isActive = (id: string | null, mode: string) => id !== null && viewMode === mode;
 
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pb-3">
-            {/* Dashboard Link */}
-            {/* Dashboard Link */}
+            {/* Dashboard */}
             <div className="py-2">
                 <div
                     onClick={() => { setActiveNoteId(null); setViewMode('dashboard'); }}
-                    className={`flex items-center gap-2 px-3 rounded-lg cursor-pointer text-sm font-medium transition-colors select-none ${viewMode === 'dashboard' ? 'bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300' : 'hover:bg-white/20 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-100'}`}
-                    style={{ height: 'var(--height-button)' }}
+                    className="flex items-center gap-2 px-3 rounded-lg cursor-pointer text-sm font-medium transition-colors select-none"
+                    style={{
+                        height: 'var(--height-button)',
+                        background: viewMode === 'dashboard' ? 'var(--sidebar-item-active-bg)' : undefined,
+                        color: viewMode === 'dashboard' ? 'var(--sidebar-item-active-text)' : 'var(--sidebar-item-text)',
+                    }}
                 >
                     <div className="w-4 h-4 flex items-center justify-center shrink-0">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -125,17 +136,21 @@ export default function NoterSidebarContent() {
 
             {/* Favorites */}
             <div className="space-y-1">
-                <h3 className="px-3 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2">Favorites</h3>
+                <h3 className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--sidebar-item-muted)' }}>Favorites</h3>
                 {favoriteNotes.length === 0 ? (
-                    <div className="px-3 py-1.5 text-xs text-zinc-400 dark:text-zinc-500 italic">No favorites</div>
+                    <div className="py-1.5 text-xs italic" style={{ color: 'var(--sidebar-item-muted)' }}>No favorites</div>
                 ) : (
                     <div className="space-y-0.5">
                         {favoriteNotes.map(note => (
                             <div
                                 key={note.id}
                                 onClick={() => { setActiveNoteId(note.id); setViewMode('notes'); }}
-                                className={`flex items-center gap-2 px-3 cursor-pointer text-sm transition-colors select-none ${activeNoteId === note.id && viewMode === 'notes' ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/20 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"}`}
-                                style={{ height: 'var(--height-button)' }}
+                                className="flex items-center gap-2 px-3 cursor-pointer text-sm transition-colors select-none rounded-lg hover:bg-[var(--sidebar-item-hover-bg)]"
+                                style={{
+                                    height: 'var(--height-button)',
+                                    background: activeNoteId === note.id && viewMode === 'notes' ? 'var(--sidebar-item-active-bg)' : undefined,
+                                    color: activeNoteId === note.id && viewMode === 'notes' ? 'var(--sidebar-item-active-text)' : 'var(--sidebar-item-text)',
+                                }}
                             >
                                 <div className="w-4 flex items-center justify-center shrink-0">
                                     <span className="text-sm">{note.icon}</span>
@@ -147,49 +162,52 @@ export default function NoterSidebarContent() {
                 )}
             </div>
 
-            {/* Private Notes (Always Visible) */}
+            {/* Private Notes */}
             <div className="space-y-1">
-                <div className="flex items-center justify-between px-3 mb-2">
-                    <h3 className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Private</h3>
+                <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-[10px] font-bold uppercase tracking-widest" style={{ color: 'var(--sidebar-item-muted)' }}>Private</h3>
                     <button
                         onClick={handleCreateNote}
-                        className={`text-zinc-400 dark:text-zinc-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-lg pr-1`}
+                        className="transition-colors text-lg pr-1"
+                        style={{ color: 'var(--sidebar-item-muted)' }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--sidebar-item-accent)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--sidebar-item-muted)'}
                         title="Add note"
-                    >
-                        +
-                    </button>
+                    >+</button>
                 </div>
                 <DndContext
                     id={dndId}
                     sensors={sensors}
                     collisionDetection={closestCenter}
                     onDragStart={(e) => setActiveId(e.active.id as string)}
-                    onDragOver={handleDragOver}
                     onDragEnd={handleDragEnd}
                 >
                     <NoteList
-                        notes={notes.filter(n => !n.isFavorite)}
-                        rootNotes={rootNotes.filter(n => !n.isFavorite)}
+                        notes={nonTrashedNotes}
+                        rootNotes={privateRootNotes}
                         activeNoteId={viewMode === 'notes' ? activeNoteId : null}
                         onSelect={(id) => { setActiveNoteId(id); setViewMode('notes'); }}
                         onAdd={(parentId) => { addNote(parentId); setViewMode('notes'); }}
                         onDelete={deleteNote}
                         onToggle={(id) => updateNote(id, { isExpanded: !notes.find(n => n.id === id)?.isExpanded })}
                     />
-                    <DragOverlay zIndex={9999}>
-                        {activeId ? (
-                            <div className="opacity-90 rotate-2 cursor-grabbing pointer-events-none scale-105 transition-transform" style={{ width: 'var(--sidebar-width, 240px)' }}>
+                    <DragOverlay
+                        zIndex={9999}
+                        modifiers={[adjustForContainerOffset]}
+                    >
+                        {draggedNote ? (
+                            <div className="opacity-90 rotate-2 cursor-grabbing pointer-events-none scale-[1.02] transition-transform" style={{ width: sidebarWidth }}>
                                 <div
-                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-white shadow-xl backdrop-blur-md"
+                                    className="flex items-center gap-2 px-3 rounded-lg text-white shadow-xl backdrop-blur-md"
                                     style={{
-                                        background: `linear-gradient(135deg, rgba(99, 102, 241, 0.55) 0%, rgba(79, 70, 229, 0.55) 100%)`,
+                                        background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.55) 0%, rgba(79, 70, 229, 0.55) 100%)',
                                         border: '1px solid rgba(255, 255, 255, 0.3)',
                                         boxShadow: '0 8px 32px rgba(31, 38, 135, 0.37)',
-                                        height: 'var(--height-button)'
+                                        height: 'var(--height-button)',
                                     }}
                                 >
-                                    <span className="text-sm">{notes.find(n => n.id === activeId)?.icon}</span>
-                                    <span className="font-semibold text-sm truncate">{notes.find(n => n.id === activeId)?.title || "Untitled"}</span>
+                                    <span className="text-sm">{draggedNote.icon}</span>
+                                    <span className="font-semibold text-sm truncate">{draggedNote.title || "Untitled"}</span>
                                 </div>
                             </div>
                         ) : null}
@@ -199,15 +217,19 @@ export default function NoterSidebarContent() {
 
             {/* Shared */}
             <div className="space-y-1">
-                <h3 className="px-3 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-2">Shared</h3>
+                <h3 className="text-[10px] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--sidebar-item-muted)' }}>Shared</h3>
             </div>
 
             {/* Trash */}
             <div className="pt-2 border-t border-white/10 mt-2">
                 <button
                     onClick={() => { setViewMode('trash'); setActiveNoteId(null); }}
-                    className={`w-full flex items-center gap-2 px-3 rounded-lg transition-colors text-sm font-medium ${viewMode === 'trash' ? "bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "hover:bg-white/20 dark:hover:bg-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"}`}
-                    style={{ height: 'var(--height-button)' }}
+                    className="w-full flex items-center gap-2 px-3 rounded-lg transition-colors text-sm font-medium hover:bg-[var(--sidebar-item-hover-bg)]"
+                    style={{
+                        height: 'var(--height-button)',
+                        background: viewMode === 'trash' ? 'var(--sidebar-item-active-bg)' : undefined,
+                        color: viewMode === 'trash' ? 'var(--sidebar-item-active-text)' : 'var(--sidebar-item-text)',
+                    }}
                 >
                     <div className="w-4 h-4 flex items-center justify-center shrink-0">
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -217,7 +239,6 @@ export default function NoterSidebarContent() {
                     Trash
                 </button>
             </div>
-        </div >
+        </div>
     );
 }
-

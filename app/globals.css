@@ -96,6 +96,14 @@
       --c-dark: #000000;
       --glass-reflex-dark: 0.8;
       --glass-reflex-light: 0.6;
+
+      --sidebar-item-active-bg: rgba(99, 102, 241, 0.18);
+      --sidebar-item-active-text: #a5b4fc;
+      --sidebar-item-hover-bg: rgba(255, 255, 255, 0.10);
+      --sidebar-item-text: #d4d4d8;
+      --sidebar-item-muted: #71717a;
+      --sidebar-item-accent: #818cf8;
+      --sidebar-item-accent-danger: #f87171;
     }
   }
 }

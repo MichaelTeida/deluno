@@ -51,8 +51,12 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
         setAppSlots(defaultSlots);
     }, []);
 
+    const resizeOffsetRef = React.useRef(0);
+
     const startResizing = useCallback((e: React.MouseEvent) => {
         setIsResizing(true);
+        const nav = (e.currentTarget as HTMLElement).closest('nav');
+        resizeOffsetRef.current = nav ? e.clientX - nav.getBoundingClientRect().width : 0;
         e.preventDefault();
     }, []);
 
@@ -62,7 +66,7 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
         const handleMouseMove = (e: MouseEvent) => {
             if (typeof window !== 'undefined' && window.innerWidth < 768) return;
 
-            let newWidth = e.clientX;
+            let newWidth = e.clientX - resizeOffsetRef.current;
             if (newWidth < 100) {
                 setIsSidebarVisible(false);
                 setIsResizing(false);

@@ -39,7 +39,7 @@ export const NoteItem = memo(function NoteItem({
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: note.id });
 
     const sortableStyle: CSSProperties = {
-        transform: CSS.Transform.toString(transform),
+        transform: CSS.Translate.toString(transform),
         transition,
         opacity: isDragging ? 0.3 : 1,
     };

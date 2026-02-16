@@ -36,7 +36,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                 className={`
                     glass bg-white/40 dark:bg-black/30 flex flex-col z-[60] md:z-30 shrink-0
                     fixed md:relative left-0 top-0 h-full md:h-auto
-                    transition-transform duration-300 ease-out
+                    transition-transform duration-300 ease-out overflow-hidden
                     ${isNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
                     ${!isSidebarVisible && 'hidden md:flex'}
                 `}
@@ -113,8 +113,10 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                     </div>
                 </div>
 
-                {/* App-Specific Sidebar Content (injected via children) */}
-                {children}
+                {/* App-Specific Sidebar Content — consistent padding from walls */}
+                <div className="px-3 pt-1">
+                    {children}
+                </div>
             </nav>
         </>
     );
