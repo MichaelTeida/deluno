@@ -73,17 +73,27 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
             onUpdate(editor.getHTML());
             handleSlashDetection(editor);
         },
+        onBlur: ({ event }) => {
+            // Close internal menus when clicking outside the editor ecosystem
+            // Note: onMouseDown.preventDefault() on menus prevents this from firing when interacting with them
+            setShowToolbar(false);
+            setShowSlash(false);
+        },
         onSelectionUpdate: ({ editor }) => {
             const { from, to } = editor.state.selection;
             if (from !== to && editable) {
-                const domRect = editor.view.coordsAtPos(from);
-                const containerRect = containerRef.current?.getBoundingClientRect();
-                if (containerRect) {
-                    setToolbarPos({
-                        top: domRect.top - containerRect.top - 52,
-                        left: Math.max(0, domRect.left - containerRect.left - 40),
-                    });
-                    setShowToolbar(true);
+                // Determine if we should show toolbar
+                // If slash menu is active, don't show toolbar to avoid clutter
+                if (!showSlash) {
+                    const domRect = editor.view.coordsAtPos(from);
+                    const containerRect = containerRef.current?.getBoundingClientRect();
+                    if (containerRect) {
+                        setToolbarPos({
+                            top: domRect.top - containerRect.top - 52,
+                            left: Math.max(0, domRect.left - containerRect.left - 40),
+                        });
+                        setShowToolbar(true);
+                    }
                 }
             } else {
                 setShowToolbar(false);
@@ -125,11 +135,23 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
     const handleSlashDetection = useCallback((ed: any) => {
         const { from } = ed.state.selection;
         const textBefore = ed.state.doc.textBetween(Math.max(0, from - 20), from, '\n');
-        const slashMatch = textBefore.match(/\/([a-zA-Z0-9]*)$/);
+
+        // Fix: Only trigger if slash is at start of line or preceded by space
+        // Capture group 1 is the query text
+        const slashMatch = textBefore.match(/(?:^|\s)\/([a-zA-Z0-9]*)$/);
 
         if (slashMatch) {
-            if (slashStartPos.current === null) slashStartPos.current = from - slashMatch[0].length;
-            setSlashFilter(slashMatch[1].toLowerCase());
+            // Adjust start position based on match (match[0] might include the space)
+            const matchLength = slashMatch[0].length;
+            const query = slashMatch[1];
+
+            // If match started with space, offset by 1
+            const isSpacePrefix = slashMatch[0].startsWith(' ');
+            const realLength = isSpacePrefix ? matchLength - 1 : matchLength;
+
+            if (slashStartPos.current === null) slashStartPos.current = from - realLength;
+
+            setSlashFilter(query.toLowerCase());
             setSlashIndex(0);
 
             const coords = ed.view.coordsAtPos(from);
@@ -140,6 +162,8 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
                     left: coords.left - containerRect.left,
                 });
                 setShowSlash(true);
+                // Mutual exclusion: Hide toolbar when typing slash command
+                setShowToolbar(false);
             }
         } else {
             closeSlash();
@@ -234,17 +258,17 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
                     </div>
 
                     {showLinkInput && (
-                        <div className="flex items-center gap-1.5 mt-1.5 pt-1.5 border-t border-white/10">
+                        <div className="flex items-center gap-1.5 mt-1.5 pt-1.5 border-t border-zinc-200 dark:border-white/10">
                             <input
                                 type="text"
                                 value={linkUrl}
                                 onChange={(e) => setLinkUrl(e.target.value)}
                                 onKeyDown={(e) => { if (e.key === 'Enter') addLink(); }}
                                 placeholder="https://..."
-                                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs text-zinc-200 placeholder:text-zinc-500 outline-none focus:border-indigo-500/50"
+                                className="flex-1 bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-lg px-2 py-1 text-xs text-zinc-900 dark:text-zinc-200 placeholder:text-zinc-500 outline-none focus:border-indigo-500/50"
                                 autoFocus
                             />
-                            <button onClick={addLink} className="px-2 py-1 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs hover:bg-indigo-500/30 transition-colors">
+                            <button onClick={addLink} className="px-2 py-1 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 dark:bg-indigo-500/20 dark:text-indigo-400 dark:hover:bg-indigo-500/30 text-xs transition-colors">
                                 Add
                             </button>
                         </div>
@@ -261,7 +285,7 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
                     onMouseDown={(e) => e.preventDefault()}
                 >
                     <div className="liquid-glass-v5 rounded-xl p-1.5 custom-scrollbar max-h-72 overflow-y-auto">
-                        <p className="text-[10px] uppercase tracking-wider text-zinc-500 px-2.5 py-1.5">Blocks</p>
+                        <p className="text-[10px] uppercase tracking-wider text-zinc-500 dark:text-zinc-400 px-2.5 py-1.5">Blocks</p>
                         {filteredItems.map((item, i) => (
                             <button
                                 key={item.title}
@@ -271,7 +295,7 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
                                 <span className="slash-menu-icon">{item.icon}</span>
                                 <span className="text-left">
                                     <span className="block font-medium text-[13px]">{item.title}</span>
-                                    <span className="block text-[11px] text-zinc-500">{item.description}</span>
+                                    <span className="block text-[11px] text-zinc-600 dark:text-zinc-400">{item.description}</span>
                                 </span>
                             </button>
                         ))}
@@ -305,5 +329,5 @@ function ToolbarButton({ active, onClick, label, className = '', title }: {
 }
 
 function Divider() {
-    return <div className="w-px h-5 bg-white/10 mx-0.5" />;
+    return <div className="w-px h-5 bg-zinc-200 dark:bg-white/10 mx-0.5" />;
 }

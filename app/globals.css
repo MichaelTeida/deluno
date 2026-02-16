@@ -523,6 +523,7 @@ html.dark body {
     border-radius: 12px;
   }
 
+  /* Dark Mode Default (or inherited) */
   .toolbar-btn {
     width: 28px;
     height: 28px;
@@ -532,7 +533,7 @@ html.dark body {
     border-radius: 6px;
     font-size: 13px;
     color: #e4e4e7;
-    /* Zinc-200 */
+    /* Zinc-200 - High Contrast for Dark Mode */
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     transition: all 0.1s;
     cursor: pointer;
@@ -572,8 +573,8 @@ html.dark body {
     border-radius: 8px;
     border: none;
     background: transparent;
-    color: #d4d4d8;
-    /* Zinc-300 */
+    color: #e4e4e7;
+    /* Zinc-200 */
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     transition: all 0.1s;
     cursor: pointer;
@@ -591,26 +592,15 @@ html.dark body {
     color: #ffffff;
   }
 
-  .slash-menu-icon {
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    background: rgba(0, 0, 0, 0.2);
-    font-size: 11px;
-    font-family: monospace;
-    flex-shrink: 0;
-    color: #e4e4e7;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-  }
+
 
   /* --- LIQUID GLASS v5 (User Provided) --- */
   .liquid-glass-v5 {
     position: relative;
     overflow: hidden;
     background: color-mix(in srgb, var(--c-glass) 16%, transparent);
+    color: var(--foreground);
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     backdrop-filter: blur(3px) saturate(150%) url(#glass-clean-v5);
     box-shadow:
@@ -630,36 +620,55 @@ html.dark body {
     transform: scale(1.02);
   }
 
-  /* Light Mode Overrides - Buttons/Text Only (Container handled by liquid-glass-v5) */
-  :root[data-theme="light"] .toolbar-btn {
-    color: #52525b;
+  /* Slash Menu Icon - Inherit color to match theme (was hardcoded light) */
+  .slash-menu-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.05);
+    /* Reduced opacity */
+    font-size: 11px;
+    font-family: monospace;
+    flex-shrink: 0;
+    color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .light .toolbar-btn {
+    color: #18181b;
+    /* Zinc-900 - High Contrast for Light Mode */
     text-shadow: none;
   }
 
-  :root[data-theme="light"] .toolbar-btn:hover {
+  .light .toolbar-btn:hover {
     background: rgba(0, 0, 0, 0.05);
     color: #000;
   }
 
-  :root[data-theme="light"] .toolbar-btn.active {
+  .light .toolbar-btn.active {
     background: rgba(99, 102, 241, 0.15);
     color: #4f46e5;
   }
 
-  :root[data-theme="light"] .slash-menu-item {
-    color: #52525b;
+  .light .slash-menu-item {
+    color: #18181b;
+    /* Zinc-900 */
     text-shadow: none;
   }
 
-  :root[data-theme="light"] .slash-menu-item:hover,
-  :root[data-theme="light"] .slash-menu-item.active {
+  .light .slash-menu-item:hover,
+  .light .slash-menu-item.active {
     background: rgba(0, 0, 0, 0.05);
     color: #000;
   }
 
-  :root[data-theme="light"] .slash-menu-icon {
+  .light .slash-menu-icon {
     background: rgba(0, 0, 0, 0.05);
-    color: #52525b;
+    color: #18181b;
+    /* Zinc-900 */
     border-color: rgba(0, 0, 0, 0.05);
   }
 }
