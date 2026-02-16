@@ -65,7 +65,7 @@ export default function NoterSidebarContent() {
         let current = notesList.find(n => n.id === childId);
         while (current && current.parentId) {
             if (current.parentId === parentId) return true;
-            current = notesList.find(n => n.id === current.parentId);
+            current = notesList.find(n => n.id === current!.parentId);
         }
         return false;
     };

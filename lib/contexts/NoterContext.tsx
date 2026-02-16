@@ -21,9 +21,9 @@ interface NoterContextType {
 const NoterContext = createContext<NoterContextType | undefined>(undefined);
 
 const initialNotes: Note[] = [
-    { id: "1", title: "Witaj w Noter", content: "To jest Twoja pierwsza notatka. Kliknij aby edytować.", parentId: null, icon: "📝", isExpanded: true, isFavorite: false, isFullWidth: false, isLocked: false, isTrashed: false, createdAt: new Date(), updatedAt: new Date() },
-    { id: "2", title: "Pomysły na projekt", content: "- Idea 1\n- Idea 2\n- Idea 3", parentId: null, icon: "💡", isExpanded: true, isFavorite: true, isFullWidth: false, isLocked: false, isTrashed: false, createdAt: new Date(), updatedAt: new Date() },
-    { id: "3", title: "Pod-notatka", content: "To jest zagnieżdżona notatka.", parentId: "2", icon: "📄", isExpanded: true, isFavorite: false, isFullWidth: false, isLocked: false, isTrashed: false, createdAt: new Date(), updatedAt: new Date() },
+    { id: "1", title: "Welcome to Noter", content: "This is your first note. Click to edit.", parentId: null, icon: "📝", isExpanded: true, isFavorite: false, isFullWidth: false, isLocked: false, isTrashed: false, createdAt: new Date(), updatedAt: new Date() },
+    { id: "2", title: "Project Ideas", content: "- Idea 1\n- Idea 2\n- Idea 3", parentId: null, icon: "💡", isExpanded: true, isFavorite: true, isFullWidth: false, isLocked: false, isTrashed: false, createdAt: new Date(), updatedAt: new Date() },
+    { id: "3", title: "Sub-note", content: "This is a nested note.", parentId: "2", icon: "📄", isExpanded: true, isFavorite: false, isFullWidth: false, isLocked: false, isTrashed: false, createdAt: new Date(), updatedAt: new Date() },
 ];
 
 export function NoterProvider({ children }: { children: React.ReactNode }) {

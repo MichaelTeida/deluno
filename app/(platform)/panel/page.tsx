@@ -1,4 +1,4 @@
-import PanelDashboard from "@/components/dashboard/PanelDashboard";
+import PanelDashboard from "@/components/platform/PanelDashboard";
 
 export default function DashboardPage() {
     return <PanelDashboard />;
