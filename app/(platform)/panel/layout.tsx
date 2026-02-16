@@ -12,7 +12,7 @@ import SearchCommand from "@/components/SearchCommand";
 
 function DefaultSidebar() {
     return (
-        <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pt-4 pb-3">
+        <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pt-2 pb-3">
             <div
                 className="flex items-center gap-2 px-3 rounded-lg text-sm font-medium"
                 style={{

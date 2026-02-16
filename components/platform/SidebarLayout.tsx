@@ -38,7 +38,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                     fixed md:relative left-0 top-0 h-full md:h-auto
                     transition-transform duration-300 ease-out overflow-hidden
                     ${isNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-                    ${!isSidebarVisible && 'hidden md:flex'}
+                    ${!isSidebarVisible && 'hidden'}
                 `}
                 data-variant="panel"
                 style={{
@@ -114,7 +114,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                 </div>
 
                 {/* App-Specific Sidebar Content — consistent padding from walls */}
-                <div className="px-3 pt-1">
+                <div className="px-3 pt-1 flex-1 min-h-0 overflow-hidden flex flex-col">
                     {children}
                 </div>
             </nav>

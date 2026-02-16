@@ -3,21 +3,10 @@
 import { useNoter } from "@/lib/contexts/NoterContext";
 import NoteList from "@/components/noter/NoteList";
 import { usePlatform } from "@/lib/contexts/PlatformContext";
-import { DndContext, DragEndEvent, MouseSensor, TouchSensor, useSensor, useSensors, closestCenter, KeyboardSensor, DragOverlay, Modifier } from "@dnd-kit/core";
+import { DndContext, DragEndEvent, MouseSensor, TouchSensor, useSensor, useSensors, closestCenter, KeyboardSensor, DragOverlay } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { useEffect, useState, useId, useRef, useMemo, useCallback } from "react";
-
-const adjustForContainerOffset: Modifier = ({ transform, draggingNodeRect, containerNodeRect }) => {
-    if (!draggingNodeRect || !containerNodeRect) return transform;
-    const nav = document.querySelector('nav[data-variant="panel"]');
-    if (!nav) return transform;
-    const navRect = nav.getBoundingClientRect();
-    return {
-        ...transform,
-        x: transform.x - navRect.left,
-        y: transform.y - navRect.top,
-    };
-};
+import { useEffect, useState, useId, useRef, useMemo } from "react";
+import { createPortal } from "react-dom";
 
 export default function NoterSidebarContent() {
     const { notes, activeNoteId, setActiveNoteId, addNote, deleteNote, updateNote, reorderNotes, viewMode, setViewMode } = useNoter();
@@ -53,16 +42,8 @@ export default function NoterSidebarContent() {
 
     const draggedNote = useMemo(() => activeId ? notes.find(n => n.id === activeId) : null, [activeId, notes]);
 
-    const isDescendant = (parentId: string, childId: string) => {
-        let current = notes.find(n => n.id === childId);
-        while (current?.parentId) {
-            if (current.parentId === parentId) return true;
-            current = notes.find(n => n.id === current!.parentId);
-        }
-        return false;
-    };
 
-    const handleDragEnd = (event: DragEndEvent) => {
+    const createDragEndHandler = (section: 'favorites' | 'private') => (event: DragEndEvent) => {
         const { active, over } = event;
         setActiveId(null);
         if (!over || active.id === over.id) return;
@@ -70,35 +51,30 @@ export default function NoterSidebarContent() {
         const activeNote = notes.find(n => n.id === active.id);
         const overNote = notes.find(n => n.id === over.id);
         if (!activeNote || !overNote) return;
-        if (isDescendant(activeNote.id, overNote.id)) return;
+        if (activeNote.parentId !== overNote.parentId) return;
 
-        const targetParentId = overNote.parentId;
+        const parentId = activeNote.parentId;
 
-        const getSiblings = (parentId: string | null) =>
-            notes.filter(n => n.parentId === parentId && !n.isTrashed && !n.isFavorite);
+        const getSiblings = () => {
+            if (parentId !== null) {
+                return notes.filter(n => n.parentId === parentId && !n.isTrashed);
+            }
+            return section === 'favorites'
+                ? notes.filter(n => n.isFavorite && !n.isTrashed)
+                : notes.filter(n => n.parentId === null && !n.isTrashed && !n.isFavorite);
+        };
 
-        const updatedNotes = [...notes];
-
-        if (activeNote.parentId !== targetParentId) {
-            const idx = updatedNotes.findIndex(n => n.id === activeNote.id);
-            updatedNotes[idx] = { ...updatedNotes[idx], parentId: targetParentId, updatedAt: new Date() };
-        }
-
-        const siblings = getSiblings(targetParentId);
+        const siblings = getSiblings();
         const siblingIds = siblings.map(n => n.id);
         const fromIdx = siblingIds.indexOf(activeNote.id);
         const toIdx = siblingIds.indexOf(overNote.id);
-
-        if (fromIdx === -1 || toIdx === -1) {
-            reorderNotes(updatedNotes);
-            return;
-        }
+        if (fromIdx === -1 || toIdx === -1) return;
 
         siblingIds.splice(fromIdx, 1);
         siblingIds.splice(toIdx, 0, activeNote.id);
 
         const siblingOrder = new Map(siblingIds.map((id, i) => [id, i]));
-        updatedNotes.sort((a, b) => {
+        const updatedNotes = [...notes].sort((a, b) => {
             const aOrder = siblingOrder.get(a.id);
             const bOrder = siblingOrder.get(b.id);
             if (aOrder !== undefined && bOrder !== undefined) return aOrder - bOrder;
@@ -110,7 +86,6 @@ export default function NoterSidebarContent() {
         reorderNotes(updatedNotes);
     };
 
-    const isActive = (id: string | null, mode: string) => id !== null && viewMode === mode;
 
     return (
         <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pb-3">
@@ -140,25 +115,44 @@ export default function NoterSidebarContent() {
                 {favoriteNotes.length === 0 ? (
                     <div className="py-1.5 text-xs italic" style={{ color: 'var(--sidebar-item-muted)' }}>No favorites</div>
                 ) : (
-                    <div className="space-y-0.5">
-                        {favoriteNotes.map(note => (
-                            <div
-                                key={note.id}
-                                onClick={() => { setActiveNoteId(note.id); setViewMode('notes'); }}
-                                className="flex items-center gap-2 px-3 cursor-pointer text-sm transition-colors select-none rounded-lg hover:bg-[var(--sidebar-item-hover-bg)]"
-                                style={{
-                                    height: 'var(--height-button)',
-                                    background: activeNoteId === note.id && viewMode === 'notes' ? 'var(--sidebar-item-active-bg)' : undefined,
-                                    color: activeNoteId === note.id && viewMode === 'notes' ? 'var(--sidebar-item-active-text)' : 'var(--sidebar-item-text)',
-                                }}
-                            >
-                                <div className="w-4 flex items-center justify-center shrink-0">
-                                    <span className="text-sm">{note.icon}</span>
-                                </div>
-                                <span className="truncate">{note.title || "Untitled"}</span>
-                            </div>
-                        ))}
-                    </div>
+                    <DndContext
+                        id={dndId + '-fav'}
+                        sensors={sensors}
+                        collisionDetection={closestCenter}
+                        onDragStart={(e) => setActiveId(e.active.id as string)}
+                        onDragEnd={createDragEndHandler('favorites')}
+                    >
+                        <NoteList
+                            notes={nonTrashedNotes}
+                            rootNotes={favoriteNotes}
+                            activeNoteId={viewMode === 'notes' ? activeNoteId : null}
+                            onSelect={(id) => { setActiveNoteId(id); setViewMode('notes'); }}
+                            onAdd={(parentId) => { addNote(parentId); setViewMode('notes'); }}
+                            onDelete={deleteNote}
+                            onToggle={(id) => updateNote(id, { isExpanded: !notes.find(n => n.id === id)?.isExpanded })}
+                        />
+                        {createPortal(
+                            <DragOverlay zIndex={9999}>
+                                {draggedNote ? (
+                                    <div className="opacity-90 rotate-2 cursor-grabbing pointer-events-none scale-[1.02] transition-transform" style={{ width: sidebarWidth }}>
+                                        <div
+                                            className="flex items-center gap-2 px-3 rounded-lg text-white shadow-xl backdrop-blur-md"
+                                            style={{
+                                                background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.55) 0%, rgba(79, 70, 229, 0.55) 100%)',
+                                                border: '1px solid rgba(255, 255, 255, 0.3)',
+                                                boxShadow: '0 8px 32px rgba(31, 38, 135, 0.37)',
+                                                height: 'var(--height-button)',
+                                            }}
+                                        >
+                                            <span className="text-sm">{draggedNote.icon}</span>
+                                            <span className="font-semibold text-sm truncate">{draggedNote.title || "Untitled"}</span>
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </DragOverlay>,
+                            document.body
+                        )}
+                    </DndContext>
                 )}
             </div>
 
@@ -180,7 +174,7 @@ export default function NoterSidebarContent() {
                     sensors={sensors}
                     collisionDetection={closestCenter}
                     onDragStart={(e) => setActiveId(e.active.id as string)}
-                    onDragEnd={handleDragEnd}
+                    onDragEnd={createDragEndHandler('private')}
                 >
                     <NoteList
                         notes={nonTrashedNotes}
@@ -191,27 +185,27 @@ export default function NoterSidebarContent() {
                         onDelete={deleteNote}
                         onToggle={(id) => updateNote(id, { isExpanded: !notes.find(n => n.id === id)?.isExpanded })}
                     />
-                    <DragOverlay
-                        zIndex={9999}
-                        modifiers={[adjustForContainerOffset]}
-                    >
-                        {draggedNote ? (
-                            <div className="opacity-90 rotate-2 cursor-grabbing pointer-events-none scale-[1.02] transition-transform" style={{ width: sidebarWidth }}>
-                                <div
-                                    className="flex items-center gap-2 px-3 rounded-lg text-white shadow-xl backdrop-blur-md"
-                                    style={{
-                                        background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.55) 0%, rgba(79, 70, 229, 0.55) 100%)',
-                                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                                        boxShadow: '0 8px 32px rgba(31, 38, 135, 0.37)',
-                                        height: 'var(--height-button)',
-                                    }}
-                                >
-                                    <span className="text-sm">{draggedNote.icon}</span>
-                                    <span className="font-semibold text-sm truncate">{draggedNote.title || "Untitled"}</span>
+                    {createPortal(
+                        <DragOverlay zIndex={9999}>
+                            {draggedNote ? (
+                                <div className="opacity-90 rotate-2 cursor-grabbing pointer-events-none scale-[1.02] transition-transform" style={{ width: sidebarWidth }}>
+                                    <div
+                                        className="flex items-center gap-2 px-3 rounded-lg text-white shadow-xl backdrop-blur-md"
+                                        style={{
+                                            background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.55) 0%, rgba(79, 70, 229, 0.55) 100%)',
+                                            border: '1px solid rgba(255, 255, 255, 0.3)',
+                                            boxShadow: '0 8px 32px rgba(31, 38, 135, 0.37)',
+                                            height: 'var(--height-button)',
+                                        }}
+                                    >
+                                        <span className="text-sm">{draggedNote.icon}</span>
+                                        <span className="font-semibold text-sm truncate">{draggedNote.title || "Untitled"}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        ) : null}
-                    </DragOverlay>
+                            ) : null}
+                        </DragOverlay>,
+                        document.body
+                    )}
                 </DndContext>
             </div>
 
