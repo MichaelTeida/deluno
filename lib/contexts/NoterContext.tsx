@@ -43,7 +43,20 @@ export function NoterProvider({ children }: { children: React.ReactNode }) {
                     if (key === 'createdAt' || key === 'updatedAt') return new Date(value);
                     return value;
                 });
-                setNotes(parsed);
+
+                // Migration: Convert legacy plain text to HTML
+                const migrated = parsed.map((note: any) => {
+                    // Primitive check: if content exists and doesn't start with <, assume plain text
+                    if (note.content && typeof note.content === 'string' && !note.content.trim().startsWith('<')) {
+                        return {
+                            ...note,
+                            content: `<p>${note.content.replace(/\n/g, '<br>')}</p>`
+                        };
+                    }
+                    return note;
+                });
+
+                setNotes(migrated);
             } catch (e) {
                 console.error("Failed to parse notes", e);
             }

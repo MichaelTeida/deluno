@@ -4,6 +4,7 @@ import { Note } from "@/lib/noter";
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import NoteMenu from "./NoteMenu";
+import Editor from "./Editor";
 
 interface NoteEditorProps {
     note: Note;
@@ -88,14 +89,12 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
 
             {/* Content */}
             <div className="flex-1 relative">
-                <textarea
-                    ref={contentRef}
-                    value={note.content}
-                    readOnly={note.isLocked}
-                    onChange={(e) => !note.isLocked && onUpdate({ content: e.target.value })}
-                    className={`w-full h-full min-h-[200px] text-zinc-700 dark:text-zinc-300 bg-transparent border-none outline-none resize-none placeholder-zinc-400 dark:placeholder-zinc-600 leading-relaxed ${note.isLocked ? "cursor-not-allowed opacity-80" : ""}`}
+                <Editor
+                    key={note.id}
+                    content={note.content}
+                    onUpdate={(content) => !note.isLocked && onUpdate({ content })}
+                    editable={!note.isLocked}
                     placeholder={note.isLocked ? "Content is locked." : "Start writing..."}
-                    style={{ resize: 'none' }}
                 />
             </div>
         </div >

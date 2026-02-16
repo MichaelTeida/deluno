@@ -377,4 +377,61 @@ html.dark body {
     outline: 2px solid theme('colors.indigo.500');
     outline-offset: 2px;
   }
+
+  /* Tiptap Editor Typography */
+  .ProseMirror {
+    @apply outline-none min-h-[200px] text-zinc-700 dark:text-zinc-300;
+  }
+
+  .ProseMirror>*+* {
+    margin-top: 0.75em;
+  }
+
+  .ProseMirror ul,
+  .ProseMirror ol {
+    @apply pl-4;
+  }
+
+  .ProseMirror ul {
+    @apply list-disc;
+  }
+
+  .ProseMirror ol {
+    @apply list-decimal;
+  }
+
+  .ProseMirror h1,
+  .ProseMirror h2,
+  .ProseMirror h3,
+  .ProseMirror h4,
+  .ProseMirror h5,
+  .ProseMirror h6 {
+    @apply leading-tight font-bold text-zinc-900 dark:text-zinc-100;
+  }
+
+  .ProseMirror h1 {
+    @apply text-3xl mb-4 mt-8;
+  }
+
+  .ProseMirror h2 {
+    @apply text-2xl mb-4 mt-6;
+  }
+
+  .ProseMirror h3 {
+    @apply text-xl mb-4 mt-6;
+  }
+
+  .ProseMirror blockquote {
+    @apply border-l-4 border-amber-500 pl-4 italic text-zinc-500 dark:text-zinc-400;
+  }
+
+  .ProseMirror hr {
+    @apply border-zinc-200 dark:border-zinc-800 my-8;
+  }
+
+  /* Placeholder extension */
+  .ProseMirror p.is-editor-empty:first-child::before {
+    content: attr(data-placeholder);
+    @apply text-zinc-400 dark:text-zinc-600 float-left h-0 pointer-events-none;
+  }
 }
