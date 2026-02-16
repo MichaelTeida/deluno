@@ -148,3 +148,7 @@ export function useNoter() {
     }
     return context;
 }
+
+export function useNoterSafe() {
+    return useContext(NoterContext) ?? null;
+}

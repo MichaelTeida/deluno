@@ -1,6 +1,15 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+
+interface AppSlots {
+    pageTitle: string;
+    contentClass?: string;
+}
+
+const defaultSlots: AppSlots = {
+    pageTitle: "Dashboard",
+};
 
 interface PlatformContextType {
     isNavOpen: boolean;
@@ -17,6 +26,9 @@ interface PlatformContextType {
     setSidebarWidth: (width: number) => void;
     isResizing: boolean;
     startResizing: (e: React.MouseEvent) => void;
+    appSlots: AppSlots;
+    registerApp: (slots: Partial<AppSlots>) => void;
+    unregisterApp: () => void;
 }
 
 const PlatformContext = createContext<PlatformContextType | undefined>(undefined);
@@ -29,6 +41,15 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [sidebarWidth, setSidebarWidth] = useState(256);
     const [isResizing, setIsResizing] = useState(false);
+    const [appSlots, setAppSlots] = useState<AppSlots>(defaultSlots);
+
+    const registerApp = useCallback((slots: Partial<AppSlots>) => {
+        setAppSlots(prev => ({ ...prev, ...slots }));
+    }, []);
+
+    const unregisterApp = useCallback(() => {
+        setAppSlots(defaultSlots);
+    }, []);
 
     const startResizing = useCallback((e: React.MouseEvent) => {
         setIsResizing(true);
@@ -89,6 +110,7 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
             isSearchOpen, setIsSearchOpen,
             sidebarWidth, setSidebarWidth,
             isResizing, startResizing,
+            appSlots, registerApp, unregisterApp,
         }}>
             {children}
         </PlatformContext.Provider>

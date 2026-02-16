@@ -1,6 +1,6 @@
 "use client";
 
-import { useNoter } from "@/lib/contexts/NoterContext";
+import { useNoterSafe } from "@/lib/contexts/NoterContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 
@@ -10,7 +10,10 @@ interface SearchCommandProps {
 }
 
 export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
-    const { notes, setActiveNoteId, setViewMode } = useNoter();
+    const noterContext = useNoterSafe();
+    const notes = noterContext?.notes ?? [];
+    const setActiveNoteId = noterContext?.setActiveNoteId;
+    const setViewMode = noterContext?.setViewMode;
     const [query, setQuery] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
@@ -45,8 +48,8 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
     );
 
     const handleSelect = (noteId: string) => {
-        setActiveNoteId(noteId);
-        setViewMode('notes');
+        setActiveNoteId?.(noteId);
+        setViewMode?.('notes');
         router.push("/panel/noter");
         onClose();
     };

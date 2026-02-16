@@ -1,39 +1,59 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { UserButton, useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { PlatformProvider, usePlatform } from "@/lib/contexts/PlatformContext";
-import { NoterProvider, useNoter } from "@/lib/contexts/NoterContext";
 import AppRail from "@/components/platform/AppRail";
 import SidebarLayout from "@/components/platform/SidebarLayout";
-import NoterSidebarContent from "@/components/noter/NoterSidebarContent";
-import NoterBreadcrumbs from "@/components/noter/NoterBreadcrumbs";
 import SettingsModal from "@/components/SettingsModal";
 import SearchCommand from "@/components/SearchCommand";
 
+function DefaultSidebar() {
+    return (
+        <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pt-4 pb-3">
+            <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm font-medium">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
+                </svg>
+                Panel
+            </div>
+        </div>
+    );
+}
+
+function DefaultBreadcrumbs() {
+    const { user } = useUser();
+    return (
+        <>
+            <Link href="/panel" className="btn-glass px-4 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
+                {user?.firstName || user?.username || 'Workspace'}
+            </Link>
+            <span className="text-zinc-400">/</span>
+            <div className="btn-glass px-4 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate" data-variant="interactive">
+                <span className="text-xs opacity-60 mr-2">📊</span>
+                Panel
+            </div>
+        </>
+    );
+}
+
 function PanelContent({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
-    const { user } = useUser();
     const {
         isNavOpen, setIsNavOpen,
         isSidebarVisible, setIsSidebarVisible,
         isSettingsOpen, setIsSettingsOpen,
         isSearchOpen, setIsSearchOpen,
+        appSlots,
     } = usePlatform();
 
-    const isNoter = pathname?.startsWith('/panel/noter');
     const isAppRoute = pathname !== '/panel';
-
-    const noterContext = isNoter ? useNoterSafe() : null;
-    const activeNote = noterContext?.activeNote ?? null;
 
     useEffect(() => {
         setIsNavOpen(false);
-    }, [pathname, activeNote?.id]);
-
-    const pageTitle = isNoter ? 'Noter' : 'Dashboard';
+    }, [pathname]);
 
     return (
         <div className="flex flex-col h-dvh w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}>
@@ -60,26 +80,15 @@ function PanelContent({ children }: { children: React.ReactNode }) {
 
                     <div className="h-6 w-[1px] bg-black/10 hidden md:block"></div>
 
+                    {/* Breadcrumbs: portal target or default */}
                     <nav className="hidden lg:flex items-center gap-2 text-sm font-medium overflow-hidden">
-                        {isNoter ? (
-                            <NoterBreadcrumbs />
-                        ) : (
-                            <>
-                                <Link href="/panel" className="btn-glass px-4 text-zinc-600 dark:text-zinc-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors truncate" data-variant="interactive">
-                                    {user?.firstName || user?.username || 'Workspace'}
-                                </Link>
-                                <span className="text-zinc-400">/</span>
-                                <div className="btn-glass px-4 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 pointer-events-none truncate" data-variant="interactive">
-                                    <span className="text-xs opacity-60 mr-2">📊</span>
-                                    Panel
-                                </div>
-                            </>
-                        )}
+                        <div id="breadcrumbs-slot" className="contents" />
+                        {!isAppRoute && <DefaultBreadcrumbs />}
                     </nav>
 
                     <div className="hidden md:flex lg:hidden items-center">
                         <div className="btn-glass px-4 bg-white/20 dark:bg-white/10 text-indigo-700 dark:text-indigo-300 text-sm" data-variant="interactive">
-                            {isNoter ? '📝 Notes' : '📊 Panel'}
+                            {isAppRoute ? `📝 ${appSlots.pageTitle}` : '📊 Panel'}
                         </div>
                     </div>
                 </div>
@@ -103,18 +112,9 @@ function PanelContent({ children }: { children: React.ReactNode }) {
                 <AppRail />
 
                 <SidebarLayout>
-                    {isNoter ? (
-                        <NoterSidebarContent />
-                    ) : (
-                        <div className="flex-1 overflow-y-auto custom-scrollbar px-3 space-y-4 pt-4 pb-3">
-                            <div className="flex items-center gap-3 px-3 py-2 rounded-lg bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 text-sm font-medium">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                                </svg>
-                                Panel
-                            </div>
-                        </div>
-                    )}
+                    {/* Portal target for app sidebar, or default */}
+                    <div id="sidebar-slot" className="contents" />
+                    {!isAppRoute && <DefaultSidebar />}
                 </SidebarLayout>
 
                 {/* WORKSPACE */}
@@ -134,7 +134,7 @@ function PanelContent({ children }: { children: React.ReactNode }) {
                                 </button>
                             )}
                             <h1 className="text-base md:text-xl font-semibold text-zinc-800 dark:text-zinc-100 tracking-tight truncate">
-                                {pageTitle}
+                                {appSlots.pageTitle}
                             </h1>
                             {isAppRoute && (
                                 <button
@@ -154,7 +154,7 @@ function PanelContent({ children }: { children: React.ReactNode }) {
                     </div>
 
                     <div className="flex-1 overflow-y-auto p-4 md:p-8 relative custom-scrollbar">
-                        <div className={`${activeNote?.isFullWidth ? 'max-w-full' : 'max-w-4xl'} mx-auto w-full px-2 md:px-0 transition-all duration-300 ease-in-out`}>
+                        <div className={`${appSlots.contentClass || 'max-w-4xl'} mx-auto w-full px-2 md:px-0 transition-all duration-300 ease-in-out`}>
                             {children}
                         </div>
                     </div>
@@ -177,14 +177,6 @@ function PanelContent({ children }: { children: React.ReactNode }) {
     );
 }
 
-function useNoterSafe() {
-    try {
-        return useNoter();
-    } catch {
-        return null;
-    }
-}
-
 export default function DashboardLayout({
     children,
 }: {
@@ -192,11 +184,9 @@ export default function DashboardLayout({
 }) {
     return (
         <PlatformProvider>
-            <NoterProvider>
-                <PanelContent>
-                    {children}
-                </PanelContent>
-            </NoterProvider>
+            <PanelContent>
+                {children}
+            </PanelContent>
         </PlatformProvider>
     );
 }
