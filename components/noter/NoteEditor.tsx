@@ -44,22 +44,23 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                         <>
                             <div className="fixed inset-0 z-[9998]" onClick={() => setShowIconPicker(false)} />
                             <div
-                                className="fixed z-[9999] glass p-3 grid grid-cols-5 gap-2 shadow-2xl"
-                                data-variant="panel"
+                                className="fixed z-[9999]"
                                 style={{
                                     top: buttonRef.current?.getBoundingClientRect().bottom! + 8,
                                     left: buttonRef.current?.getBoundingClientRect().left!,
                                 }}
                             >
-                                {ICONS.map(icon => (
-                                    <button
-                                        key={icon}
-                                        onClick={() => { onUpdate({ icon }); setShowIconPicker(false); }}
-                                        className="text-xl hover:bg-white/40 dark:hover:bg-white/20 rounded p-1 transition-colors"
-                                    >
-                                        {icon}
-                                    </button>
-                                ))}
+                                <div className="liquid-glass-v5 rounded-xl p-3 grid grid-cols-5 gap-2" data-variant="panel">
+                                    {ICONS.map(icon => (
+                                        <button
+                                            key={icon}
+                                            onClick={() => { onUpdate({ icon }); setShowIconPicker(false); }}
+                                            className="text-xl hover:bg-white/40 dark:hover:bg-white/20 rounded p-1 transition-colors"
+                                        >
+                                            {icon}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </>,
                         document.body

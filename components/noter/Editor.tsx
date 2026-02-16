@@ -3,6 +3,12 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
+import Underline from '@tiptap/extension-underline';
+import Highlight from '@tiptap/extension-highlight';
+import TaskList from '@tiptap/extension-task-list';
+import TaskItem from '@tiptap/extension-task-item';
+import TextAlign from '@tiptap/extension-text-align';
+import Link from '@tiptap/extension-link';
 import { useEffect, useState, useCallback, useRef } from 'react';
 
 interface EditorProps {
@@ -20,54 +26,17 @@ interface SlashMenuItem {
 }
 
 const slashMenuItems: SlashMenuItem[] = [
-    {
-        title: 'Heading 1',
-        description: 'Large heading',
-        icon: 'H1',
-        command: (editor) => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-    },
-    {
-        title: 'Heading 2',
-        description: 'Medium heading',
-        icon: 'H2',
-        command: (editor) => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-    },
-    {
-        title: 'Heading 3',
-        description: 'Small heading',
-        icon: 'H3',
-        command: (editor) => editor.chain().focus().toggleHeading({ level: 3 }).run(),
-    },
-    {
-        title: 'Bullet List',
-        description: 'Unordered list',
-        icon: '•',
-        command: (editor) => editor.chain().focus().toggleBulletList().run(),
-    },
-    {
-        title: 'Numbered List',
-        description: 'Ordered list',
-        icon: '1.',
-        command: (editor) => editor.chain().focus().toggleOrderedList().run(),
-    },
-    {
-        title: 'Blockquote',
-        description: 'Quote block',
-        icon: '❝',
-        command: (editor) => editor.chain().focus().toggleBlockquote().run(),
-    },
-    {
-        title: 'Divider',
-        description: 'Horizontal rule',
-        icon: '—',
-        command: (editor) => editor.chain().focus().setHorizontalRule().run(),
-    },
-    {
-        title: 'Code Block',
-        description: 'Preformatted code',
-        icon: '<>',
-        command: (editor) => editor.chain().focus().toggleCodeBlock().run(),
-    },
+    { title: 'Text', description: 'Plain paragraph', icon: '¶', command: (e) => e.chain().focus().setParagraph().run() },
+    { title: 'Heading 1', description: 'Large heading', icon: 'H1', command: (e) => e.chain().focus().toggleHeading({ level: 1 }).run() },
+    { title: 'Heading 2', description: 'Medium heading', icon: 'H2', command: (e) => e.chain().focus().toggleHeading({ level: 2 }).run() },
+    { title: 'Heading 3', description: 'Small heading', icon: 'H3', command: (e) => e.chain().focus().toggleHeading({ level: 3 }).run() },
+    { title: 'Bullet List', description: 'Unordered list', icon: '•', command: (e) => e.chain().focus().toggleBulletList().run() },
+    { title: 'Numbered List', description: 'Ordered list', icon: '1.', command: (e) => e.chain().focus().toggleOrderedList().run() },
+    { title: 'Task List', description: 'Checklist with checkboxes', icon: '☑', command: (e) => e.chain().focus().toggleTaskList().run() },
+    { title: 'Blockquote', description: 'Quote block', icon: '❝', command: (e) => e.chain().focus().toggleBlockquote().run() },
+    { title: 'Code Block', description: 'Preformatted code', icon: '⌨', command: (e) => e.chain().focus().toggleCodeBlock().run() },
+    { title: 'Divider', description: 'Horizontal rule', icon: '—', command: (e) => e.chain().focus().setHorizontalRule().run() },
+    { title: 'Highlight', description: 'Mark text with color', icon: '🖍', command: (e) => e.chain().focus().toggleHighlight().run() },
 ];
 
 export default function Editor({ content, onUpdate, editable = true, placeholder = "Start writing..." }: EditorProps) {
@@ -79,11 +48,23 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
     const [slashIndex, setSlashIndex] = useState(0);
     const containerRef = useRef<HTMLDivElement>(null);
     const slashStartPos = useRef<number | null>(null);
+    const [linkUrl, setLinkUrl] = useState('');
+    const [showLinkInput, setShowLinkInput] = useState(false);
+
+    const filteredItems = slashMenuItems.filter(item =>
+        item.title.toLowerCase().includes(slashFilter)
+    );
 
     const editor = useEditor({
         extensions: [
             StarterKit,
             Placeholder.configure({ placeholder }),
+            Underline,
+            Highlight.configure({ multicolor: false }),
+            TaskList,
+            TaskItem.configure({ nested: true }),
+            TextAlign.configure({ types: ['heading', 'paragraph'] }),
+            Link.configure({ openOnClick: false, HTMLAttributes: { class: 'editor-link' } }),
         ],
         content,
         editable,
@@ -99,13 +80,14 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
                 const containerRect = containerRef.current?.getBoundingClientRect();
                 if (containerRect) {
                     setToolbarPos({
-                        top: domRect.top - containerRect.top - 48,
-                        left: domRect.left - containerRect.left,
+                        top: domRect.top - containerRect.top - 52,
+                        left: Math.max(0, domRect.left - containerRect.left - 40),
                     });
                     setShowToolbar(true);
                 }
             } else {
                 setShowToolbar(false);
+                setShowLinkInput(false);
             }
         },
         editorProps: {
@@ -142,17 +124,11 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
 
     const handleSlashDetection = useCallback((ed: any) => {
         const { from } = ed.state.selection;
-        const textBefore = ed.state.doc.textBetween(
-            Math.max(0, from - 20),
-            from,
-            '\n'
-        );
-
+        const textBefore = ed.state.doc.textBetween(Math.max(0, from - 20), from, '\n');
         const slashMatch = textBefore.match(/\/([a-zA-Z0-9]*)$/);
+
         if (slashMatch) {
-            if (slashStartPos.current === null) {
-                slashStartPos.current = from - slashMatch[0].length;
-            }
+            if (slashStartPos.current === null) slashStartPos.current = from - slashMatch[0].length;
             setSlashFilter(slashMatch[1].toLowerCase());
             setSlashIndex(0);
 
@@ -160,7 +136,7 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
             const containerRect = containerRef.current?.getBoundingClientRect();
             if (containerRect) {
                 setSlashPos({
-                    top: coords.bottom - containerRect.top + 4,
+                    top: coords.bottom - containerRect.top + 8,
                     left: coords.left - containerRect.left,
                 });
                 setShowSlash(true);
@@ -179,25 +155,24 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
 
     const selectSlashItem = useCallback((index: number) => {
         if (!editor) return;
-        const items = filteredItems;
-        const item = items[index];
+        const item = filteredItems[index];
         if (!item) return;
 
         if (slashStartPos.current !== null) {
             const { from } = editor.state.selection;
-            editor.chain()
-                .focus()
-                .deleteRange({ from: slashStartPos.current, to: from })
-                .run();
+            editor.chain().focus().deleteRange({ from: slashStartPos.current, to: from }).run();
         }
-
         item.command(editor);
         closeSlash();
-    }, [editor, slashFilter, closeSlash]);
+    }, [editor, filteredItems, closeSlash]);
 
-    const filteredItems = slashMenuItems.filter(item =>
-        item.title.toLowerCase().includes(slashFilter)
-    );
+    const addLink = useCallback(() => {
+        if (!editor || !linkUrl) return;
+        const url = linkUrl.startsWith('http') ? linkUrl : `https://${linkUrl}`;
+        editor.chain().focus().setLink({ href: url }).run();
+        setLinkUrl('');
+        setShowLinkInput(false);
+    }, [editor, linkUrl]);
 
     useEffect(() => {
         if (editor) editor.setEditable(editable);
@@ -210,116 +185,125 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
             {/* Floating Toolbar */}
             {showToolbar && editable && (
                 <div
-                    className="absolute z-50 flex items-center gap-0.5 p-1 rounded-xl glass"
+                    className="editor-floating-menu"
                     data-variant="panel"
                     style={{ top: toolbarPos.top, left: toolbarPos.left }}
                     onMouseDown={(e) => e.preventDefault()}
                 >
-                    <ToolbarButton
-                        active={editor.isActive('bold')}
-                        onClick={() => editor.chain().focus().toggleBold().run()}
-                        label="B"
-                        bold
-                    />
-                    <ToolbarButton
-                        active={editor.isActive('italic')}
-                        onClick={() => editor.chain().focus().toggleItalic().run()}
-                        label="I"
-                        italic
-                    />
-                    <ToolbarButton
-                        active={editor.isActive('strike')}
-                        onClick={() => editor.chain().focus().toggleStrike().run()}
-                        label="S"
-                        strike
-                    />
-                    <div className="w-px h-5 bg-zinc-500/30 mx-1" />
-                    <ToolbarButton
-                        active={editor.isActive('heading', { level: 1 })}
-                        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-                        label="H1"
-                    />
-                    <ToolbarButton
-                        active={editor.isActive('heading', { level: 2 })}
-                        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                        label="H2"
-                    />
-                    <ToolbarButton
-                        active={editor.isActive('heading', { level: 3 })}
-                        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                        label="H3"
-                    />
-                    <div className="w-px h-5 bg-zinc-500/30 mx-1" />
-                    <ToolbarButton
-                        active={editor.isActive('bulletList')}
-                        onClick={() => editor.chain().focus().toggleBulletList().run()}
-                        label="•"
-                    />
-                    <ToolbarButton
-                        active={editor.isActive('orderedList')}
-                        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                        label="1."
-                    />
-                    <ToolbarButton
-                        active={editor.isActive('blockquote')}
-                        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-                        label="❝"
-                    />
+                    <div className="liquid-glass-v5 rounded-xl p-1.5 flex items-center gap-0.5">
+                        <ToolbarButton active={editor.isActive('bold')} onClick={() => editor.chain().focus().toggleBold().run()} label="B" className="font-bold" title="Bold (Ctrl+B)" />
+                        <ToolbarButton active={editor.isActive('italic')} onClick={() => editor.chain().focus().toggleItalic().run()} label="I" className="italic" title="Italic (Ctrl+I)" />
+                        <ToolbarButton active={editor.isActive('underline')} onClick={() => editor.chain().focus().toggleUnderline().run()} label="U" className="underline" title="Underline (Ctrl+U)" />
+                        <ToolbarButton active={editor.isActive('strike')} onClick={() => editor.chain().focus().toggleStrike().run()} label="S" className="line-through" title="Strikethrough" />
+                        <ToolbarButton active={editor.isActive('code')} onClick={() => editor.chain().focus().toggleCode().run()} label="<>" title="Inline Code" />
+                        <ToolbarButton active={editor.isActive('highlight')} onClick={() => editor.chain().focus().toggleHighlight().run()} label="🖍" title="Highlight" />
+
+                        <Divider />
+
+                        <ToolbarButton active={editor.isActive('heading', { level: 1 })} onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()} label="H1" title="Heading 1" />
+                        <ToolbarButton active={editor.isActive('heading', { level: 2 })} onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()} label="H2" title="Heading 2" />
+                        <ToolbarButton active={editor.isActive('heading', { level: 3 })} onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()} label="H3" title="Heading 3" />
+
+                        <Divider />
+
+                        <ToolbarButton active={editor.isActive({ textAlign: 'left' })} onClick={() => editor.chain().focus().setTextAlign('left').run()} label="≡" title="Align Left" />
+                        <ToolbarButton active={editor.isActive({ textAlign: 'center' })} onClick={() => editor.chain().focus().setTextAlign('center').run()} label="≡" className="text-center" title="Align Center" />
+                        <ToolbarButton active={editor.isActive({ textAlign: 'right' })} onClick={() => editor.chain().focus().setTextAlign('right').run()} label="≡" className="text-right" title="Align Right" />
+
+                        <Divider />
+
+                        <ToolbarButton active={editor.isActive('bulletList')} onClick={() => editor.chain().focus().toggleBulletList().run()} label="•" title="Bullet List" />
+                        <ToolbarButton active={editor.isActive('orderedList')} onClick={() => editor.chain().focus().toggleOrderedList().run()} label="1." title="Numbered List" />
+                        <ToolbarButton active={editor.isActive('taskList')} onClick={() => editor.chain().focus().toggleTaskList().run()} label="☑" title="Task List" />
+                        <ToolbarButton active={editor.isActive('blockquote')} onClick={() => editor.chain().focus().toggleBlockquote().run()} label="❝" title="Blockquote" />
+
+                        <Divider />
+
+                        <ToolbarButton
+                            active={editor.isActive('link')}
+                            onClick={() => {
+                                if (editor.isActive('link')) {
+                                    editor.chain().focus().unsetLink().run();
+                                } else {
+                                    setShowLinkInput(!showLinkInput);
+                                }
+                            }}
+                            label="🔗"
+                            title="Link"
+                        />
+                    </div>
+
+                    {showLinkInput && (
+                        <div className="flex items-center gap-1.5 mt-1.5 pt-1.5 border-t border-white/10">
+                            <input
+                                type="text"
+                                value={linkUrl}
+                                onChange={(e) => setLinkUrl(e.target.value)}
+                                onKeyDown={(e) => { if (e.key === 'Enter') addLink(); }}
+                                placeholder="https://..."
+                                className="flex-1 bg-white/5 border border-white/10 rounded-lg px-2 py-1 text-xs text-zinc-200 placeholder:text-zinc-500 outline-none focus:border-indigo-500/50"
+                                autoFocus
+                            />
+                            <button onClick={addLink} className="px-2 py-1 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs hover:bg-indigo-500/30 transition-colors">
+                                Add
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
 
             {/* Slash Command Menu */}
             {showSlash && editable && filteredItems.length > 0 && (
                 <div
-                    className="absolute z-50 w-64 max-h-72 overflow-y-auto rounded-xl p-1.5 glass custom-scrollbar"
+                    className="editor-slash-menu"
                     data-variant="panel"
                     style={{ top: slashPos.top, left: slashPos.left }}
                     onMouseDown={(e) => e.preventDefault()}
                 >
-                    <p className="text-[10px] uppercase tracking-wider text-zinc-500 px-2 py-1 mb-1">Blocks</p>
-                    {filteredItems.map((item, i) => (
-                        <button
-                            key={item.title}
-                            className={`w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm transition-colors ${i === slashIndex
-                                    ? 'bg-indigo-500/20 text-white'
-                                    : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-200'
-                                }`}
-                            onClick={() => selectSlashItem(i)}
-                        >
-                            <span className="w-8 h-8 flex items-center justify-center rounded-lg bg-white/5 text-xs font-mono shrink-0">
-                                {item.icon}
-                            </span>
-                            <span className="text-left">
-                                <span className="block font-medium text-sm">{item.title}</span>
-                                <span className="block text-xs text-zinc-500">{item.description}</span>
-                            </span>
-                        </button>
-                    ))}
+                    <div className="liquid-glass-v5 rounded-xl p-1.5 custom-scrollbar max-h-72 overflow-y-auto">
+                        <p className="text-[10px] uppercase tracking-wider text-zinc-500 px-2.5 py-1.5">Blocks</p>
+                        {filteredItems.map((item, i) => (
+                            <button
+                                key={item.title}
+                                className={`slash-menu-item ${i === slashIndex ? 'active' : ''}`}
+                                onClick={() => selectSlashItem(i)}
+                            >
+                                <span className="slash-menu-icon">{item.icon}</span>
+                                <span className="text-left">
+                                    <span className="block font-medium text-[13px]">{item.title}</span>
+                                    <span className="block text-[11px] text-zinc-500">{item.description}</span>
+                                </span>
+                            </button>
+                        ))}
+                    </div>
                 </div>
             )}
 
             <EditorContent editor={editor} className="h-full" />
+
+
         </div>
     );
 }
 
-function ToolbarButton({ active, onClick, label, bold, italic, strike }: {
+function ToolbarButton({ active, onClick, label, className = '', title }: {
     active: boolean;
     onClick: () => void;
     label: string;
-    bold?: boolean;
-    italic?: boolean;
-    strike?: boolean;
+    className?: string;
+    title?: string;
 }) {
     return (
         <button
             onClick={onClick}
-            className={`w-7 h-7 flex items-center justify-center rounded-lg text-xs transition-all ${active
-                    ? 'bg-indigo-500/25 text-indigo-400 shadow-sm'
-                    : 'text-zinc-400 hover:bg-white/10 hover:text-zinc-200'
-                } ${bold ? 'font-bold' : ''} ${italic ? 'italic' : ''} ${strike ? 'line-through' : ''}`}
+            title={title}
+            className={`toolbar-btn ${active ? 'active' : ''} ${className}`}
         >
             {label}
         </button>
     );
+}
+
+function Divider() {
+    return <div className="w-px h-5 bg-white/10 mx-0.5" />;
 }

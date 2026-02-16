@@ -72,31 +72,33 @@ export default function NoteMenu() {
             </button>
 
             {isOpen && (
-                <div className="absolute top-full right-0 mt-1 w-56 glass p-2 flex flex-col gap-1 z-50 shadow-xl" data-variant="panel">
-                    <div className="px-2 py-1 text-[10px] font-bold text-zinc-400 uppercase tracking-widest border-b border-white/10 mb-1">
-                        Actions
-                    </div>
+                <div className="absolute top-full right-0 mt-1 w-56 z-50">
+                    <div className="liquid-glass-v5 rounded-xl p-2 flex flex-col gap-1" data-variant="panel">
+                        <div className="px-2 py-1 text-[10px] font-bold text-zinc-400 uppercase tracking-widest border-b border-white/10 mb-1">
+                            Actions
+                        </div>
 
-                    <MenuOption onClick={handleDuplicate} icon="📄" label="Duplicate" />
-                    <MenuOption onClick={handleFullWidth} icon={activeNote.isFullWidth ? "⬅➡" : "↔"} label={activeNote.isFullWidth ? "Standard Width" : "Full Width"} />
-                    <MenuOption onClick={handleLock} icon={activeNote.isLocked ? "🔓" : "🔒"} label={activeNote.isLocked ? "Unlock Page" : "Lock Page"} />
+                        <MenuOption onClick={handleDuplicate} icon="📄" label="Duplicate" />
+                        <MenuOption onClick={handleFullWidth} icon={activeNote.isFullWidth ? "⬅➡" : "↔"} label={activeNote.isFullWidth ? "Standard Width" : "Full Width"} />
+                        <MenuOption onClick={handleLock} icon={activeNote.isLocked ? "🔓" : "🔒"} label={activeNote.isLocked ? "Unlock Page" : "Lock Page"} />
 
-                    <div className="h-[1px] bg-white/10 my-1" />
+                        <div className="h-[1px] bg-white/10 my-1" />
 
-                    <MenuOption onClick={handleCopyLink} icon="🔗" label="Copy Link" />
-                    <MenuOption onClick={handleExportPDF} icon="📤" label="Export to PDF" />
-                    <MenuOption onClick={() => setIsOpen(false)} icon="📥" label="Import (BETA)" disabled />
+                        <MenuOption onClick={handleCopyLink} icon="🔗" label="Copy Link" />
+                        <MenuOption onClick={handleExportPDF} icon="📤" label="Export to PDF" />
+                        <MenuOption onClick={() => setIsOpen(false)} icon="📥" label="Import (BETA)" disabled />
 
-                    <div className="h-[1px] bg-white/10 my-1" />
+                        <div className="h-[1px] bg-white/10 my-1" />
 
-                    <MenuOption onClick={() => { }} icon="➡" label="Move to..." disabled />
-                    <MenuOption onClick={handleTrash} icon="🗑️" label="Move to Trash" destructive />
+                        <MenuOption onClick={() => { }} icon="➡" label="Move to..." disabled />
+                        <MenuOption onClick={handleTrash} icon="🗑️" label="Move to Trash" destructive />
 
-                    <div className="h-[1px] bg-white/10 my-1" />
+                        <div className="h-[1px] bg-white/10 my-1" />
 
-                    <div className="px-2 py-1 flex justify-between text-xs text-zinc-500">
-                        <span>Words:</span>
-                        <span className="font-mono">{wordCount}</span>
+                        <div className="px-2 py-1 flex justify-between text-xs text-zinc-500">
+                            <span>Words:</span>
+                            <span className="font-mono">{wordCount}</span>
+                        </div>
                     </div>
                 </div>
             )}
