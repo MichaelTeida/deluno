@@ -61,11 +61,11 @@ WORKSPACE → APP-owned. Each app defines its own. Empty = empty.
 ```
 app/
 ├── layout.tsx                          ← Root (Clerk, Theme, Fonts, Glass)
-├── page.tsx                            ← Landing page
 ├── globals.css                         ← Theme Engine + Design Tokens
 │
-├── (website)/                          ← Public website (future)
+├── (website)/                          ← Public website
 │   ├── layout.tsx                      ← Marketing layout (header, footer)
+│   ├── page.tsx                        ← Landing page
 │   ├── pricing/page.tsx
 │   ├── blog/page.tsx
 │   ├── docs/page.tsx
@@ -149,14 +149,11 @@ noter/
 
 ### PlatformContext (`lib/contexts/PlatformContext.tsx`)
 
-Manages all platform-level state:
+Manages platform state and app slots:
 - Sidebar visibility, width, resize
 - Mobile nav toggle
-- Settings modal
-- Search command palette (Ctrl+K)
-- Rail expand/collapse
-
-Every child component accesses this via `usePlatform()`.
+- **App Slots**: Metadata (title, width) via `registerApp()`
+- **Portals**: DOM mount points (`#sidebar-slot`, `#breadcrumbs-slot`) for app content
 
 ### AppRail (`components/platform/AppRail.tsx`)
 
@@ -169,15 +166,12 @@ const apps: AppDefinition[] = [
 ];
 ```
 
-Adding a new app = adding one object to this array.
-
 ### SidebarLayout (`components/platform/SidebarLayout.tsx`)
 
 Wrapper for the resizable sidebar. Provides:
-- Desktop: resizable width (200–480px), snap-to-close at <100px
-- Mobile: slide-out drawer with backdrop overlay
-- Search row, mobile header, mobile app rail
-- Content injected via `{children}` — each app provides its own
+- **Portal Slots**: Renders `#sidebar-slot` for apps to inject content into.
+- Desktop/Mobile behavior (resize, slide-out).
+- Default behavior: Shows generic "Panel" sidebar if no app injects content.
 
 ---
 
@@ -238,7 +232,7 @@ When adding a new language: swap the JSON file in the provider. Zero component c
  STEP 1 — Create routing
  ────────────────────────
  📁 app/(platform)/panel/my-app/
- ├── layout.tsx       ← Provider + Sidebar inject
+ ├── layout.tsx       ← Provider + Portal Injection
  └── page.tsx         ← Workspace (empty to start)
 
  STEP 2 — Create logic
@@ -264,10 +258,36 @@ When adding a new language: swap the JSON file in the provider. Zero component c
 
 ```tsx
 // app/(platform)/panel/my-app/layout.tsx
+"use client";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { usePlatform } from "@/lib/contexts/PlatformContext";
 import { MyAppProvider } from "@/lib/contexts/MyAppContext";
 
+function MyAppPortals({ children }: { children: React.ReactNode }) {
+    const { registerApp, unregisterApp } = usePlatform();
+    const [sidebarTarget, setSidebarTarget] = useState<HTMLElement | null>(null);
+
+    useEffect(() => {
+        setSidebarTarget(document.getElementById("sidebar-slot"));
+        registerApp({ pageTitle: "My App" });
+        return () => unregisterApp();
+    }, []);
+
+    return (
+        <>
+            {sidebarTarget && createPortal(<div>My Sidebar</div>, sidebarTarget)}
+            {children}
+        </>
+    );
+}
+
 export default function MyAppLayout({ children }: { children: React.ReactNode }) {
-  return <MyAppProvider>{children}</MyAppProvider>;
+    return (
+        <MyAppProvider>
+            <MyAppPortals>{children}</MyAppPortals>
+        </MyAppProvider>
+    );
 }
 ```
 
