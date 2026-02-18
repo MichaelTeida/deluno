@@ -16,13 +16,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Deluno | Your workspace for productivity",
-  description: "Organize projects, notes, and tasks in one place. A modern SaaS platform with unique Liquid Glass design.",
-  keywords: ["notes", "projects", "task management", "SaaS", "productivity", "Deluno"],
-  authors: [{ name: "Deluno Team" }],
+  title: "Deluno — One workspace. Every idea.",
+  description: "Notes, projects, and tasks behind one beautiful glass interface. Free alpha access — no credit card, no catch.",
+  keywords: ["notes", "projects", "task management", "SaaS", "productivity", "Deluno", "workspace", "glass UI"],
+  authors: [{ name: "Deluno" }],
   openGraph: {
-    title: "Deluno | Your workspace for productivity",
-    description: "A modern platform for organizing your work.",
+    title: "Deluno — One workspace. Every idea.",
+    description: "Notes, projects, and tasks behind one beautiful glass interface. Free alpha access.",
     type: "website",
   }
 };
