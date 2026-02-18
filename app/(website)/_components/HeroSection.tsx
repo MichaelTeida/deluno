@@ -32,7 +32,9 @@ export default function HeroSection() {
     }, [mouseX, mouseY]);
 
     return (
-        <section className="relative min-h-[110vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[110vh] flex items-center justify-center overflow-hidden 
+        [mask-image:linear-gradient(to_bottom,black_0%,black_75%,transparent_100%)]
+    [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_75%,transparent_100%)]">
             {/* Background Illustration & Glows */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
                 {/* Autonomous floating layer - Random movement & Rotation & Pulse */}
@@ -40,14 +42,14 @@ export default function HeroSection() {
                     animate={{
                         x: [0, 10, -5, 8, -10, 0],
                         y: [0, -15, 5, -10, 15, 0],
-                        rotate: [0, 2, -2, 1, -1, 0],
-                        scale: [1, 1.02, 1, 1.02, 1]
+                        rotate: [0, 6, -5, 1, -5, 0],
+                        scale: [1, 1.1, 1, 1.1, 1]
                     }}
                     transition={{
-                        x: { duration: 25, repeat: Infinity, ease: "easeInOut" },
-                        y: { duration: 30, repeat: Infinity, ease: "easeInOut" },
-                        rotate: { duration: 45, repeat: Infinity, ease: "easeInOut" },
-                        scale: { duration: 35, repeat: Infinity, ease: "easeInOut" }
+                        x: { duration: 50, repeat: Infinity, ease: "easeInOut" },
+                        y: { duration: 60, repeat: Infinity, ease: "easeInOut" },
+                        rotate: { duration: 70, repeat: Infinity, ease: "easeInOut" },
+                        scale: { duration: 60, repeat: Infinity, ease: "easeInOut" }
                     }}
                     style={{ x: moveX, y: moveY }}
                     className="absolute inset-0 flex items-center justify-center opacity-20 dark:opacity-10 transition-opacity duration-1000"
@@ -63,9 +65,6 @@ export default function HeroSection() {
                         />
                     </div>
                 </motion.div>
-
-                {/* Section bottom fade mask - applied globally to container */}
-                <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-zinc-950 dark:via-zinc-950/80 dark:to-transparent z-10" />
 
                 <div className="absolute top-[15%] left-[20%] w-[500px] h-[500px] rounded-full opacity-40 homepage-glow-pulse"
                     style={{ background: "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 65%)" }} />
