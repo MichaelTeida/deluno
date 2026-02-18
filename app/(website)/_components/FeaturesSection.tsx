@@ -64,7 +64,7 @@ export default function FeaturesSection() {
                 <AnimatedSection stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {FEATURES.map((ft) => (
                         <StaggerItem key={ft.title}>
-                            <div className="glass p-7 rounded-2xl h-full transition-all duration-500 hover:translate-y-[-3px]" data-variant="card">
+                            <div className="glass p-7 rounded-2xl h-full transition-all duration-500 hover:translate-y-[-3px]" data-variant="website">
                                 <div className="w-10 h-10 glass rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-5">
                                     {ft.icon}
                                 </div>

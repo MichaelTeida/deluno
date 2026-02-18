@@ -48,7 +48,7 @@ export default function PricingSection() {
                         <StaggerItem key={tier.name}>
                             <div
                                 className={`glass rounded-2xl p-7 h-full flex flex-col relative transition-all duration-500 hover:translate-y-[-3px] ${tier.highlighted ? "ring-2 ring-indigo-500/40" : ""}`}
-                                data-variant="card"
+                                data-variant="website"
                             >
                                 {tier.highlighted && (
                                     <div className="absolute -top-px left-6 right-6 h-[2px] rounded-b bg-gradient-to-r from-indigo-500 to-violet-500" />

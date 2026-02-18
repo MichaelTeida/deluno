@@ -73,7 +73,7 @@ export default function AppsSection() {
                 <AnimatedSection stagger className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {APPS.map((app) => (
                         <StaggerItem key={app.name}>
-                            <a href={app.href} className="glass rounded-2xl p-8 block group transition-all duration-500 hover:translate-y-[-4px] relative overflow-hidden" data-variant="card">
+                            <a href={app.href} className="glass rounded-2xl p-8 block group transition-all duration-500 hover:translate-y-[-4px] relative overflow-hidden" data-variant="website">
                                 <div className="flex items-start justify-between mb-6">
                                     <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${app.gradient} flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
                                         {app.icon}

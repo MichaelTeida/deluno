@@ -8,7 +8,7 @@ export default function CTASection() {
         <section className="py-32">
             <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10">
                 <AnimatedSection>
-                    <div className="glass rounded-3xl p-12 sm:p-16 text-center relative overflow-hidden" data-variant="panel">
+                    <div className="glass rounded-3xl p-12 sm:p-16 text-center relative overflow-hidden" data-variant="website">
                         <div className="absolute top-[-100px] right-[-100px] w-[300px] h-[300px] rounded-full opacity-30 homepage-glow-pulse"
                             style={{ background: "radial-gradient(circle, rgba(99,102,241,0.3) 0%, transparent 70%)" }}
                             aria-hidden="true" />

@@ -36,6 +36,7 @@
     /* Mixes for consistent application */
     --effect-glass-bg: color-mix(in srgb, var(--c-glass) 16%, transparent);
     --effect-glass-border: color-mix(in srgb, var(--c-light) 40%, transparent);
+    --glass-bg: rgba(255, 255, 255, 0.4);
     /* Simplified for border property */
 
     /* The Complex Shadow Layering from v5 */
@@ -250,6 +251,13 @@ html.dark body {
   .glass[data-variant="card"] {
     border-radius: var(--radius-panel);
     cursor: pointer;
+    background: var(--glass-bg, var(--effect-glass-bg));
+  }
+
+  /* Website Variant - public marketing pages */
+  .glass[data-variant="website"] {
+    border-radius: var(--radius-panel);
+    background: var(--glass-bg, var(--effect-glass-bg));
   }
 
   .glass[data-variant="card"]:hover {
@@ -273,7 +281,7 @@ html.dark body {
     transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1), transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1), color 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 
     /* Liquid Glass Effect */
-    background: var(--effect-glass-bg);
+    background: var(--glass-bg, var(--effect-glass-bg));
     backdrop-filter: blur(3px) saturate(var(--glass-saturation)) url(#glass-clean-v5);
     box-shadow: var(--effect-glass-shadow);
     color: var(--foreground);
@@ -628,7 +636,7 @@ html.dark body {
   .liquid-glass-v5 {
     position: relative;
     overflow: hidden;
-    background: color-mix(in srgb, var(--c-glass) 16%, transparent);
+    background: var(--glass-bg, color-mix(in srgb, var(--c-glass) 16%, transparent));
     color: var(--foreground);
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
     transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);

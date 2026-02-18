@@ -74,7 +74,7 @@ export default function NoterPage() {
                 <AnimatedSection stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                     {NOTER_FEATURES.map((f) => (
                         <StaggerItem key={f.title}>
-                            <div className="glass p-7 rounded-2xl h-full transition-all duration-500 hover:translate-y-[-3px]" data-variant="card">
+                            <div className="glass p-7 rounded-2xl h-full transition-all duration-500 hover:translate-y-[-3px]" data-variant="website">
                                 <div className="w-11 h-11 glass rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-5">
                                     {f.icon}
                                 </div>
@@ -88,7 +88,7 @@ export default function NoterPage() {
 
             <section className="w-full max-w-[1200px] mx-auto px-6 md:px-10">
                 <AnimatedSection>
-                    <div className="glass rounded-3xl p-12 sm:p-16 text-center relative overflow-hidden" data-variant="panel">
+                    <div className="glass rounded-3xl p-12 sm:p-16 text-center relative overflow-hidden" data-variant="website">
                         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
                             <div className="absolute top-0 left-1/3 w-[350px] h-[350px] opacity-20 homepage-glow-pulse"
                                 style={{ background: "radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 60%)" }} />

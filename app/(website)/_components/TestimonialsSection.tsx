@@ -39,7 +39,7 @@ export default function TestimonialsSection() {
                 <AnimatedSection stagger className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {TESTIMONIALS.map((t) => (
                         <StaggerItem key={t.name}>
-                            <div className="glass rounded-2xl p-7 h-full flex flex-col" data-variant="card">
+                            <div className="glass rounded-2xl p-7 h-full flex flex-col" data-variant="website">
                                 <div className="flex items-center gap-1 mb-4">
                                     {[...Array(t.stars)].map((_, i) => (
                                         <svg key={i} width="14" height="14" viewBox="0 0 24 24" fill="#f59e0b"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>

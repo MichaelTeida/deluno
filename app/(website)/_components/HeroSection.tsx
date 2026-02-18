@@ -78,7 +78,7 @@ export default function HeroSection() {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="inline-flex items-center gap-2.5 glass px-5 py-2 rounded-full mb-10"
+                    className="inline-flex items-center gap-2.5 glass px-5 py-2 rounded-full mb-10" data-variant="website"
                     style={{ cursor: "default" }}
                 >
                     <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />

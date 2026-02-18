@@ -29,7 +29,7 @@ export default function TechStackSection() {
                 <AnimatedSection stagger className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {TECH.map((t) => (
                         <StaggerItem key={t.name}>
-                            <div className="glass rounded-xl p-5 flex flex-col items-center gap-3 text-center transition-all duration-300 hover:translate-y-[-2px]" data-variant="card">
+                            <div className="glass rounded-xl p-5 flex flex-col items-center gap-3 text-center transition-all duration-300 hover:translate-y-[-2px]" data-variant="website">
                                 <span
                                     className="text-lg font-bold"
                                     style={{ color: `var(--tech-color, ${t.color})` }}

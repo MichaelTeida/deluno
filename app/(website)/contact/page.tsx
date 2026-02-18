@@ -47,7 +47,7 @@ export default function ContactPage() {
                 <AnimatedSection stagger className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {CONTACT_OPTIONS.map((opt) => (
                         <StaggerItem key={opt.title}>
-                            <div className="glass p-8 rounded-2xl h-full transition-all duration-500 hover:translate-y-[-3px]" data-variant="card">
+                            <div className="glass p-8 rounded-2xl h-full transition-all duration-500 hover:translate-y-[-3px]" data-variant="website">
                                 <div className="w-11 h-11 glass rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 mb-5">
                                     {opt.icon}
                                 </div>
@@ -61,7 +61,7 @@ export default function ContactPage() {
 
             <section className="w-full max-w-[640px] mx-auto px-6 md:px-10">
                 <AnimatedSection>
-                    <div className="glass rounded-2xl p-8 sm:p-10" data-variant="panel">
+                    <div className="glass rounded-2xl p-8 sm:p-10" data-variant="website">
                         <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-7">Send a message</h2>
 
                         {submitted ? (
