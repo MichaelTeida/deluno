@@ -66,7 +66,7 @@ function PanelContent({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col h-dvh w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}>
 
             {/* HEADER */}
-            <header className="h-12 md:h-16 shrink-0 glass bg-white/40 dark:bg-black/30 flex items-center justify-between px-3 md:px-6 z-50" data-variant="panel">
+            <header className="h-12 md:h-16 shrink-0 glass flex items-center justify-between px-3 md:px-6 z-50" data-variant="panel">
                 <div className="flex items-center gap-2 md:gap-4 lg:gap-6 overflow-hidden min-w-0 pr-2">
                     <button
                         onClick={() => setIsNavOpen(!isNavOpen)}
@@ -125,7 +125,7 @@ function PanelContent({ children }: { children: React.ReactNode }) {
                 </SidebarLayout>
 
                 {/* WORKSPACE */}
-                <main className="flex-1 glass bg-white/40 dark:bg-black/30 relative z-20 flex flex-col overflow-hidden min-w-0" data-variant="content">
+                <main className="flex-1 glass relative z-20 flex flex-col overflow-hidden min-w-0" data-variant="content">
                     <div className="h-12 md:h-14 shrink-0 border-b border-white/20 flex items-center justify-between px-4 md:px-6">
                         <div className="flex items-center gap-3 max-w-[70%]">
                             {!isSidebarVisible && (

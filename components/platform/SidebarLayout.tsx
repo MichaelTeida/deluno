@@ -34,7 +34,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
 
             <nav
                 className={`
-                    glass bg-white/40 dark:bg-black/30 flex flex-col z-[60] md:z-30 shrink-0
+                    glass flex flex-col z-[60] md:z-30 shrink-0
                     fixed md:relative left-0 top-0 h-full md:h-auto
                     transition-transform duration-300 ease-out overflow-hidden
                     ${isNavOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}

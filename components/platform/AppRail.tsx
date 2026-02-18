@@ -43,7 +43,7 @@ export default function AppRail() {
     return (
         <aside className={`
             ${isRailExpanded ? 'w-52 px-3' : 'w-14 md:w-16 items-center'} 
-            glass bg-white/40 dark:bg-black/30 flex flex-col py-3 md:py-4 gap-2 z-40 shrink-0 
+            glass flex flex-col py-3 md:py-4 gap-2 z-40 shrink-0 
             transition-all duration-300 ease-out
             hidden md:flex
         `} data-variant="panel">
