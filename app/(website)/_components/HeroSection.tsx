@@ -1,19 +1,76 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import Image from "next/image";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { TextReveal } from "./AnimatedSection";
 
 export default function HeroSection() {
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    // Smooth springs for mouse movement
+    const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+    const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
+
+    // Transform mouse position to subtle movement
+    const moveX = useTransform(springX, [-500, 500], [-30, 30]);
+    const moveY = useTransform(springY, [-500, 500], [-30, 30]);
+
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            const { clientX, clientY } = e;
+            const moveXVal = clientX - window.innerWidth / 2;
+            const moveYVal = clientY - window.innerHeight / 2;
+            mouseX.set(moveXVal);
+            mouseY.set(moveYVal);
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => window.removeEventListener("mousemove", handleMouseMove);
+    }, [mouseX, mouseY]);
+
     return (
-        <section className="relative min-h-[100vh] flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-                <div className="absolute top-[15%] left-[20%] w-[500px] h-[500px] rounded-full opacity-60 homepage-glow-pulse"
-                    style={{ background: "radial-gradient(circle, rgba(99,102,241,0.18) 0%, transparent 65%)" }} />
-                <div className="absolute bottom-[20%] right-[15%] w-[400px] h-[400px] rounded-full opacity-50 homepage-glow-pulse homepage-delay-3"
-                    style={{ background: "radial-gradient(circle, rgba(139,92,246,0.14) 0%, transparent 65%)" }} />
-                <div className="absolute top-[60%] left-[50%] w-[300px] h-[300px] rounded-full opacity-40 homepage-glow-pulse homepage-delay-5"
-                    style={{ background: "radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 65%)" }} />
+        <section className="relative min-h-[110vh] flex items-center justify-center overflow-hidden">
+            {/* Background Illustration & Glows */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
+                {/* Autonomous floating layer - Random movement & Rotation & Pulse */}
+                <motion.div
+                    animate={{
+                        x: [0, 10, -5, 8, -10, 0],
+                        y: [0, -15, 5, -10, 15, 0],
+                        rotate: [0, 2, -2, 1, -1, 0],
+                        scale: [1, 1.02, 1, 1.02, 1]
+                    }}
+                    transition={{
+                        x: { duration: 25, repeat: Infinity, ease: "easeInOut" },
+                        y: { duration: 30, repeat: Infinity, ease: "easeInOut" },
+                        rotate: { duration: 45, repeat: Infinity, ease: "easeInOut" },
+                        scale: { duration: 35, repeat: Infinity, ease: "easeInOut" }
+                    }}
+                    style={{ x: moveX, y: moveY }}
+                    className="absolute inset-0 flex items-center justify-center opacity-20 dark:opacity-10 transition-opacity duration-1000"
+                >
+                    <div className="relative w-full h-full flex items-center justify-center">
+                        <Image
+                            src="/images/Hero_Illustration-1200x800_WebP_transparentBG.webp"
+                            alt=""
+                            width={1600}
+                            height={1000}
+                            className="w-[140%] md:w-[110%] h-auto max-w-none transform scale-125 md:scale-110"
+                            priority
+                        />
+                    </div>
+                </motion.div>
+
+                {/* Section bottom fade mask - applied globally to container */}
+                <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-white via-white/80 to-transparent dark:from-zinc-950 dark:via-zinc-950/80 dark:to-transparent z-10" />
+
+                <div className="absolute top-[15%] left-[20%] w-[500px] h-[500px] rounded-full opacity-40 homepage-glow-pulse"
+                    style={{ background: "radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 65%)" }} />
+                <div className="absolute bottom-[20%] right-[15%] w-[400px] h-[400px] rounded-full opacity-30 homepage-glow-pulse homepage-delay-3"
+                    style={{ background: "radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 65%)" }} />
             </div>
 
             <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10 relative z-10 text-center pt-28 pb-20">
@@ -37,7 +94,7 @@ export default function HeroSection() {
                             animate={{ y: 0 }}
                             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
                         >
-                            Every idea.
+                            Every tool.
                         </motion.span>
                     </span>
                 </h1>

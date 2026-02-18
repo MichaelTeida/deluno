@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { AnimatedSection, StaggerItem } from "./AnimatedSection";
 
 const FEATURES = [
@@ -37,8 +38,20 @@ const FEATURES = [
 
 export default function FeaturesSection() {
     return (
-        <section id="features" className="py-32">
-            <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10">
+        <section id="features" className="relative py-32 overflow-hidden">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1440px] opacity-40 dark:opacity-20 scale-110 blur-[8px]">
+                    <Image
+                        src="/images/Features_Section_Background-1440x600_WebP_transparentBG.webp"
+                        alt=""
+                        width={1440}
+                        height={600}
+                        className="w-full h-auto"
+                    />
+                </div>
+            </div>
+
+            <div className="w-full max-w-[1200px] mx-auto px-6 md:px-10 relative z-10">
                 <AnimatedSection className="text-center mb-16">
                     <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-zinc-900 dark:text-white tracking-tight mb-5">
                         Everything you need, <span className="homepage-gradient-text">nothing you don&apos;t</span>
