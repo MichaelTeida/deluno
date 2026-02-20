@@ -70,10 +70,10 @@ function PanelContent({ children }: { children: React.ReactNode }) {
                 <div className="flex items-center gap-2 md:gap-4 lg:gap-6 overflow-hidden min-w-0 pr-2">
                     <button
                         onClick={() => setIsNavOpen(!isNavOpen)}
-                        className="md:hidden glass w-12 h-12 flex items-center justify-center text-zinc-600 rounded-full"
+                        className="md:hidden glass w-8 h-8 flex items-center justify-center text-zinc-500 hover:text-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200 transition-colors"
                         data-variant="interactive"
                     >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                         </svg>
                     </button>
