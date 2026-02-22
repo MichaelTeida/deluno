@@ -18,12 +18,11 @@ export default function SearchCommand({ isOpen, onClose }: SearchCommandProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
-    // Focus input when opened
     useEffect(() => {
         if (isOpen) {
             setTimeout(() => inputRef.current?.focus(), 50);
         } else {
-            setQuery(""); // Reset query on close
+            requestAnimationFrame(() => setQuery("")); // Reset query on close
         }
     }, [isOpen]);
 

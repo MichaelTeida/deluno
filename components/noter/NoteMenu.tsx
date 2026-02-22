@@ -2,13 +2,11 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useNoter } from "@/lib/contexts/NoterContext";
-import { usePathname } from "next/navigation";
 
 export default function NoteMenu() {
     const { activeNote, addNote, updateNote, deleteNote } = useNoter();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef<HTMLDivElement>(null);
-    const pathname = usePathname();
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -23,6 +21,7 @@ export default function NoteMenu() {
     if (!activeNote) return null;
 
     const handleDuplicate = () => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { id, createdAt, updatedAt, ...rest } = activeNote;
         addNote(activeNote.parentId, { ...rest, title: `${activeNote.title} (Copy)` });
         setIsOpen(false);

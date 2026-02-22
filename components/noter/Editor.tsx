@@ -1,6 +1,6 @@
 "use client";
 
-import { useEditor, EditorContent } from '@tiptap/react';
+import { useEditor, EditorContent, Editor as TiptapEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
 import Underline from '@tiptap/extension-underline';
@@ -22,7 +22,7 @@ interface SlashMenuItem {
     title: string;
     description: string;
     icon: string;
-    command: (editor: any) => void;
+    command: (editor: TiptapEditor) => void;
 }
 
 const slashMenuItems: SlashMenuItem[] = [
@@ -55,6 +55,13 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
         item.title.toLowerCase().includes(slashFilter)
     );
 
+    const closeSlash = useCallback(() => {
+        setShowSlash(false);
+        setSlashFilter('');
+        setSlashIndex(0);
+        slashStartPos.current = null;
+    }, []);
+
     const editor = useEditor({
         extensions: [
             StarterKit,
@@ -73,7 +80,7 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
             onUpdate(editor.getHTML());
             handleSlashDetection(editor);
         },
-        onBlur: ({ event }) => {
+        onBlur: () => {
             // Close internal menus when clicking outside the editor ecosystem
             // Note: onMouseDown.preventDefault() on menus prevents this from firing when interacting with them
             setShowToolbar(false);
@@ -132,7 +139,7 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
         },
     });
 
-    const handleSlashDetection = useCallback((ed: any) => {
+    const handleSlashDetection = useCallback((ed: TiptapEditor) => {
         const { from } = ed.state.selection;
         const textBefore = ed.state.doc.textBetween(Math.max(0, from - 20), from, '\n');
 
@@ -168,14 +175,9 @@ export default function Editor({ content, onUpdate, editable = true, placeholder
         } else {
             closeSlash();
         }
-    }, []);
+    }, [closeSlash]);
 
-    const closeSlash = useCallback(() => {
-        setShowSlash(false);
-        setSlashFilter('');
-        setSlashIndex(0);
-        slashStartPos.current = null;
-    }, []);
+
 
     const selectSlashItem = useCallback((index: number) => {
         if (!editor) return;

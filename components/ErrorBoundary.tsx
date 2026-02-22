@@ -16,7 +16,8 @@ class ErrorBoundary extends Component<Props, State> {
         hasError: false
     };
 
-    public static getDerivedStateFromError(_: Error): State {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public static getDerivedStateFromError(_error: Error): State {
         return { hasError: true };
     }
 
@@ -32,7 +33,7 @@ class ErrorBoundary extends Component<Props, State> {
             return (
                 <div className="flex flex-col items-center justify-center h-full p-4 text-center">
                     <h2 className="text-xl font-bold text-red-500 mb-2">Something went wrong</h2>
-                    <p className="text-zinc-500 mb-4">We couldn't load this content.</p>
+                    <p className="text-zinc-500 mb-4">We couldn&apos;t load this content.</p>
                     <button
                         onClick={() => this.setState({ hasError: false })}
                         className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"

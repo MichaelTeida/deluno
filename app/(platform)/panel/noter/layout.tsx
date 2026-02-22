@@ -14,27 +14,29 @@ function NoterPortals({ children }: { children: React.ReactNode }) {
     const [breadcrumbsTarget, setBreadcrumbsTarget] = useState<HTMLElement | null>(null);
 
     useEffect(() => {
-        setSidebarTarget(document.getElementById("sidebar-slot"));
-        setBreadcrumbsTarget(document.getElementById("breadcrumbs-slot"));
+        const id = requestAnimationFrame(() => {
+            setSidebarTarget(document.getElementById("sidebar-slot"));
+            setBreadcrumbsTarget(document.getElementById("breadcrumbs-slot"));
+        });
+        return () => cancelAnimationFrame(id);
     }, []);
 
     useEffect(() => {
         registerApp({
             pageTitle: "Noter",
-            contentClass: activeNote?.isFullWidth ? "max-w-full" : "max-w-4xl",
         });
         return () => unregisterApp();
-    }, []);
+    }, [registerApp, unregisterApp]);
 
     useEffect(() => {
         registerApp({
             contentClass: activeNote?.isFullWidth ? "max-w-full" : "max-w-4xl",
         });
-    }, [activeNote?.isFullWidth]);
+    }, [activeNote?.isFullWidth, registerApp]);
 
     useEffect(() => {
         setIsNavOpen(false);
-    }, [activeNote?.id]);
+    }, [activeNote?.id, setIsNavOpen]);
 
     return (
         <>

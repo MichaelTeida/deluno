@@ -36,33 +36,36 @@ export function NoterProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const savedNotes = localStorage.getItem('deluno-notes');
         const savedActiveId = localStorage.getItem('deluno-active-note');
-        if (savedNotes) {
-            try {
-                // Parse dates back to Date objects
-                const parsed = JSON.parse(savedNotes, (key, value) => {
-                    if (key === 'createdAt' || key === 'updatedAt') return new Date(value);
-                    return value;
-                });
 
-                // Migration: Convert legacy plain text to HTML
-                const migrated = parsed.map((note: any) => {
-                    // Primitive check: if content exists and doesn't start with <, assume plain text
-                    if (note.content && typeof note.content === 'string' && !note.content.trim().startsWith('<')) {
-                        return {
-                            ...note,
-                            content: `<p>${note.content.replace(/\n/g, '<br>')}</p>`
-                        };
-                    }
-                    return note;
-                });
+        requestAnimationFrame(() => {
+            if (savedNotes) {
+                try {
+                    // Parse dates back to Date objects
+                    const parsed = JSON.parse(savedNotes, (key, value) => {
+                        if (key === 'createdAt' || key === 'updatedAt') return new Date(value);
+                        return value;
+                    });
 
-                setNotes(migrated);
-            } catch (e) {
-                console.error("Failed to parse notes", e);
+                    // Migration: Convert legacy plain text to HTML
+                    const migrated = parsed.map((note: Note) => {
+                        // Primitive check: if content exists and doesn't start with <, assume plain text
+                        if (note.content && typeof note.content === 'string' && !note.content.trim().startsWith('<')) {
+                            return {
+                                ...note,
+                                content: `<p>${note.content.replace(/\n/g, '<br>')}</p>`
+                            };
+                        }
+                        return note;
+                    });
+
+                    setNotes(migrated);
+                } catch (e) {
+                    console.error("Failed to parse notes", e);
+                }
             }
-        }
-        if (savedActiveId) setActiveNoteId(savedActiveId);
-        setIsInitialized(true);
+            if (savedActiveId) setActiveNoteId(savedActiveId);
+            setIsInitialized(true);
+        });
     }, []);
 
     // Save to LocalStorage on change

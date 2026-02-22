@@ -60,7 +60,7 @@ function PanelContent({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         setIsNavOpen(false);
-    }, [pathname]);
+    }, [pathname, setIsNavOpen]);
 
     return (
         <div className="flex flex-col h-dvh w-full text-zinc-800 dark:text-zinc-200 p-2 md:p-4 gap-2 md:gap-4 overflow-hidden" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left))', paddingRight: 'max(0.5rem, env(safe-area-inset-right))' }}>

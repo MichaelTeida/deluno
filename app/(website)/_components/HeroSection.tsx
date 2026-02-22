@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
@@ -39,22 +39,24 @@ export default function HeroSection() {
             <div className="absolute inset-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">
                 {/* Autonomous floating layer - Random movement & Rotation & Pulse */}
                 <motion.div
-                    animate={{
-                        x: [0, 10, -5, 8, -10, 0],
-                        y: [0, -15, 5, -10, 15, 0],
-                        rotate: [0, 6, -5, 1, -5, 0],
-                        scale: [1, 1.1, 1, 1.1, 1]
-                    }}
-                    transition={{
-                        x: { duration: 50, repeat: Infinity, ease: "easeInOut" },
-                        y: { duration: 60, repeat: Infinity, ease: "easeInOut" },
-                        rotate: { duration: 70, repeat: Infinity, ease: "easeInOut" },
-                        scale: { duration: 60, repeat: Infinity, ease: "easeInOut" }
-                    }}
                     style={{ x: moveX, y: moveY }}
                     className="absolute inset-0 flex items-center justify-center opacity-20 dark:opacity-10 transition-opacity duration-1000"
                 >
-                    <div className="relative w-full h-full flex items-center justify-center">
+                    <motion.div
+                        animate={{
+                            x: [0, 10, -5, 8, -10, 0],
+                            y: [0, -15, 5, -10, 15, 0],
+                            rotate: [0, 6, -5, 1, -5, 0],
+                            scale: [1, 1.1, 1, 1.1, 1]
+                        }}
+                        transition={{
+                            x: { duration: 50, repeat: Infinity, ease: "easeInOut" },
+                            y: { duration: 60, repeat: Infinity, ease: "easeInOut" },
+                            rotate: { duration: 70, repeat: Infinity, ease: "easeInOut" },
+                            scale: { duration: 60, repeat: Infinity, ease: "easeInOut" }
+                        }}
+                        className="relative w-full h-full flex items-center justify-center"
+                    >
                         <Image
                             src="/images/Hero_Illustration-1200x800_WebP_transparentBG.webp"
                             alt=""
@@ -63,7 +65,7 @@ export default function HeroSection() {
                             className="w-[140%] md:w-[110%] h-auto max-w-none transform scale-125 md:scale-110"
                             priority
                         />
-                    </div>
+                    </motion.div>
                 </motion.div>
 
                 <div className="absolute top-[15%] left-[20%] w-[500px] h-[500px] rounded-full opacity-40 homepage-glow-pulse"

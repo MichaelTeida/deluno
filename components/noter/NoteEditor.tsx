@@ -15,8 +15,18 @@ const ICONS = ["📄", "📝", "💡", "📋", "📌", "⭐", "🎯", "📊", "�
 
 export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
     const [showIconPicker, setShowIconPicker] = useState(false);
+    const [iconPickerPos, setIconPickerPos] = useState({ top: 0, left: 0 });
     const contentRef = useRef<HTMLTextAreaElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
+
+    const handleOpenIconPicker = () => {
+        if (note.isLocked) return;
+        if (!showIconPicker && buttonRef.current) {
+            const rect = buttonRef.current.getBoundingClientRect();
+            setIconPickerPos({ top: rect.bottom + 8, left: rect.left });
+        }
+        setShowIconPicker(!showIconPicker);
+    };
 
     useEffect(() => {
         if (contentRef.current) {
@@ -33,7 +43,7 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                 <div className="relative">
                     <button
                         ref={buttonRef}
-                        onClick={() => !note.isLocked && setShowIconPicker(!showIconPicker)}
+                        onClick={handleOpenIconPicker}
                         className={`relative z-10 text-3xl transition-colors rounded-lg p-2 ${note.isLocked ? "opacity-50 cursor-not-allowed" : "hover:bg-white/30 dark:hover:bg-white/10"}`}
                         disabled={note.isLocked}
                         title={note.isLocked ? "Page locked" : "Change icon"}
@@ -46,8 +56,8 @@ export default function NoteEditor({ note, onUpdate }: NoteEditorProps) {
                             <div
                                 className="fixed z-[9999]"
                                 style={{
-                                    top: buttonRef.current?.getBoundingClientRect().bottom! + 8,
-                                    left: buttonRef.current?.getBoundingClientRect().left!,
+                                    top: iconPickerPos.top,
+                                    left: iconPickerPos.left,
                                 }}
                             >
                                 <div className="liquid-glass-v5 rounded-xl p-3 grid grid-cols-5 gap-2" data-variant="panel">
@@ -107,7 +117,8 @@ function HeaderActionsPortal({ note, onUpdate }: { note: Note, onUpdate: (update
     const portalTarget = typeof document !== 'undefined' ? document.getElementById('header-actions') : null;
 
     useEffect(() => {
-        setMounted(true);
+        const id = requestAnimationFrame(() => setMounted(true));
+        return () => cancelAnimationFrame(id);
     }, []);
 
     if (!mounted || !portalTarget) return null;

@@ -15,11 +15,14 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
         isNavOpen, setIsNavOpen,
         isSidebarVisible, setIsSidebarVisible,
         sidebarWidth, startResizing,
-        isSearchOpen, setIsSearchOpen,
+        setIsSearchOpen,
     } = usePlatform();
 
     const [isMounted, setIsMounted] = useState(false);
-    useEffect(() => setIsMounted(true), []);
+    useEffect(() => {
+        const id = requestAnimationFrame(() => setIsMounted(true));
+        return () => cancelAnimationFrame(id);
+    }, []);
 
     const isNoter = pathname?.startsWith('/panel/noter');
 
